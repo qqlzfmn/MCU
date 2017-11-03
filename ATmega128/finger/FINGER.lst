@@ -1,0 +1,277 @@
+Interrupt Vectors
+    00000 940C 0068 JMP	__start|__text_start
+    00024 940C 00CF JMP	_uart0_rx_isr
+    00026 940C 00D0 JMP	_uart0_udre_isr
+    00028 940C 00D1 JMP	_uart0_tx_isr
+
+Program Code (text area)
+__start|__text_start:
+    00068 EFCF      LDI	R28,0xFF
+    00069 E1D0      LDI	R29,0x10
+    0006A BFCD      OUT	0x3D,R28
+    0006B BFDE      OUT	0x3E,R29
+    0006C 51CE      SUBI	R28,0x1E
+    0006D 40D0      SBCI	R29,0
+    0006E EA0A      LDI	R16,0xAA
+    0006F 8308      ST	Y,R16
+    00070 2400      CLR	R0
+    00071 E4E4      LDI	R30,0x44
+    00072 E0F1      LDI	R31,1
+    00073 E011      LDI	R17,1
+    00074 34E4      CPI	R30,0x44
+    00075 07F1      CPC	R31,R17
+    00076 F011      BEQ	0x0079
+    00077 9201      ST	Z+,R0
+    00078 CFFB      RJMP	0x0074
+    00079 8300      ST	Z,R16
+    0007A E8EC      LDI	R30,0x8C
+    0007B E0F0      LDI	R31,0
+    0007C E0A0      LDI	R26,0
+    0007D E0B1      LDI	R27,1
+    0007E E010      LDI	R17,0
+    0007F E000      LDI	R16,0
+    00080 BF0B      OUT	0x3B,R16
+    00081 3DE0      CPI	R30,0xD0
+    00082 07F1      CPC	R31,R17
+    00083 F021      BEQ	0x0088
+    00084 95C8      LPM
+    00085 9631      ADIW	R30,1
+    00086 920D      ST	X+,R0
+    00087 CFF9      RJMP	0x0081
+    00088 940E 00E6 CALL	_main
+_exit:
+    0008A CFFF      RJMP	_exit
+FILE: F:\工作\单片机\WorkSpace\finger\finger.c
+(0001) //ICC-AVR application builder : 17/10/31 16:00:25
+(0002) // Target : M128
+(0003) // Crystal: 11.0592Mhz
+(0004) 
+(0005) #include <iom128v.h>
+(0006) #include <macros.h>
+(0007) 
+(0008) #define FOSC 11059200// Clock Speed
+(0009) #define BAUD 115200
+(0010) #define MYUBRR FOSC/16/BAUD-1
+(0011) 
+(0012) #define uint unsigned int
+(0013) #define uchar unsigned char
+(0014) 
+(0015) void port_init(void)
+(0016) {
+(0017) 	PORTA = 0x00;
+_port_init:
+    0008B 2422      CLR	R2
+    0008C BA2B      OUT	0x1B,R2
+(0018)  	DDRA  = 0x00;
+    0008D BA2A      OUT	0x1A,R2
+(0019)  	PORTB = 0x00;
+    0008E BA28      OUT	0x18,R2
+(0020)  	DDRB  = 0x00;
+    0008F BA27      OUT	0x17,R2
+    00090 9508      RET
+(0021) }
+(0022) 
+(0023) //UART0 initialize
+(0024) // desired baud rate: 57600
+(0025) // actual: baud rate:57600 (0.0%)
+(0026) // char size: 8 bit
+(0027) // parity: Disabled
+(0028) void uart0_init(unsigned int ubrr)
+(0029) {
+(0030) 	/* Set baud rate */
+(0031) 	UBRR0H = (unsigned char)(ubrr>>8);
+_uart0_init:
+  ubrr                 --> R16
+    00091 0118      MOVW	R2,R16
+    00092 2C23      MOV	R2,R3
+    00093 2433      CLR	R3
+    00094 9220 0090 STS	0x90,R2
+(0032) 	UBRR0L = (unsigned char)ubrr;
+    00096 B909      OUT	0x09,R16
+(0033) 	/* Enable receiver and transmitter */
+(0034) 	UCSR0B = (1<<RXEN0)|(1<<TXEN0);
+    00097 E188      LDI	R24,0x18
+    00098 B98A      OUT	0x0A,R24
+(0035) 	/* Set frame format: 8data, 2stop bit */
+(0036) 	UCSR0C = (1<<USBS0)|(3<<UCSZ00);
+    00099 E08E      LDI	R24,0xE
+    0009A 9380 0095 STS	0x95,R24
+    0009C 9508      RET
+(0037) }
+(0038) 
+(0039) void uart0_send_char(uchar data)
+(0040) {
+(0041) 	while(!(UCSR0A & (1<<UDRE0)));
+_uart0_send_char:
+  data                 --> R16
+    0009D 9B5D      SBIS	0x0B,5
+    0009E CFFE      RJMP	_uart0_send_char
+(0042) 	
+(0043) 	UDR0 = data;
+    0009F B90C      OUT	0x0C,R16
+    000A0 9508      RET
+_uart0_send_string:
+  p                    --> R20
+    000A1 934A      ST	-Y,R20
+    000A2 935A      ST	-Y,R21
+    000A3 01A8      MOVW	R20,R16
+(0044) }
+(0045) 
+(0046) void uart0_send_string(uchar *p)
+(0047) {
+    000A4 C005      RJMP	0x00AA
+(0048)     while(*p)
+(0049)     {
+(0050)         uart0_send_char(*p);
+    000A5 01FA      MOVW	R30,R20
+    000A6 8100      LD	R16,Z
+    000A7 DFF5      RCALL	_uart0_send_char
+(0051)         p++;
+    000A8 5F4F      SUBI	R20,0xFF
+    000A9 4F5F      SBCI	R21,0xFF
+    000AA 01FA      MOVW	R30,R20
+    000AB 8020      LD	R2,Z
+    000AC 2022      TST	R2
+    000AD F7B9      BNE	0x00A5
+    000AE 9159      LD	R21,Y+
+    000AF 9149      LD	R20,Y+
+    000B0 9508      RET
+(0052)     }
+(0053) }
+(0054) 
+(0055) uint lcd_bz()
+(0056) {
+(0057) 	PORTA = 0x00;
+_lcd_bz:
+    000B1 2422      CLR	R2
+    000B2 BA2B      OUT	0x1B,R2
+(0058)  	DDRA  = 0x00;
+    000B3 BA2A      OUT	0x1A,R2
+(0059) 	if(PINA&BIT(4))
+    000B4 9BCC      SBIS	0x19,4
+    000B5 C003      RJMP	0x00B9
+(0060) 		return 1;
+    000B6 E001      LDI	R16,1
+    000B7 E010      LDI	R17,0
+    000B8 C002      RJMP	0x00BB
+(0061) 	else
+(0062) 		return 0;
+    000B9 2700      CLR	R16
+    000BA 2711      CLR	R17
+    000BB 9508      RET
+_delay:
+  i                    --> R20
+  ms                   --> R16
+    000BC 934A      ST	-Y,R20
+    000BD 935A      ST	-Y,R21
+(0063) }
+(0064) 
+(0065) void delay(uint ms)
+(0066) {
+(0067) 	uint i;
+(0068) 	for(ms;ms>0;ms--)
+    000BE C00A      RJMP	0x00C9
+(0069) 		for(i=1200;i>0;i--);
+    000BF EB40      LDI	R20,0xB0
+    000C0 E054      LDI	R21,4
+    000C1 C002      RJMP	0x00C4
+    000C2 5041      SUBI	R20,1
+    000C3 4050      SBCI	R21,0
+    000C4 3040      CPI	R20,0
+    000C5 0745      CPC	R20,R21
+    000C6 F7D9      BNE	0x00C2
+    000C7 5001      SUBI	R16,1
+    000C8 4010      SBCI	R17,0
+    000C9 3000      CPI	R16,0
+    000CA 0701      CPC	R16,R17
+    000CB F799      BNE	0x00BF
+    000CC 9159      LD	R21,Y+
+    000CD 9149      LD	R20,Y+
+    000CE 9508      RET
+(0070) }
+(0071) 
+(0072) #pragma interrupt_handler uart0_rx_isr:iv_USART0_RXC
+(0073) void uart0_rx_isr(void)
+(0074) {
+_uart0_rx_isr:
+    000CF 9518      RETI
+(0075)  	//uart has received a character in UDR
+(0076) }
+(0077) 
+(0078) #pragma interrupt_handler uart0_udre_isr:iv_USART0_UDRE
+(0079) void uart0_udre_isr(void)
+(0080) {
+_uart0_udre_isr:
+    000D0 9518      RETI
+(0081)  	//character transferred to shift register so UDR is now empty
+(0082) }
+(0083) 
+(0084) #pragma interrupt_handler uart0_tx_isr:iv_USART0_TXC
+(0085) void uart0_tx_isr(void)
+(0086) {
+_uart0_tx_isr:
+    000D1 9518      RETI
+(0087)  	//character has been transmitted
+(0088) }
+(0089) 
+(0090) //call this routine to initialize all peripherals
+(0091) void init_devices(void)
+(0092) {
+(0093)  	//stop errant interrupts until set up
+(0094)  	CLI(); //disable all interrupts
+_init_devices:
+    000D2 94F8      BCLR	7
+(0095)  	XDIV  = 0x00; //xtal divider
+    000D3 2422      CLR	R2
+    000D4 BE2C      OUT	0x3C,R2
+(0096)  	XMCRA = 0x00; //external memory
+    000D5 9220 006D STS	0x6D,R2
+(0097)  	port_init();
+    000D7 DFB3      RCALL	_port_init
+(0098)  	uart0_init(MYUBRR);
+    000D8 E005      LDI	R16,5
+    000D9 E010      LDI	R17,0
+    000DA DFB6      RCALL	_uart0_init
+(0099) 
+(0100)  	MCUCR = 0x00;
+    000DB 2422      CLR	R2
+    000DC BE25      OUT	0x35,R2
+(0101)  	EICRA = 0x00; //extended ext ints
+    000DD 9220 006A STS	0x6A,R2
+(0102)  	EICRB = 0x00; //extended ext ints
+    000DF BE2A      OUT	0x3A,R2
+(0103)  	EIMSK = 0x00;
+    000E0 BE29      OUT	0x39,R2
+(0104)  	TIMSK = 0x00; //timer interrupt sources
+    000E1 BE27      OUT	0x37,R2
+(0105)  	ETIMSK = 0x00; //extended timer interrupt sources
+    000E2 9220 007D STS	0x7D,R2
+(0106)  	SEI(); //re-enable interrupts
+    000E4 9478      BSET	7
+    000E5 9508      RET
+(0107)  	//all peripherals are now initialized
+(0108) }
+(0109) 
+(0110) //
+(0111) void main(void)
+(0112) {
+(0113)  	init_devices();
+_main:
+    000E6 DFEB      RCALL	_init_devices
+(0114)  	//insert your functional code here...
+(0115) 	//delay(1000);
+(0116) 	while(lcd_bz());
+    000E7 DFC9      RCALL	_lcd_bz
+    000E8 3000      CPI	R16,0
+    000E9 0701      CPC	R16,R17
+    000EA F7E1      BNE	0x00E7
+(0117) 	uart0_send_string("CLS(0);DS32(0,50,'实验室门禁系统',1);DS16(65,100,'显示模块测试',2);");
+    000EB E000      LDI	R16,0
+    000EC E011      LDI	R17,1
+    000ED DFB3      RCALL	_uart0_send_string
+(0118) 	//uart0_send_string("CLS(0);BOX(0,0,219,175,15);BOX(1,1,218,174,0);BOXF(2,2,217,17,3);PL(2,18,218,18,0);SBC(3);DS12(40,4,'菜单演示界面',15);SBC(0);PIC(20,40,1);DS12(25,75,'电压',7);PIC(70,40,2);DS12(75,75,'电流',7);PIC(120,40,3);DS12(125,75,'充电',7);PIC(170,40,4);DS12(175,75,'输入',7);PIC(20,110,5);DS12(25,145,'输出',7);PIC(70,110,6);DS12(75,145,'测试',7);PIC(120,110,7);DS12(125,145,'关闭',7);PIC(170,110,8);DS12(175,145,'设置',7);");
+(0119) 	//uart0_send_string("DR0;CLS(0);DS16(30,2,'Usart-GPU  串口液晶屏 ',2);PL(0,20,220,20,4);SNF(10,22);DS16(10,50,'出品:APACHECTL',13);DS16(10,72,'网站:http://www.A-DIY.cn',13);BS12(10,100,210,4,'　本页面可自由由上位机软件定义，具体资料以及程序请去网站下载。',15);BS12(10,140,210,4,'　静等10秒，演示开始；此间如有串口命令，则自动进入命令处理状态。',15);");
+(0120) 	while(1);
+FILE: <library>
+    000EE CFFF      RJMP	0x00EE
+    000EF 9508      RET

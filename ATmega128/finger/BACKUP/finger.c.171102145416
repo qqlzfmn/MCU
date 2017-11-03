@@ -1,0 +1,119 @@
+//ICC-AVR application builder : 17/10/31 16:00:25
+// Target : M128
+// Crystal: 11.0592Mhz
+
+#include <iom128v.h>
+#include <macros.h>
+
+#define FOSC 11059200// Clock Speed
+#define BAUD 57600
+#define MYUBRR FOSC/16/BAUD-1
+
+#define uint unsigned int
+#define uchar unsigned char
+
+void port_init(void)
+{
+	PORTA = 0x00;
+ 	DDRA  = 0x00;
+ 	PORTB = 0x00;
+ 	DDRB  = 0x00;
+ 	PORTC = 0x00; //m103 output only
+ 	DDRC  = 0x00;
+ 	PORTD = 0x00;
+ 	DDRD  = 0x00;
+ 	PORTE = 0x00;
+ 	DDRE  = 0x00;
+ 	PORTF = 0x00;
+ 	DDRF  = 0x00;
+ 	PORTG = 0x00;
+ 	DDRG  = 0x00;
+}
+
+//UART0 initialize
+// desired baud rate: 57600
+// actual: baud rate:57600 (0.0%)
+// char size: 8 bit
+// parity: Disabled
+void uart0_init(unsigned int ubrr)
+{
+	/* Set baud rate */
+	UBRRH = (unsigned char)(ubrr>>8);
+	UBRRL = (unsigned char)ubrr;
+	/* Enable receiver and transmitter */
+	UCSRB = (1<<RXEN)|(1<<TXEN);
+	/* Set frame format: 8data, 2stop bit */
+	UCSRC = (1<<USBS)|(3<<UCSZ0);
+}
+
+void uart0_send(uchar data)
+{
+	while(!(UCSR0A & (1<<UDRE0)));
+	
+	UDR0 = data;
+}
+
+void uart0_send_string(uchar *p)
+{
+    while(*p)
+    {
+        uart0_send(*p);
+        p++;
+    }
+}
+
+void delay(uint ms)
+{
+	uint i;
+	for(ms;ms>0;ms--)
+		for(i=1200;i>0;i--);
+}
+
+#pragma interrupt_handler uart0_rx_isr:iv_USART0_RXC
+void uart0_rx_isr(void)
+{
+ 	//uart has received a character in UDR
+}
+
+#pragma interrupt_handler uart0_udre_isr:iv_USART0_UDRE
+void uart0_udre_isr(void)
+{
+ 	//character transferred to shift register so UDR is now empty
+}
+
+#pragma interrupt_handler uart0_tx_isr:iv_USART0_TXC
+void uart0_tx_isr(void)
+{
+ 	//character has been transmitted
+}
+
+//call this routine to initialize all peripherals
+void init_devices(void)
+{
+ 	//stop errant interrupts until set up
+ 	CLI(); //disable all interrupts
+ 	XDIV  = 0x00; //xtal divider
+ 	XMCRA = 0x00; //external memory
+ 	port_init();
+ 	uart0_init();
+
+ 	MCUCR = 0x00;
+ 	EICRA = 0x00; //extended ext ints
+ 	EICRB = 0x00; //extended ext ints
+ 	EIMSK = 0x00;
+ 	TIMSK = 0x00; //timer interrupt sources
+ 	ETIMSK = 0x00; //extended timer interrupt sources
+ 	SEI(); //re-enable interrupts
+ 	//all peripherals are now initialized
+}
+
+//
+void main(void)
+{
+ 	init_devices();
+ 	//insert your functional code here...
+	delay(1000);
+	uart0_send_string("CLS(13);BOX(0,0,219,175,15);BOX(1,1,218,174,0);BOXF(2,2,217,17,3);PL(2,18,218,18,0);\r\n");
+	while(1);
+}
+
