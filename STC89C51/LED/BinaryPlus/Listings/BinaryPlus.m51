@@ -1,0 +1,90 @@
+BL51 BANKED LINKER/LOCATER V6.22                                                        09/30/2017  00:59:40  PAGE 1
+
+
+BL51 BANKED LINKER/LOCATER V6.22, INVOKED BY:
+D:\KEIL_V5\C51\BIN\BL51.EXE .\Objects\BinaryPlus.obj TO .\Objects\BinaryPlus PRINT (.\Listings\BinaryPlus.m51)
+
+
+MEMORY MODEL: SMALL
+
+
+INPUT MODULES INCLUDED:
+  .\Objects\BinaryPlus.obj (BINARYPLUS)
+  D:\KEIL_V5\C51\LIB\C51S.LIB (?C_STARTUP)
+  D:\KEIL_V5\C51\LIB\C51S.LIB (?C_INIT)
+
+
+LINK MAP OF MODULE:  .\Objects\BinaryPlus (BINARYPLUS)
+
+
+            TYPE    BASE      LENGTH    RELOCATION   SEGMENT NAME
+            -----------------------------------------------------
+
+            * * * * * * *   D A T A   M E M O R Y   * * * * * * *
+            REG     0000H     0008H     ABSOLUTE     "REG BANK 0"
+            DATA    0008H     0002H     UNIT         ?DT?BINARYPLUS
+            IDATA   000AH     0001H     UNIT         ?STACK
+
+            * * * * * * *   C O D E   M E M O R Y   * * * * * * *
+            CODE    0000H     0003H     ABSOLUTE     
+            CODE    0003H     008CH     UNIT         ?C_C51STARTUP
+            CODE    008FH     001EH     UNIT         ?PR?_DELAY?BINARYPLUS
+            CODE    00ADH     0014H     UNIT         ?PR?MAIN?BINARYPLUS
+            CODE    00C1H     0005H     UNIT         ?C_INITSEG
+
+
+
+OVERLAY MAP OF MODULE:   .\Objects\BinaryPlus (BINARYPLUS)
+
+
+SEGMENT
+  +--> CALLED SEGMENT
+---------------------
+?C_C51STARTUP
+  +--> ?PR?MAIN?BINARYPLUS
+  +--> ?C_INITSEG
+
+?PR?MAIN?BINARYPLUS
+  +--> ?PR?_DELAY?BINARYPLUS
+
+
+
+SYMBOL TABLE OF MODULE:  .\Objects\BinaryPlus (BINARYPLUS)
+
+  VALUE           TYPE          NAME
+  ----------------------------------
+
+  -------         MODULE        BINARYPLUS
+  C:0000H         SYMBOL        _ICE_DUMMY_
+  D:00A0H         PUBLIC        P2
+  C:008FH         PUBLIC        _delay
+  C:00ADH         PUBLIC        main
+BL51 BANKED LINKER/LOCATER V6.22                                                      09/30/2017  00:59:40  PAGE 2
+
+
+  D:0008H         PUBLIC        led
+  -------         PROC          MAIN
+  C:00ADH         LINE#         4
+  C:00ADH         LINE#         5
+  C:00ADH         LINE#         6
+  C:00ADH         LINE#         7
+  C:00ADH         LINE#         8
+  C:00B4H         LINE#         9
+  C:00BCH         LINE#         10
+  C:00BFH         LINE#         11
+  -------         ENDPROC       MAIN
+  -------         PROC          _DELAY
+  D:0006H         SYMBOL        i
+  -------         DO            
+  D:0004H         SYMBOL        j
+  -------         ENDDO         
+  C:008FH         LINE#         13
+  C:008FH         LINE#         14
+  C:008FH         LINE#         16
+  C:0098H         LINE#         17
+  C:00ACH         LINE#         19
+  -------         ENDPROC       _DELAY
+  -------         ENDMOD        BINARYPLUS
+
+Program Size: data=11.0 xdata=0 code=198
+LINK/LOCATE RUN COMPLETE.  0 WARNING(S),  0 ERROR(S)

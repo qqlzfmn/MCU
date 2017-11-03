@@ -1,0 +1,63 @@
+C51 COMPILER V9.56.0.0   STATICDISPLAY                                                     09/30/2017 15:30:13 PAGE 1   
+
+
+C51 COMPILER V9.56.0.0, COMPILATION OF MODULE STATICDISPLAY
+OBJECT MODULE PLACED IN .\Objects\StaticDisplay.obj
+COMPILER INVOKED BY: D:\Keil_v5\C51\BIN\C51.EXE StaticDisplay.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\List
+                    -ings\StaticDisplay.lst) TABS(2) OBJECT(.\Objects\StaticDisplay.obj)
+
+line level    source
+
+   1          #include<reg51.h>
+   2          #define uint unsigned int
+   3          void delay(uint i);
+   4          void display(uint i);
+   5          void main()
+   6          {
+   7   1        uint led;
+   8   1        while(1)
+   9   1        {
+  10   2          for(led=0;led<=9;led++)
+  11   2          {
+  12   3            display(led);
+  13   3            delay(500);
+  14   3          }
+  15   2        }
+  16   1      }
+  17          void delay(uint i)
+  18          {
+  19   1        uint j;
+  20   1        for(i;i>0;i--)
+  21   1          for(j=255;j>0;j--)
+  22   1            ;
+  23   1      }
+  24          void display(uint i)
+  25          {
+  26   1        switch(i)
+  27   1        {
+  28   2          case 0:P0=0xC0;break;
+  29   2          case 1:P0=0xF9;break;
+  30   2          case 2:P0=0xA4;break;
+  31   2          case 3:P0=0xB0;break;
+  32   2          case 4:P0=0x99;break;
+  33   2          case 5:P0=0x92;break;
+  34   2          case 6:P0=0x82;break;
+  35   2          case 7:P0=0xF8;break;
+  36   2          case 8:P0=0x80;break;
+  37   2          case 9:P0=0x90;break;
+  38   2        }
+  39   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    154    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----       2
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

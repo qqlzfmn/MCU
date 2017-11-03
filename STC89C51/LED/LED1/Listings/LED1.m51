@@ -1,0 +1,66 @@
+BL51 BANKED LINKER/LOCATER V6.22                                                        09/30/2017  00:38:37  PAGE 1
+
+
+BL51 BANKED LINKER/LOCATER V6.22, INVOKED BY:
+D:\KEIL_V5\C51\BIN\BL51.EXE .\Objects\led1.obj TO .\Objects\led1 PRINT (.\Listings\led1.m51)
+
+
+MEMORY MODEL: SMALL
+
+
+INPUT MODULES INCLUDED:
+  .\Objects\led1.obj (LED1)
+  D:\KEIL_V5\C51\LIB\C51S.LIB (?C_STARTUP)
+
+
+LINK MAP OF MODULE:  .\Objects\led1 (LED1)
+
+
+            TYPE    BASE      LENGTH    RELOCATION   SEGMENT NAME
+            -----------------------------------------------------
+
+            * * * * * * *   D A T A   M E M O R Y   * * * * * * *
+            REG     0000H     0008H     ABSOLUTE     "REG BANK 0"
+            IDATA   0008H     0001H     UNIT         ?STACK
+
+            * * * * * * *   C O D E   M E M O R Y   * * * * * * *
+            CODE    0000H     0003H     ABSOLUTE     
+            CODE    0003H     000CH     UNIT         ?C_C51STARTUP
+            CODE    000FH     0003H     UNIT         ?PR?MAIN?LED1
+
+
+
+OVERLAY MAP OF MODULE:   .\Objects\led1 (LED1)
+
+
+SEGMENT
+  +--> CALLED SEGMENT
+---------------------
+?C_C51STARTUP
+  +--> ?PR?MAIN?LED1
+
+
+
+SYMBOL TABLE OF MODULE:  .\Objects\led1 (LED1)
+
+  VALUE           TYPE          NAME
+  ----------------------------------
+
+  -------         MODULE        LED1
+  C:0000H         SYMBOL        _ICE_DUMMY_
+  D:00A0H         PUBLIC        P2
+  C:000FH         PUBLIC        main
+  B:00A0H.7       PUBLIC        led1
+  -------         PROC          MAIN
+  C:000FH         LINE#         3
+  C:000FH         LINE#         4
+  C:000FH         LINE#         5
+  C:0011H         LINE#         6
+  -------         ENDPROC       MAIN
+  -------         ENDMOD        LED1
+
+BL51 BANKED LINKER/LOCATER V6.22                                                      09/30/2017  00:38:37  PAGE 2
+
+
+Program Size: data=9.0 xdata=0 code=18
+LINK/LOCATE RUN COMPLETE.  0 WARNING(S),  0 ERROR(S)

@@ -1,0 +1,59 @@
+C51 COMPILER V9.56.0.0   LED                                                               10/02/2017 11:52:24 PAGE 1   
+
+
+C51 COMPILER V9.56.0.0, COMPILATION OF MODULE LED
+OBJECT MODULE PLACED IN .\Objects\LED.obj
+COMPILER INVOKED BY: D:\Keil_v5\C51\BIN\C51.EXE LED.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings\LED.l
+                    -st) TABS(2) OBJECT(.\Objects\LED.obj)
+
+line level    source
+
+   1          #include <reg51.h>
+   2          #define uint unsigned int
+   3          sbit led = P2^7;
+   4          uint num=0;
+   5          
+   6          void InitTimer0(void)
+   7          {
+   8   1          TMOD = 0x01;
+   9   1          TH0 = 0x4C;
+  10   1          TL0 = 0x00;
+  11   1          EA = 1;
+  12   1          ET0 = 1;
+  13   1          TR0 = 1;
+  14   1      }
+  15          
+  16          void main(void)
+  17          {
+  18   1          InitTimer0();
+  19   1          while(1)
+  20   1          {
+  21   2              if(num==20)
+  22   2              {
+  23   3                num=0;
+  24   3                led=~led;
+  25   3              }
+  26   2          }
+  27   1      }
+  28          
+  29          void Timer0Interrupt(void) interrupt 1
+  30          {
+  31   1          TH0 = 0x4C;
+  32   1          TL0 = 0x00;
+  33   1          //add your code here!
+  34   1          num++;
+  35   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     54    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      2    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

@@ -1,0 +1,240 @@
+BL51 BANKED LINKER/LOCATER V6.22                                                        10/07/2017  00:06:35  PAGE 1
+
+
+BL51 BANKED LINKER/LOCATER V6.22, INVOKED BY:
+D:\KEIL_V5\C51\BIN\BL51.EXE .\Objects\Keyboard.obj TO .\Objects\Keyboard PRINT (.\Listings\Keyboard.m51)
+
+
+MEMORY MODEL: SMALL
+
+
+INPUT MODULES INCLUDED:
+  .\Objects\Keyboard.obj (KEYBOARD)
+  D:\KEIL_V5\C51\LIB\C51S.LIB (?C_STARTUP)
+  D:\KEIL_V5\C51\LIB\C51S.LIB (?C?SIDIV)
+  D:\KEIL_V5\C51\LIB\C51S.LIB (?C?UIDIV)
+
+
+LINK MAP OF MODULE:  .\Objects\Keyboard (KEYBOARD)
+
+
+            TYPE    BASE      LENGTH    RELOCATION   SEGMENT NAME
+            -----------------------------------------------------
+
+            * * * * * * *   D A T A   M E M O R Y   * * * * * * *
+            REG     0000H     0008H     ABSOLUTE     "REG BANK 0"
+            DATA    0008H     0004H     UNIT         _DATA_GROUP_
+            IDATA   000CH     0001H     UNIT         ?STACK
+
+            * * * * * * *   C O D E   M E M O R Y   * * * * * * *
+            CODE    0000H     0003H     ABSOLUTE     
+            CODE    0003H     0124H     UNIT         ?PR?KEYSCAN?KEYBOARD
+            CODE    0127H     008BH     UNIT         ?C?LIB_CODE
+            CODE    01B2H     005FH     UNIT         ?PR?MAIN?KEYBOARD
+            CODE    0211H     005AH     UNIT         ?PR?_DISPLAY?KEYBOARD
+            CODE    026BH     0056H     UNIT         ?PR?_SELECT?KEYBOARD
+            CODE    02C1H     0022H     UNIT         ?PR?_DELAY?KEYBOARD
+            CODE    02E3H     000CH     UNIT         ?C_C51STARTUP
+
+
+
+OVERLAY MAP OF MODULE:   .\Objects\Keyboard (KEYBOARD)
+
+
+SEGMENT                          DATA_GROUP 
+  +--> CALLED SEGMENT          START    LENGTH
+----------------------------------------------
+?C_C51STARTUP                  -----    -----
+  +--> ?PR?MAIN?KEYBOARD
+
+?PR?MAIN?KEYBOARD              0008H    0002H
+  +--> ?PR?_SELECT?KEYBOARD
+  +--> ?PR?_DISPLAY?KEYBOARD
+  +--> ?PR?_DELAY?KEYBOARD
+  +--> ?PR?KEYSCAN?KEYBOARD
+
+?PR?KEYSCAN?KEYBOARD           000AH    0002H
+  +--> ?PR?_DELAY?KEYBOARD
+
+
+
+SYMBOL TABLE OF MODULE:  .\Objects\Keyboard (KEYBOARD)
+BL51 BANKED LINKER/LOCATER V6.22                                                      10/07/2017  00:06:35  PAGE 2
+
+
+
+  VALUE           TYPE          NAME
+  ----------------------------------
+
+  -------         MODULE        KEYBOARD
+  C:0000H         SYMBOL        _ICE_DUMMY_
+  D:0080H         PUBLIC        P0
+  D:0090H         PUBLIC        P1
+  D:00A0H         PUBLIC        P2
+  C:026BH         PUBLIC        _select
+  C:02C5H         PUBLIC        _delay
+  C:01B2H         PUBLIC        main
+  C:0003H         PUBLIC        keyscan
+  C:0211H         PUBLIC        _display
+  -------         PROC          MAIN
+  -------         DO            
+  D:0008H         SYMBOL        key
+  -------         ENDDO         
+  C:01B2H         LINE#         9
+  C:01B2H         LINE#         10
+  C:01B2H         LINE#         11
+  C:01B7H         LINE#         12
+  C:01B7H         LINE#         13
+  C:01B7H         LINE#         14
+  C:01BEH         LINE#         15
+  C:01CCH         LINE#         16
+  C:01D3H         LINE#         17
+  C:01DAH         LINE#         18
+  C:01E1H         LINE#         19
+  C:01F3H         LINE#         20
+  C:01FAH         LINE#         21
+  C:0201H         LINE#         22
+  C:0208H         LINE#         23
+  C:020FH         LINE#         24
+  -------         ENDPROC       MAIN
+  C:02C1H         SYMBOL        L?0066
+  -------         PROC          L?0065
+  -------         ENDPROC       L?0065
+  C:02C1H         SYMBOL        L?0066
+  -------         PROC          _DELAY
+  D:0006H         SYMBOL        i
+  -------         DO            
+  D:0004H         SYMBOL        j
+  -------         ENDDO         
+  C:02C5H         LINE#         26
+  C:02C5H         LINE#         27
+  C:02C5H         LINE#         29
+  C:02CEH         LINE#         30
+  C:02E2H         LINE#         31
+  -------         ENDPROC       _DELAY
+  -------         PROC          _DISPLAY
+  D:0006H         SYMBOL        i
+  C:0211H         LINE#         32
+  C:0211H         LINE#         33
+  C:0211H         LINE#         34
+  C:023FH         LINE#         35
+  C:023FH         LINE#         36
+BL51 BANKED LINKER/LOCATER V6.22                                                      10/07/2017  00:06:35  PAGE 3
+
+
+  C:0243H         LINE#         37
+  C:0247H         LINE#         38
+  C:024BH         LINE#         39
+  C:024FH         LINE#         40
+  C:0253H         LINE#         41
+  C:0257H         LINE#         42
+  C:025BH         LINE#         43
+  C:025FH         LINE#         44
+  C:0263H         LINE#         45
+  C:0267H         LINE#         46
+  C:026AH         LINE#         47
+  C:026AH         LINE#         48
+  -------         ENDPROC       _DISPLAY
+  -------         PROC          _SELECT
+  D:0006H         SYMBOL        i
+  C:026BH         LINE#         49
+  C:026BH         LINE#         50
+  C:026BH         LINE#         51
+  C:0299H         LINE#         52
+  C:0299H         LINE#         53
+  C:029DH         LINE#         54
+  C:02A1H         LINE#         55
+  C:02A5H         LINE#         56
+  C:02A9H         LINE#         57
+  C:02ADH         LINE#         58
+  C:02B1H         LINE#         59
+  C:02B5H         LINE#         60
+  C:02B9H         LINE#         61
+  C:02BDH         LINE#         62
+  C:02C0H         LINE#         63
+  C:02C0H         LINE#         64
+  -------         ENDPROC       _SELECT
+  -------         PROC          KEYSCAN
+  -------         DO            
+  D:000AH         SYMBOL        temp
+  -------         ENDDO         
+  C:0003H         LINE#         65
+  C:0003H         LINE#         66
+  C:0003H         LINE#         68
+  C:0006H         LINE#         69
+  C:000DH         LINE#         70
+  C:0013H         LINE#         71
+  C:001BH         LINE#         72
+  C:001BH         LINE#         73
+  C:001EH         LINE#         74
+  C:0025H         LINE#         75
+  C:002BH         LINE#         76
+  C:0033H         LINE#         77
+  C:0033H         LINE#         78
+  C:003AH         LINE#         79
+  C:004FH         LINE#         80
+  C:004FH         LINE#         81
+  C:0054H         LINE#         82
+  C:0059H         LINE#         83
+  C:005EH         LINE#         84
+  C:0063H         LINE#         85
+  C:0063H         LINE#         86
+BL51 BANKED LINKER/LOCATER V6.22                                                      10/07/2017  00:06:35  PAGE 4
+
+
+  C:0063H         LINE#         87
+  C:0063H         LINE#         88
+  C:0066H         LINE#         89
+  C:006DH         LINE#         90
+  C:0073H         LINE#         91
+  C:007BH         LINE#         92
+  C:007BH         LINE#         93
+  C:007EH         LINE#         94
+  C:0085H         LINE#         95
+  C:008BH         LINE#         96
+  C:0093H         LINE#         97
+  C:0093H         LINE#         98
+  C:009AH         LINE#         99
+  C:00AFH         LINE#         100
+  C:00AFH         LINE#         101
+  C:00B4H         LINE#         102
+  C:00B9H         LINE#         103
+  C:00BEH         LINE#         104
+  C:00C3H         LINE#         105
+  C:00C3H         LINE#         106
+  C:00C3H         LINE#         107
+  C:00C3H         LINE#         108
+  C:00C6H         LINE#         109
+  C:00CDH         LINE#         110
+  C:00D3H         LINE#         111
+  C:00DBH         LINE#         112
+  C:00DBH         LINE#         113
+  C:00DEH         LINE#         114
+  C:00E5H         LINE#         115
+  C:00EBH         LINE#         116
+  C:00F3H         LINE#         117
+  C:00F3H         LINE#         118
+  C:00FAH         LINE#         119
+  C:010FH         LINE#         120
+  C:010FH         LINE#         121
+  C:0114H         LINE#         122
+  C:0119H         LINE#         123
+  C:011EH         LINE#         124
+  C:0123H         LINE#         125
+  C:0123H         LINE#         126
+  C:0123H         LINE#         127
+  C:0123H         LINE#         128
+  C:0126H         LINE#         129
+  -------         ENDPROC       KEYSCAN
+  -------         ENDMOD        KEYBOARD
+
+  -------         MODULE        ?C?SIDIV
+  C:0127H         PUBLIC        ?C?SIDIV
+  -------         ENDMOD        ?C?SIDIV
+
+  -------         MODULE        ?C?UIDIV
+  C:015DH         PUBLIC        ?C?UIDIV
+  -------         ENDMOD        ?C?UIDIV
+
+Program Size: data=13.0 xdata=0 code=751
+LINK/LOCATE RUN COMPLETE.  0 WARNING(S),  0 ERROR(S)

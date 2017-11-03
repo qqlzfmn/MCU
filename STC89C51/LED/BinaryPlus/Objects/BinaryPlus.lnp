@@ -1,0 +1,3 @@
+".\Objects\BinaryPlus.obj" 
+TO ".\Objects\BinaryPlus" 
+PRINT(".\Listings\BinaryPlus.m51")

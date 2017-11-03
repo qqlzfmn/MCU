@@ -1,0 +1,112 @@
+BL51 BANKED LINKER/LOCATER V6.22                                                        09/30/2017  15:30:14  PAGE 1
+
+
+BL51 BANKED LINKER/LOCATER V6.22, INVOKED BY:
+D:\KEIL_V5\C51\BIN\BL51.EXE .\Objects\StaticDisplay.obj TO .\Objects\StaticDisplay PRINT (.\Listings\StaticDisplay.m51)
+
+
+MEMORY MODEL: SMALL
+
+
+INPUT MODULES INCLUDED:
+  .\Objects\StaticDisplay.obj (STATICDISPLAY)
+  D:\KEIL_V5\C51\LIB\C51S.LIB (?C_STARTUP)
+
+
+LINK MAP OF MODULE:  .\Objects\StaticDisplay (STATICDISPLAY)
+
+
+            TYPE    BASE      LENGTH    RELOCATION   SEGMENT NAME
+            -----------------------------------------------------
+
+            * * * * * * *   D A T A   M E M O R Y   * * * * * * *
+            REG     0000H     0008H     ABSOLUTE     "REG BANK 0"
+            DATA    0008H     0002H     UNIT         _DATA_GROUP_
+            IDATA   000AH     0001H     UNIT         ?STACK
+
+            * * * * * * *   C O D E   M E M O R Y   * * * * * * *
+            CODE    0000H     0003H     ABSOLUTE     
+            CODE    0003H     0056H     UNIT         ?PR?_DISPLAY?STATICDISPLAY
+            CODE    0059H     0026H     UNIT         ?PR?MAIN?STATICDISPLAY
+            CODE    007FH     001EH     UNIT         ?PR?_DELAY?STATICDISPLAY
+            CODE    009DH     000CH     UNIT         ?C_C51STARTUP
+
+
+
+OVERLAY MAP OF MODULE:   .\Objects\StaticDisplay (STATICDISPLAY)
+
+
+SEGMENT                              DATA_GROUP 
+  +--> CALLED SEGMENT              START    LENGTH
+--------------------------------------------------
+?C_C51STARTUP                      -----    -----
+  +--> ?PR?MAIN?STATICDISPLAY
+
+?PR?MAIN?STATICDISPLAY             0008H    0002H
+  +--> ?PR?_DISPLAY?STATICDISPLAY
+  +--> ?PR?_DELAY?STATICDISPLAY
+
+
+
+SYMBOL TABLE OF MODULE:  .\Objects\StaticDisplay (STATICDISPLAY)
+
+  VALUE           TYPE          NAME
+  ----------------------------------
+
+  -------         MODULE        STATICDISPLAY
+  C:0000H         SYMBOL        _ICE_DUMMY_
+  D:0080H         PUBLIC        P0
+  C:007FH         PUBLIC        _delay
+  C:0059H         PUBLIC        main
+  C:0003H         PUBLIC        _display
+BL51 BANKED LINKER/LOCATER V6.22                                                      09/30/2017  15:30:14  PAGE 2
+
+
+  -------         PROC          MAIN
+  -------         DO            
+  D:0008H         SYMBOL        led
+  -------         ENDDO         
+  C:0059H         LINE#         5
+  C:0059H         LINE#         6
+  C:0059H         LINE#         8
+  C:0059H         LINE#         9
+  C:0059H         LINE#         10
+  C:005EH         LINE#         11
+  C:005EH         LINE#         12
+  C:0065H         LINE#         13
+  C:006CH         LINE#         14
+  -------         ENDPROC       MAIN
+  -------         PROC          _DELAY
+  D:0006H         SYMBOL        i
+  -------         DO            
+  D:0004H         SYMBOL        j
+  -------         ENDDO         
+  C:007FH         LINE#         17
+  C:007FH         LINE#         18
+  C:007FH         LINE#         20
+  C:0088H         LINE#         21
+  C:009CH         LINE#         23
+  -------         ENDPROC       _DELAY
+  -------         PROC          _DISPLAY
+  D:0006H         SYMBOL        i
+  C:0003H         LINE#         24
+  C:0003H         LINE#         25
+  C:0003H         LINE#         26
+  C:0031H         LINE#         27
+  C:0031H         LINE#         28
+  C:0035H         LINE#         29
+  C:0039H         LINE#         30
+  C:003DH         LINE#         31
+  C:0041H         LINE#         32
+  C:0045H         LINE#         33
+  C:0049H         LINE#         34
+  C:004DH         LINE#         35
+  C:0051H         LINE#         36
+  C:0055H         LINE#         37
+  C:0058H         LINE#         38
+  C:0058H         LINE#         39
+  -------         ENDPROC       _DISPLAY
+  -------         ENDMOD        STATICDISPLAY
+
+Program Size: data=11.0 xdata=0 code=169
+LINK/LOCATE RUN COMPLETE.  0 WARNING(S),  0 ERROR(S)

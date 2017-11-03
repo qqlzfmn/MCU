@@ -1,0 +1,3 @@
+".\Objects\StaticDisplay.obj" 
+TO ".\Objects\StaticDisplay" 
+PRINT(".\Listings\StaticDisplay.m51")

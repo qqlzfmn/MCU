@@ -1,0 +1,141 @@
+BL51 BANKED LINKER/LOCATER V6.22                                                        09/30/2017  17:52:14  PAGE 1
+
+
+BL51 BANKED LINKER/LOCATER V6.22, INVOKED BY:
+D:\KEIL_V5\C51\BIN\BL51.EXE .\Objects\DynamicDisplay.obj TO .\Objects\DynamicDisplay PRINT (.\Listings\DynamicDisplay.m5
+>> 1)
+
+
+MEMORY MODEL: SMALL
+
+
+INPUT MODULES INCLUDED:
+  .\Objects\DynamicDisplay.obj (DYNAMICDISPLAY)
+  D:\KEIL_V5\C51\LIB\C51S.LIB (?C_STARTUP)
+
+
+LINK MAP OF MODULE:  .\Objects\DynamicDisplay (DYNAMICDISPLAY)
+
+
+            TYPE    BASE      LENGTH    RELOCATION   SEGMENT NAME
+            -----------------------------------------------------
+
+            * * * * * * *   D A T A   M E M O R Y   * * * * * * *
+            REG     0000H     0008H     ABSOLUTE     "REG BANK 0"
+            DATA    0008H     0002H     UNIT         _DATA_GROUP_
+            IDATA   000AH     0001H     UNIT         ?STACK
+
+            * * * * * * *   C O D E   M E M O R Y   * * * * * * *
+            CODE    0000H     0003H     ABSOLUTE     
+            CODE    0003H     0056H     UNIT         ?PR?_DISPLAY?DYNAMICDISPLAY
+            CODE    0059H     0056H     UNIT         ?PR?_SELECT?DYNAMICDISPLAY
+            CODE    00AFH     0031H     UNIT         ?PR?MAIN?DYNAMICDISPLAY
+            CODE    00E0H     001EH     UNIT         ?PR?_DELAY?DYNAMICDISPLAY
+            CODE    00FEH     000CH     UNIT         ?C_C51STARTUP
+
+
+
+OVERLAY MAP OF MODULE:   .\Objects\DynamicDisplay (DYNAMICDISPLAY)
+
+
+SEGMENT                               DATA_GROUP 
+  +--> CALLED SEGMENT               START    LENGTH
+---------------------------------------------------
+?C_C51STARTUP                       -----    -----
+  +--> ?PR?MAIN?DYNAMICDISPLAY
+
+?PR?MAIN?DYNAMICDISPLAY             0008H    0002H
+  +--> ?PR?_SELECT?DYNAMICDISPLAY
+  +--> ?PR?_DISPLAY?DYNAMICDISPLAY
+  +--> ?PR?_DELAY?DYNAMICDISPLAY
+
+
+
+SYMBOL TABLE OF MODULE:  .\Objects\DynamicDisplay (DYNAMICDISPLAY)
+
+  VALUE           TYPE          NAME
+  ----------------------------------
+
+  -------         MODULE        DYNAMICDISPLAY
+  C:0000H         SYMBOL        _ICE_DUMMY_
+  D:0080H         PUBLIC        P0
+BL51 BANKED LINKER/LOCATER V6.22                                                      09/30/2017  17:52:14  PAGE 2
+
+
+  D:0090H         PUBLIC        P1
+  C:0059H         PUBLIC        _select
+  C:00E0H         PUBLIC        _delay
+  C:00AFH         PUBLIC        main
+  C:0003H         PUBLIC        _display
+  -------         PROC          MAIN
+  -------         DO            
+  D:0008H         SYMBOL        led
+  -------         ENDDO         
+  C:00AFH         LINE#         6
+  C:00AFH         LINE#         7
+  C:00AFH         LINE#         9
+  C:00AFH         LINE#         10
+  C:00AFH         LINE#         11
+  C:00B5H         LINE#         12
+  C:00B5H         LINE#         13
+  C:00BCH         LINE#         14
+  C:00C3H         LINE#         15
+  C:00CAH         LINE#         16
+  C:00CDH         LINE#         17
+  -------         ENDPROC       MAIN
+  -------         PROC          _DELAY
+  D:0006H         SYMBOL        i
+  -------         DO            
+  D:0004H         SYMBOL        j
+  -------         ENDDO         
+  C:00E0H         LINE#         20
+  C:00E0H         LINE#         21
+  C:00E0H         LINE#         23
+  C:00E9H         LINE#         24
+  C:00FDH         LINE#         26
+  -------         ENDPROC       _DELAY
+  -------         PROC          _DISPLAY
+  D:0006H         SYMBOL        i
+  C:0003H         LINE#         27
+  C:0003H         LINE#         28
+  C:0003H         LINE#         29
+  C:0031H         LINE#         30
+  C:0031H         LINE#         31
+  C:0035H         LINE#         32
+  C:0039H         LINE#         33
+  C:003DH         LINE#         34
+  C:0041H         LINE#         35
+  C:0045H         LINE#         36
+  C:0049H         LINE#         37
+  C:004DH         LINE#         38
+  C:0051H         LINE#         39
+  C:0055H         LINE#         40
+  C:0058H         LINE#         41
+  C:0058H         LINE#         42
+  -------         ENDPROC       _DISPLAY
+  -------         PROC          _SELECT
+  D:0006H         SYMBOL        i
+  C:0059H         LINE#         43
+  C:0059H         LINE#         44
+  C:0059H         LINE#         45
+  C:0087H         LINE#         46
+BL51 BANKED LINKER/LOCATER V6.22                                                      09/30/2017  17:52:14  PAGE 3
+
+
+  C:0087H         LINE#         47
+  C:008BH         LINE#         48
+  C:008FH         LINE#         49
+  C:0093H         LINE#         50
+  C:0097H         LINE#         51
+  C:009BH         LINE#         52
+  C:009FH         LINE#         53
+  C:00A3H         LINE#         54
+  C:00A7H         LINE#         55
+  C:00ABH         LINE#         56
+  C:00AEH         LINE#         57
+  C:00AEH         LINE#         58
+  -------         ENDPROC       _SELECT
+  -------         ENDMOD        DYNAMICDISPLAY
+
+Program Size: data=11.0 xdata=0 code=266
+LINK/LOCATE RUN COMPLETE.  0 WARNING(S),  0 ERROR(S)
