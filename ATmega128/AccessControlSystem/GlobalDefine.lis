@@ -1,0 +1,6 @@
+                        .module GlobalDefine.c
+                        .area text(rom, con, rel)
+ 0000                   .dbfile GlobalDefine.c
+ 0000           ; //GlobalDefine.c
+ 0000           ; 
+ 0000           ; #include "GlobalDefine.h"

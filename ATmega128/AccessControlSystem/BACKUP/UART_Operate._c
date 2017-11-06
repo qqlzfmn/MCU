@@ -1,0 +1,72 @@
+//UART_Operate.c
+
+#include "UART_Operate.h"
+
+//USART初始化
+void USART$_Init(unsigned int ubrr)
+{
+	UBRR$H = (unsigned char)(ubrr>>8); //设置波特率
+	UBRR$L = (unsigned char)ubrr;
+	UCSR$B = (1<<RXEN$)|(1<<TXEN$); //使能接收器与发送器
+	UCSR$C = (1<<USBS$)|(3<<UCSZ0$); //设置帧格式: 8个数据位, 2个停止位
+}
+
+//以5到8个数据位的方式发送帧
+void USART$_Transmit(unsigned char data)
+{
+	while(!(UCSR$A & (1<<UDRE$))); //等待发送缓冲器为空
+	UDR$ = data; //将数据放入缓冲器, 发送数据
+}
+
+//以9个数据位的方式发送帧
+void USART$_Transmit_9bits(unsigned int data)
+{
+	while(!(UCSR$A & (1<<UDRE$)))); //等待发送缓冲器为空
+	UCSR$B &= ~(1<<TXB8$); //将第9位复制到TXB8
+	if(data & 0x0100)
+		UCSR$B |= (1<<TXB8$);
+	UDR$ = data; //将数据放入缓冲器, 发送数据
+}
+
+//以5到8个数据位的方式接收帧
+unsigned char USART$_Receive(void)
+{
+	while(!(UCSR$A & (1<<RXC$))); //等待接收数据
+	return UDR$; //从缓冲器中获取并返回数据
+}
+
+//以9个数据位的方式接收帧
+unsigned int USART$_Receive_9bits(void)
+{
+	unsigned char status, resh, resl;
+
+	while(!(UCSR$A & (1<<RXC$))); //等待接收数据
+	status = UCSR$A; //从缓冲器中获得状态、第9位及数据
+	resh = UCSR$B;
+	resl = UDR$;
+	if(status & (1<<FE$) | (1<<DOR$) | (1<<UPE$)) //如果出错, 返回-1
+		return -1;
+	resh = (resh >> 1) & 0x01; //过滤第9位数据, 然后返回
+	return ((resh << 8) | resl);
+}
+
+//以5到8个数据位的方式发送字符串
+void USART$_Transmit_String(unsigned char *p)
+{
+    while(*p)
+    {
+        USART$_Transmit(*p);
+        p++;
+    }
+}
+
+
+
+
+//刷新接收缓冲器
+void USART_Flush(void)
+{
+	unsigned char dummy;
+	while(UCSRA & (1<<RXC))
+		dummy = UDR;
+}

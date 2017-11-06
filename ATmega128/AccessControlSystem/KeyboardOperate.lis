@@ -1,0 +1,6 @@
+                        .module KeyboardOperate.c
+                        .area text(rom, con, rel)
+ 0000                   .dbfile KeyboardOperate.c
+ 0000           ; //KeyboardOperate.c
+ 0000           ; 
+ 0000           ; #include "KeyboardOperate.h"

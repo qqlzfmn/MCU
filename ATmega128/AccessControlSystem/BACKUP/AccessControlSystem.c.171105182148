@@ -1,0 +1,12 @@
+#include<iom128v.h>
+#include<macros.h>
+#include"UART_Operate"
+#include"FingerprintOperate.h"
+#include"LCD_Operate.h"
+#include"KeyboardOperate.h"
+#include"GlobalDefine.h"
+
+void main(void)
+{
+	while(1);
+}

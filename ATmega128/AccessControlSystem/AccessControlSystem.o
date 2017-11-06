@@ -1,0 +1,18 @@
+XL
+H 1 areas 2 global symbols
+M AccessControlSystem.c
+S _USART0_Init Ref0000
+A text size C flags 0
+dbfile AccessControlSystem.c
+dbfile F:\工作\单片机\WorkSpace\AccessControlSystem\AccessControlSystem.c
+dbfunc e main 0 fV
+dbline FFFFFFFF 0
+dbline A 0
+dbline B 0
+dbline C 8
+dbline C 8
+dbline FFFFFFFE A
+dbline 0 A
+S _main Def0000
+T 00 00 05 E0 10 E0 0E 94 00 00 FF CF 08 95
+R 00 00 00 00 12 08 00 00
