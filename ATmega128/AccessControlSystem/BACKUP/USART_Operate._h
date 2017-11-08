@@ -4,10 +4,9 @@
 #define _USART_Operate_H
 
 #define FOSC 11059200 //晶振频率
-#define BAUD0 115200 //USART0波特率
-#define BAUD1 57600 //USART1波特率
-#define MYUBRR0 FOSC/16/BAUD0-1 //UBRR0初值
-#define MYUBRR1 FOSC/16/BAUD1-1 //UBRR1初值
+#define BAUD0 115200 //USART0波特率(屏幕)
+#define BAUD1 57600 //USART1波特率(指纹)
+#define MYUBRR FOSC/16/BAUD0-1 //UBRR初值
 
 //USART0初始化
 void USART0_Init(unsigned int ubrr);

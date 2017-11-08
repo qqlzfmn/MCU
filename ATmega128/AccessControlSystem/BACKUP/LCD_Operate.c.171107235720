@@ -1,0 +1,27 @@
+//LCD_Operate.c
+
+#include <iom128v.h>
+#include <macros.h>
+#include "LCD_Operate.h"
+#include "USART_Operate.h"
+
+//LCD≤‚√¶
+unsigned char LCD_Busy(void)
+{
+	if(PINA & BIT(4))
+		return 1;
+	else
+		return 0;
+}
+
+//LCD«Â∆¡
+void LCD_Clear_Screen(unsigned char *color)
+{
+	USART0_Transmit_String("CLS(");
+	while(*color)
+    {
+        USART0_Transmit(*color);
+        color++;
+    }
+	USART0_Transmit_String(");\r\n");
+}

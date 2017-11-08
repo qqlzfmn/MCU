@@ -38,6 +38,6 @@ void FINGERPRINT_Cmd_Save_Finger(unsigned char ucH_Char,unsigned char ucL_Char);
 void FINGERPRINT_Recevice_Data(unsigned char ucLength);
 
 //指纹添加新用户
-unsigned char FP_add_new_user(unsigned char ucH_user,unsigned char ucL_user);
+unsigned char FINGERPRINT_add_new_user(unsigned char ucH_user,unsigned char ucL_user);
 
 #endif

@@ -16,7 +16,7 @@ USART_Operate.o:	USART_Operate.c
 FingerprintOperate.o: .\FingerprintOperate.h .\USART_Operate.h
 FingerprintOperate.o:	FingerprintOperate.c
 	$(CC) -c $(CFLAGS) FingerprintOperate.c
-LCD_Operate.o: .\LCD_Operate.h
+LCD_Operate.o: D:\iccv7avr\include\iom128v.h D:\iccv7avr\include\macros.h D:\iccv7avr\include\AVRdef.h .\LCD_Operate.h .\USART_Operate.h
 LCD_Operate.o:	LCD_Operate.c
 	$(CC) -c $(CFLAGS) LCD_Operate.c
 KeyboardOperate.o: .\KeyboardOperate.h

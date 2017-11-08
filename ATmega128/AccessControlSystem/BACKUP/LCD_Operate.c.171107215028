@@ -1,0 +1,15 @@
+//LCD_Operate.c
+
+#include <iom128v.h>
+#include "LCD_Operate.h"
+
+//LCD≤‚√¶
+unsigned int lcd_bz(void)
+{
+	PORTA = 0x00;
+ 	DDRA  = 0x00;
+	if(PINA & BIT(4))
+		return 1;
+	else
+		return 0;
+}

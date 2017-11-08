@@ -1,0 +1,36 @@
+#include <iom128v.h>
+#include <macros.h>
+#include "USART_Operate.h"
+#include "FingerprintOperate.h"
+#include "LCD_Operate.h"
+#include "KeyboardOperate.h"
+#include "GlobalDefine.h"
+
+#define uart0_send_string USART0_Transmit_String
+
+void delay(unsigned int ms)
+{
+	unsigned int i;
+	for(ms;ms>0;ms--)
+		for(i=1200;i>0;i--);
+}
+
+void main(void)
+{
+	USART0_Init(MYUBRR0);
+	PORTA = 0x81;
+ 	DDRA  = 0x81;
+	
+	while(1)
+	{
+		while(lcd_bz());
+		uart0_send_string("CLS(0);DS32(0,50,'实验室门禁系统',1);DS16(65,100,'显示模块测试',2);\r\n");
+		while(lcd_bz());
+		delay(5000);
+		while(lcd_bz());
+		uart0_send_string("CLS(0);DS32(0,50,'实验室门禁系统',3);DS16(65,100,'显示模块测试',4);\r\n");
+		while(lcd_bz());
+		delay(5000);
+		
+	}
+}

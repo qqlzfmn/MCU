@@ -271,22 +271,22 @@
  0002           ; volatile unsigned char UART1_FINGERPRINT_RECEVICE_BUFFER[24];
  0002           ; 
  0002           ; //FINGERPRINT通信协议定义
- 0002           ; unsigned char FP_Pack_Head[6] = {0xEF,0x01,0xFF,0xFF,0xFF,0xFF}; //协议包头
- 0002           ; unsigned char FP_Get_Img[6] = {0x01,0x00,0x03,0x01,0x0,0x05}; //获得指纹图像
- 0002           ; unsigned char FP_Templete_Num[6] ={0x01,0x00,0x03,0x1D,0x00,0x21 }; //获得模版总数
- 0002           ; unsigned char FP_Search[11]={0x01,0x0,0x08,0x04,0x01,0x0,0x0,0x03,0xA1,0x0,0xB2}; //搜索指纹搜索范围0 - 929
- 0002           ; unsigned char FP_Search_0_9[11]={0x01,0x0,0x08,0x04,0x01,0x0,0x0,0x0,0x13,0x0,0x21}; //搜索0-9号指纹
- 0002           ; unsigned char FP_Img_To_Buffer1[7]={0x01,0x0,0x04,0x02,0x01,0x0,0x08}; //将图像放入到BUFFER1
- 0002           ; unsigned char FP_Img_To_Buffer2[7]={0x01,0x0,0x04,0x02,0x02,0x0,0x09}; //将图像放入到BUFFER2
- 0002           ; unsigned char FP_Reg_Model[6]={0x01,0x0,0x03,0x05,0x0,0x09}; //将BUFFER1跟BUFFER2合成特征模版
- 0002           ; unsigned char FP_Delet_All_Model[6]={0x01,0x0,0x03,0x0d,0x00,0x11}; //删除指纹模块里所有的模版
- 0002           ; volatile unsigned char  FP_Save_Finger[9]={0x01,0x00,0x06,0x06,0x01,0x00,0x0B,0x00,0x19}; //将BUFFER1中的特征码存放到指定的位置
- 0002           ; volatile unsigned char FP_Delete_Model[10]={0x01,0x00,0x07,0x0C,0x0,0x0,0x0,0x1,0x0,0x0}; //删除指定的模版
+ 0002           ; unsigned char FP_Pack_Head[6]={0xEF,0x01,0xFF,0xFF,0xFF,0xFF}; //协议包头
+ 0002           ; unsigned char FP_Get_Img[6]={0x01,0x00,0x03,0x01,0x00,0x05}; //获得指纹图像
+ 0002           ; unsigned char FP_Templete_Num[6]={0x01,0x00,0x03,0x1D,0x00,0x21}; //获得模版总数
+ 0002           ; unsigned char FP_Search[11]={0x01,0x00,0x08,0x04,0x01,0x00,0x00,0x03,0xA1,0x00,0xB2}; //搜索指纹搜索范围0 - 929
+ 0002           ; unsigned char FP_Search_0_9[11]={0x01,0x00,0x08,0x04,0x01,0x00,0x00,0x00,0x13,0x00,0x21}; //搜索0-9号指纹
+ 0002           ; unsigned char FP_Img_To_Buffer1[7]={0x01,0x00,0x04,0x02,0x01,0x00,0x08}; //将图像放入到BUFFER1
+ 0002           ; unsigned char FP_Img_To_Buffer2[7]={0x01,0x00,0x04,0x02,0x02,0x00,0x09}; //将图像放入到BUFFER2
+ 0002           ; unsigned char FP_Reg_Model[6]={0x01,0x00,0x03,0x05,0x00,0x09}; //将BUFFER1跟BUFFER2合成特征模版
+ 0002           ; unsigned char FP_Delet_All_Model[6]={0x01,0x00,0x03,0x0d,0x00,0x11}; //删除指纹模块里所有的模版
+ 0002           ; volatile unsigned char FP_Save_Finger[9]={0x01,0x00,0x06,0x06,0x01,0x00,0x0B,0x00,0x19}; //将BUFFER1中的特征码存放到指定的位置
+ 0002           ; volatile unsigned char FP_Delete_Model[10]={0x01,0x00,0x07,0x0C,0x00,0x00,0x00,0x1,0x00,0x00}; //删除指定的模版
  0002           ; //volatile unsigned char FINGER_NUM;
  0002           ; 
  0002           ; /*------------------ FINGERPRINT命令字 --------------------------*/
  0002           ; 
- 0002           ; //FINGERPRINT_获得指纹图像命令
+ 0002           ; //获得指纹图像命令
  0002           ; void FINGERPRINT_Cmd_Get_Img(void)
  0002           ; {
  0002                   .dbline 32
@@ -1196,11 +1196,11 @@
  03A8                   .dbsym r i 10 c
  03A8                   .dbsym r ucLength 12 c
  03A8                   .dbend
- 03A8                   .dbfunc e FP_add_new_user _FP_add_new_user fc
+ 03A8                   .dbfunc e FINGERPRINT_add_new_user _FINGERPRINT_add_new_user fc
  03A8           ;       ucL_user -> R12
  03A8           ;       ucH_user -> R10
                         .even
- 03A8           _FP_add_new_user::
+ 03A8           _FINGERPRINT_add_new_user::
  03A8 AA92              st -y,R10
  03AA CA92              st -y,R12
  03AC C22E              mov R12,R18
@@ -1210,7 +1210,7 @@
  03B0           ; }
  03B0           ; 
  03B0           ; //指纹添加新用户
- 03B0           ; unsigned char FP_add_new_user(unsigned char ucH_user,unsigned char ucL_user)
+ 03B0           ; unsigned char FINGERPRINT_add_new_user(unsigned char ucH_user,unsigned char ucL_user)
  03B0           ; {
  03B0           L113:
  03B0                   .dbline 185

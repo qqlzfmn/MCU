@@ -184,7 +184,7 @@ dbline B1 39C
 dbline B1 39E
 dbline FFFFFFFE 3A2
 dbline 0 3A2
-dbfunc e FP_add_new_user 3A8 fc
+dbfunc e FINGERPRINT_add_new_user 3A8 fc
 dbsym r ucL_user C c
 dbsym r ucH_user A c
 dbline FFFFFFFF 3B0
@@ -213,7 +213,6 @@ dbline 0 3EA
 S _FINGERPRINT_Recevice_Data Def0380
 S _FINGERPRINT_Cmd_Get_Img Def0000
 S _FINGERPRINT_Cmd_Delete_Model Def0136
-S _FP_add_new_user Def03A8
 S _FINGERPRINT_Cmd_Search_Finger Def022C
 S _FINGERPRINT_Cmd_Delete_All_Model Def00F8
 S _FINGERPRINT_Cmd_Img_To_Buffer1 Def003E
@@ -222,6 +221,7 @@ S _FINGERPRINT_Cmd_Save_Finger Def02A8
 S _FINGERPRINT_Cmd_Get_Templete_Num Def01DA
 S _FINGERPRINT_Cmd_Search_Finger_Admin Def026A
 S _FINGERPRINT_Cmd_Reg_Model Def00BA
+S _FINGERPRINT_add_new_user Def03A8
 A data size 55 flags 20
 dbfile FingerprintOperate.c
 dbfile F:\工作\单片机\WorkSpace\AccessControlSystem\FingerprintOperate.c

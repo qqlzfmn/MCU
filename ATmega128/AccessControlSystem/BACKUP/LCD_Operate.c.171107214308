@@ -1,0 +1,15 @@
+//LCD_Operate.c
+
+#include "LCD_Operate.h"
+
+//LCD≤‚√¶
+unsigned int lcd_bz()
+{
+	PORTA = 0x00;
+ 	DDRA  = 0x00;
+	if(PINA&BIT(4))
+		return 1;
+	else
+		return 0;
+}
+
