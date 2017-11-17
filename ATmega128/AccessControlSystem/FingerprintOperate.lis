@@ -78,12 +78,12 @@
  001A                   .dbfile F:\工作\单片机\WorkSpace\AccessControlSystem\FingerprintOperate.c
  001A                   .blkb 2
                         .area idata
- 001A A100              .byte 161,0
+ 001A E700              .byte 231,0
                         .area data(ram, con, rel)
  001C                   .dbfile F:\工作\单片机\WorkSpace\AccessControlSystem\FingerprintOperate.c
  001C                   .blkb 1
                         .area idata
- 001C B2                .byte 178
+ 001C F8                .byte 248
                         .area data(ram, con, rel)
  001D                   .dbfile F:\工作\单片机\WorkSpace\AccessControlSystem\FingerprintOperate.c
  001D                   .dbsym e FP_Search _FP_Search A[11:11]c
@@ -110,12 +110,12 @@
  0025                   .dbfile F:\工作\单片机\WorkSpace\AccessControlSystem\FingerprintOperate.c
  0025                   .blkb 2
                         .area idata
- 0025 1300              .byte 19,0
+ 0025 0A00              .byte 10,0
                         .area data(ram, con, rel)
  0027                   .dbfile F:\工作\单片机\WorkSpace\AccessControlSystem\FingerprintOperate.c
  0027                   .blkb 1
                         .area idata
- 0027 21                .byte 33
+ 0027 18                .byte 24
                         .area data(ram, con, rel)
  0028                   .dbfile F:\工作\单片机\WorkSpace\AccessControlSystem\FingerprintOperate.c
  0028                   .dbsym e FP_Search_0_9 _FP_Search_0_9 A[11:11]c
@@ -259,11 +259,12 @@
  0000           _FINGERPRINT_Cmd_Get_Img::
  0000 4A93              st -y,R20
  0002                   .dbline -1
- 0002                   .dbline 29
+ 0002                   .dbline 30
  0002           ; //FingerprintOperate.c
  0002           ; 
  0002           ; #include "FingerprintOperate.h"
  0002           ; #include "USART_Operate.h"
+ 0002           ; #include "GlobalDefine.h"
  0002           ; 
  0002           ; #define UART1_Send_Byte USART1_Transmit
  0002           ; #define UART1_Receive_Byte USART1_Receive
@@ -274,8 +275,8 @@
  0002           ; unsigned char FP_Pack_Head[6]={0xEF,0x01,0xFF,0xFF,0xFF,0xFF}; //协议包头
  0002           ; unsigned char FP_Get_Img[6]={0x01,0x00,0x03,0x01,0x00,0x05}; //获得指纹图像
  0002           ; unsigned char FP_Templete_Num[6]={0x01,0x00,0x03,0x1D,0x00,0x21}; //获得模版总数
- 0002           ; unsigned char FP_Search[11]={0x01,0x00,0x08,0x04,0x01,0x00,0x00,0x03,0xA1,0x00,0xB2}; //搜索指纹搜索范围0 - 929
- 0002           ; unsigned char FP_Search_0_9[11]={0x01,0x00,0x08,0x04,0x01,0x00,0x00,0x00,0x13,0x00,0x21}; //搜索0-9号指纹
+ 0002           ; unsigned char FP_Search[11]={0x01,0x00,0x08,0x04,0x01,0x00,0x00,0x03,0xE7,0x00,0xF8}; //搜索指纹搜索范围0-999
+ 0002           ; unsigned char FP_Search_0_9[11]={0x01,0x00,0x08,0x04,0x01,0x00,0x00,0x00,0x0A,0x00,0x18}; //搜索0-9号指纹
  0002           ; unsigned char FP_Img_To_Buffer1[7]={0x01,0x00,0x04,0x02,0x01,0x00,0x08}; //将图像放入到BUFFER1
  0002           ; unsigned char FP_Img_To_Buffer2[7]={0x01,0x00,0x04,0x02,0x02,0x00,0x09}; //将图像放入到BUFFER2
  0002           ; unsigned char FP_Reg_Model[6]={0x01,0x00,0x03,0x05,0x00,0x09}; //将BUFFER1跟BUFFER2合成特征模版
@@ -284,19 +285,19 @@
  0002           ; volatile unsigned char FP_Delete_Model[10]={0x01,0x00,0x07,0x0C,0x00,0x00,0x00,0x1,0x00,0x00}; //删除指定的模版
  0002           ; //volatile unsigned char FINGER_NUM;
  0002           ; 
- 0002           ; /*------------------ FINGERPRINT命令字 --------------------------*/
+ 0002           ; /*-------------------- FINGERPRINT命令字 --------------------*/
  0002           ; 
  0002           ; //获得指纹图像命令
  0002           ; void FINGERPRINT_Cmd_Get_Img(void)
  0002           ; {
- 0002                   .dbline 32
+ 0002                   .dbline 33
  0002           ;       unsigned char i;
  0002           ; 
  0002           ;       for(i=0;i<6;i++) //发送包头
  0002 4427              clr R20
  0004 0AC0              xjmp L5
  0006           L2:
- 0006                   .dbline 33
+ 0006                   .dbline 34
  0006           ;               UART1_Send_Byte(FP_Pack_Head[i]);
  0006 80E0              ldi R24,<_FP_Pack_Head
  0008 90E0              ldi R25,>_FP_Pack_Head
@@ -307,20 +308,20 @@
  0012 0081              ldd R16,z+0
  0014 0E940000          xcall _USART1_Transmit
  0018           L3:
- 0018                   .dbline 32
+ 0018                   .dbline 33
  0018 4395              inc R20
  001A           L5:
- 001A                   .dbline 32
+ 001A                   .dbline 33
  001A 4630              cpi R20,6
  001C A0F3              brlo L2
  001E           X0:
- 001E                   .dbline 35
+ 001E                   .dbline 36
  001E           ; 
  001E           ;       for(i=0;i<6;i++) //发送命令0x1d
  001E 4427              clr R20
  0020 0AC0              xjmp L9
  0022           L6:
- 0022                   .dbline 36
+ 0022                   .dbline 37
  0022           ;               UART1_Send_Byte(FP_Get_Img[i]);
  0022 80E0              ldi R24,<_FP_Get_Img
  0024 90E0              ldi R25,>_FP_Get_Img
@@ -331,10 +332,10 @@
  002E 0081              ldd R16,z+0
  0030 0E940000          xcall _USART1_Transmit
  0034           L7:
- 0034                   .dbline 35
+ 0034                   .dbline 36
  0034 4395              inc R20
  0036           L9:
- 0036                   .dbline 35
+ 0036                   .dbline 36
  0036 4630              cpi R20,6
  0038 A0F3              brlo L6
  003A           X1:
@@ -351,20 +352,20 @@
  003E           _FINGERPRINT_Cmd_Img_To_Buffer1::
  003E 4A93              st -y,R20
  0040                   .dbline -1
- 0040                   .dbline 41
+ 0040                   .dbline 42
  0040           ; }
  0040           ; 
  0040           ; //将图像转换成特征码存放在Buffer1中
  0040           ; void FINGERPRINT_Cmd_Img_To_Buffer1(void)
  0040           ; {
- 0040                   .dbline 44
+ 0040                   .dbline 45
  0040           ;       unsigned char i;
  0040           ; 
  0040           ;       for(i=0;i<6;i++) //发送包头
  0040 4427              clr R20
  0042 0AC0              xjmp L14
  0044           L11:
- 0044                   .dbline 45
+ 0044                   .dbline 46
  0044           ;               UART1_Send_Byte(FP_Pack_Head[i]);
  0044 80E0              ldi R24,<_FP_Pack_Head
  0046 90E0              ldi R25,>_FP_Pack_Head
@@ -375,20 +376,20 @@
  0050 0081              ldd R16,z+0
  0052 0E940000          xcall _USART1_Transmit
  0056           L12:
- 0056                   .dbline 44
+ 0056                   .dbline 45
  0056 4395              inc R20
  0058           L14:
- 0058                   .dbline 44
+ 0058                   .dbline 45
  0058 4630              cpi R20,6
  005A A0F3              brlo L11
  005C           X2:
- 005C                   .dbline 47
+ 005C                   .dbline 48
  005C           ; 
  005C           ;       for(i=0;i<7;i++) //发送命令将图像转换成特征码存放在CHAR_buffer1
  005C 4427              clr R20
  005E 0AC0              xjmp L18
  0060           L15:
- 0060                   .dbline 48
+ 0060                   .dbline 49
  0060           ;               UART1_Send_Byte(FP_Img_To_Buffer1[i]);
  0060 80E0              ldi R24,<_FP_Img_To_Buffer1
  0062 90E0              ldi R25,>_FP_Img_To_Buffer1
@@ -399,10 +400,10 @@
  006C 0081              ldd R16,z+0
  006E 0E940000          xcall _USART1_Transmit
  0072           L16:
- 0072                   .dbline 47
+ 0072                   .dbline 48
  0072 4395              inc R20
  0074           L18:
- 0074                   .dbline 47
+ 0074                   .dbline 48
  0074 4730              cpi R20,7
  0076 A0F3              brlo L15
  0078           X3:
@@ -419,20 +420,20 @@
  007C           _FINGERPRINT_Cmd_Img_To_Buffer2::
  007C 4A93              st -y,R20
  007E                   .dbline -1
- 007E                   .dbline 53
+ 007E                   .dbline 54
  007E           ; }
  007E           ; 
  007E           ; //将图像转换成特征码存放在Buffer2中
  007E           ; void FINGERPRINT_Cmd_Img_To_Buffer2(void)
  007E           ; {
- 007E                   .dbline 56
+ 007E                   .dbline 57
  007E           ;       unsigned char i;
  007E           ; 
  007E           ;       for(i=0;i<6;i++) //发送包头
  007E 4427              clr R20
  0080 0AC0              xjmp L23
  0082           L20:
- 0082                   .dbline 57
+ 0082                   .dbline 58
  0082           ;               UART1_Send_Byte(FP_Pack_Head[i]);
  0082 80E0              ldi R24,<_FP_Pack_Head
  0084 90E0              ldi R25,>_FP_Pack_Head
@@ -443,20 +444,20 @@
  008E 0081              ldd R16,z+0
  0090 0E940000          xcall _USART1_Transmit
  0094           L21:
- 0094                   .dbline 56
+ 0094                   .dbline 57
  0094 4395              inc R20
  0096           L23:
- 0096                   .dbline 56
+ 0096                   .dbline 57
  0096 4630              cpi R20,6
  0098 A0F3              brlo L20
  009A           X4:
- 009A                   .dbline 59
+ 009A                   .dbline 60
  009A           ; 
  009A           ;       for(i=0;i<7;i++) //发送命令将图像转换成特征码存放在CHAR_buffer2
  009A 4427              clr R20
  009C 0AC0              xjmp L27
  009E           L24:
- 009E                   .dbline 60
+ 009E                   .dbline 61
  009E           ;               UART1_Send_Byte(FP_Img_To_Buffer2[i]);
  009E 80E0              ldi R24,<_FP_Img_To_Buffer2
  00A0 90E0              ldi R25,>_FP_Img_To_Buffer2
@@ -467,10 +468,10 @@
  00AA 0081              ldd R16,z+0
  00AC 0E940000          xcall _USART1_Transmit
  00B0           L25:
- 00B0                   .dbline 59
+ 00B0                   .dbline 60
  00B0 4395              inc R20
  00B2           L27:
- 00B2                   .dbline 59
+ 00B2                   .dbline 60
  00B2 4730              cpi R20,7
  00B4 A0F3              brlo L24
  00B6           X5:
@@ -487,20 +488,20 @@
  00BA           _FINGERPRINT_Cmd_Reg_Model::
  00BA 4A93              st -y,R20
  00BC                   .dbline -1
- 00BC                   .dbline 65
+ 00BC                   .dbline 66
  00BC           ; }
  00BC           ; 
  00BC           ; //将BUFFER1跟BUFFER2中的特征码合并成指纹模版
  00BC           ; void FINGERPRINT_Cmd_Reg_Model(void)
  00BC           ; {
- 00BC                   .dbline 68
+ 00BC                   .dbline 69
  00BC           ;       unsigned char i;
  00BC           ; 
  00BC           ;       for(i=0;i<6;i++) //包头
  00BC 4427              clr R20
  00BE 0AC0              xjmp L32
  00C0           L29:
- 00C0                   .dbline 69
+ 00C0                   .dbline 70
  00C0           ;               UART1_Send_Byte(FP_Pack_Head[i]);
  00C0 80E0              ldi R24,<_FP_Pack_Head
  00C2 90E0              ldi R25,>_FP_Pack_Head
@@ -511,20 +512,20 @@
  00CC 0081              ldd R16,z+0
  00CE 0E940000          xcall _USART1_Transmit
  00D2           L30:
- 00D2                   .dbline 68
+ 00D2                   .dbline 69
  00D2 4395              inc R20
  00D4           L32:
- 00D4                   .dbline 68
+ 00D4                   .dbline 69
  00D4 4630              cpi R20,6
  00D6 A0F3              brlo L29
  00D8           X6:
- 00D8                   .dbline 71
+ 00D8                   .dbline 72
  00D8           ; 
  00D8           ;       for(i=0;i<6;i++) //命令合并指纹模版
  00D8 4427              clr R20
  00DA 0AC0              xjmp L36
  00DC           L33:
- 00DC                   .dbline 72
+ 00DC                   .dbline 73
  00DC           ;               UART1_Send_Byte(FP_Reg_Model[i]);
  00DC 80E0              ldi R24,<_FP_Reg_Model
  00DE 90E0              ldi R25,>_FP_Reg_Model
@@ -535,10 +536,10 @@
  00E8 0081              ldd R16,z+0
  00EA 0E940000          xcall _USART1_Transmit
  00EE           L34:
- 00EE                   .dbline 71
+ 00EE                   .dbline 72
  00EE 4395              inc R20
  00F0           L36:
- 00F0                   .dbline 71
+ 00F0                   .dbline 72
  00F0 4630              cpi R20,6
  00F2 A0F3              brlo L33
  00F4           X7:
@@ -555,20 +556,20 @@
  00F8           _FINGERPRINT_Cmd_Delete_All_Model::
  00F8 4A93              st -y,R20
  00FA                   .dbline -1
- 00FA                   .dbline 77
+ 00FA                   .dbline 78
  00FA           ; }
  00FA           ; 
  00FA           ; //删除指纹模块里的所有指纹模版
  00FA           ; void FINGERPRINT_Cmd_Delete_All_Model(void)
  00FA           ; {
- 00FA                   .dbline 80
+ 00FA                   .dbline 81
  00FA           ;       unsigned char i;
  00FA           ; 
  00FA           ;       for(i=0;i<6;i++) //包头
  00FA 4427              clr R20
  00FC 0AC0              xjmp L41
  00FE           L38:
- 00FE                   .dbline 81
+ 00FE                   .dbline 82
  00FE           ;               UART1_Send_Byte(FP_Pack_Head[i]);
  00FE 80E0              ldi R24,<_FP_Pack_Head
  0100 90E0              ldi R25,>_FP_Pack_Head
@@ -579,20 +580,20 @@
  010A 0081              ldd R16,z+0
  010C 0E940000          xcall _USART1_Transmit
  0110           L39:
- 0110                   .dbline 80
+ 0110                   .dbline 81
  0110 4395              inc R20
  0112           L41:
- 0112                   .dbline 80
+ 0112                   .dbline 81
  0112 4630              cpi R20,6
  0114 A0F3              brlo L38
  0116           X8:
- 0116                   .dbline 83
+ 0116                   .dbline 84
  0116           ; 
  0116           ;       for(i=0;i<6;i++) //命令合并指纹模版
  0116 4427              clr R20
  0118 0AC0              xjmp L45
  011A           L42:
- 011A                   .dbline 84
+ 011A                   .dbline 85
  011A           ;               UART1_Send_Byte(FP_Delet_All_Model[i]);
  011A 80E0              ldi R24,<_FP_Delet_All_Model
  011C 90E0              ldi R25,>_FP_Delet_All_Model
@@ -603,10 +604,10 @@
  0126 0081              ldd R16,z+0
  0128 0E940000          xcall _USART1_Transmit
  012C           L43:
- 012C                   .dbline 83
+ 012C                   .dbline 84
  012C 4395              inc R20
  012E           L45:
- 012E                   .dbline 83
+ 012E                   .dbline 84
  012E 4630              cpi R20,6
  0130 A0F3              brlo L42
  0132           X9:
@@ -618,9 +619,9 @@
  0136                   .dbsym r i 20 c
  0136                   .dbend
  0136                   .dbfunc e FINGERPRINT_Cmd_Delete_Model _FINGERPRINT_Cmd_Delete_Model fV
- 0136           ;     uiSum_temp -> y+0
+ 0136           ;            sum -> y+0
  0136           ;              i -> R20
- 0136           ;      uiID_temp -> R20,R21
+ 0136           ;        Page_ID -> R20,R21
                         .even
  0136           _FINGERPRINT_Cmd_Delete_Model::
  0136 4A93              st -y,R20
@@ -628,40 +629,42 @@
  013A A801              movw R20,R16
  013C 2297              sbiw R28,2
  013E                   .dbline -1
- 013E                   .dbline 89
+ 013E                   .dbline 90
  013E           ; }
  013E           ; 
  013E           ; //删除指纹模块里的指定指纹模版
- 013E           ; void FINGERPRINT_Cmd_Delete_Model(unsigned int uiID_temp)
+ 013E           ; void FINGERPRINT_Cmd_Delete_Model(unsigned int Page_ID)
  013E           ; {
- 013E                   .dbline 90
- 013E           ;       volatile unsigned int uiSum_temp = 0;
+ 013E                   .dbline 91
+ 013E           ;       volatile unsigned int sum = 0;
  013E 2224              clr R2
  0140 3324              clr R3
  0142 3982              std y+1,R3
  0144 2882              std y+0,R2
- 0146                   .dbline 93
+ 0146                   .dbline 96
  0146           ;       unsigned char i;
  0146           ; 
- 0146           ;       FP_Delete_Model[4]=(uiID_temp&0xFF00)>>8;
+ 0146           ;       //Delete_MODEL[10]={0x01,0x00,0x07,0x0C,0x00,0x00,0x00,0x1,0x00,0x00}; //删除指定的模版
+ 0146           ; 
+ 0146           ;       FP_Delete_Model[4] = (Page_ID & 0xFF00) >> 8;
  0146 CA01              movw R24,R20
  0148 8070              andi R24,0
  014A 892F              mov R24,R25
  014C 9927              clr R25
  014E 80934F00          sts _FP_Delete_Model+4,R24
- 0152                   .dbline 94
- 0152           ;       FP_Delete_Model[5]=(uiID_temp&0x00FF);
+ 0152                   .dbline 97
+ 0152           ;       FP_Delete_Model[5] = (Page_ID & 0x00FF);
  0152 CA01              movw R24,R20
  0154 9070              andi R25,0
  0156 80935000          sts _FP_Delete_Model+5,R24
- 015A                   .dbline 96
+ 015A                   .dbline 99
  015A           ; 
  015A           ;       for(i=0;i<8;i++)
  015A 4427              clr R20
  015C 0FC0              xjmp L52
  015E           L49:
- 015E                   .dbline 97
- 015E           ;               uiSum_temp = uiSum_temp + FP_Delete_Model[i];
+ 015E                   .dbline 100
+ 015E           ;               sum = sum + FP_Delete_Model[i];
  015E 80E0              ldi R24,<_FP_Delete_Model
  0160 90E0              ldi R25,>_FP_Delete_Model
  0162 E42F              mov R30,R20
@@ -677,18 +680,17 @@
  0176 5982              std y+1,R5
  0178 4882              std y+0,R4
  017A           L50:
- 017A                   .dbline 96
+ 017A                   .dbline 99
  017A 4395              inc R20
  017C           L52:
- 017C                   .dbline 96
+ 017C                   .dbline 99
  017C 4830              cpi R20,8
  017E 78F3              brlo L49
  0180           X10:
- 0180                   .dbline 101
- 0180           ;       
- 0180           ;       //UART0_Send_Byte(uiSum_temp);
- 0180           ;                       
- 0180           ;       FP_Delete_Model[8]=(uiSum_temp&0xFF00)>>8;
+ 0180                   .dbline 103
+ 0180           ; 
+ 0180           ;       //UART1_Send_Byte(sum);
+ 0180           ;       FP_Delete_Model[8] = (sum & 0xFF00)>>8;
  0180 8881              ldd R24,y+0
  0182 9981              ldd R25,y+1
  0184 8070              andi R24,0
@@ -696,19 +698,19 @@
  0188 232C              mov R2,R3
  018A 3324              clr R3
  018C 20925300          sts _FP_Delete_Model+8,R2
- 0190                   .dbline 102
- 0190           ;       FP_Delete_Model[9]=uiSum_temp&0x00FF;
+ 0190                   .dbline 104
+ 0190           ;       FP_Delete_Model[9] =  sum & 0x00FF;
  0190 8881              ldd R24,y+0
  0192 9981              ldd R25,y+1
  0194 9070              andi R25,0
  0196 80935400          sts _FP_Delete_Model+9,R24
- 019A                   .dbline 104
+ 019A                   .dbline 106
  019A           ; 
  019A           ;       for(i=0;i<6;i++) //包头
  019A 4427              clr R20
  019C 0AC0              xjmp L58
  019E           L55:
- 019E                   .dbline 105
+ 019E                   .dbline 107
  019E           ;               UART1_Send_Byte(FP_Pack_Head[i]);
  019E 80E0              ldi R24,<_FP_Pack_Head
  01A0 90E0              ldi R25,>_FP_Pack_Head
@@ -719,20 +721,20 @@
  01AA 0081              ldd R16,z+0
  01AC 0E940000          xcall _USART1_Transmit
  01B0           L56:
- 01B0                   .dbline 104
+ 01B0                   .dbline 106
  01B0 4395              inc R20
  01B2           L58:
- 01B2                   .dbline 104
+ 01B2                   .dbline 106
  01B2 4630              cpi R20,6
  01B4 A0F3              brlo L55
  01B6           X11:
- 01B6                   .dbline 107
+ 01B6                   .dbline 109
  01B6           ; 
  01B6           ;       for(i=0;i<10;i++) //命令合并指纹模版
  01B6 4427              clr R20
  01B8 0AC0              xjmp L62
  01BA           L59:
- 01BA                   .dbline 108
+ 01BA                   .dbline 110
  01BA           ;               UART1_Send_Byte(FP_Delete_Model[i]);
  01BA 80E0              ldi R24,<_FP_Delete_Model
  01BC 90E0              ldi R25,>_FP_Delete_Model
@@ -743,10 +745,10 @@
  01C6 0081              ldd R16,z+0
  01C8 0E940000          xcall _USART1_Transmit
  01CC           L60:
- 01CC                   .dbline 107
+ 01CC                   .dbline 109
  01CC 4395              inc R20
  01CE           L62:
- 01CE                   .dbline 107
+ 01CE                   .dbline 109
  01CE 4A30              cpi R20,10
  01D0 A0F3              brlo L59
  01D2           X12:
@@ -757,9 +759,9 @@
  01D4 5991              ld R21,y+
  01D6 4991              ld R20,y+
  01D8 0895              ret
- 01DA                   .dbsym l uiSum_temp 0 i
+ 01DA                   .dbsym l sum 0 i
  01DA                   .dbsym r i 20 c
- 01DA                   .dbsym r uiID_temp 20 i
+ 01DA                   .dbsym r Page_ID 20 i
  01DA                   .dbend
  01DA                   .dbfunc e FINGERPRINT_Cmd_Get_Templete_Num _FINGERPRINT_Cmd_Get_Templete_Num fV
  01DA           ;           temp -> y+0
@@ -770,13 +772,13 @@
  01DC 5A93              st -y,R21
  01DE 2E97              sbiw R28,14
  01E0                   .dbline -1
- 01E0                   .dbline 113
+ 01E0                   .dbline 115
  01E0           ; }
  01E0           ; 
  01E0           ; //获得指纹模板数量
  01E0           ; void FINGERPRINT_Cmd_Get_Templete_Num(void)
  01E0           ; {
- 01E0                   .dbline 117
+ 01E0                   .dbline 119
  01E0           ;       unsigned int i;
  01E0           ;       unsigned char temp[14];
  01E0           ; 
@@ -785,7 +787,7 @@
  01E2 5527              clr R21
  01E4 0AC0              xjmp L67
  01E6           L64:
- 01E6                   .dbline 118
+ 01E6                   .dbline 120
  01E6           ;               UART1_Send_Byte(FP_Pack_Head[i]);
  01E6 80E0              ldi R24,<_FP_Pack_Head
  01E8 90E0              ldi R25,>_FP_Pack_Head
@@ -795,24 +797,24 @@
  01F0 0081              ldd R16,z+0
  01F2 0E940000          xcall _USART1_Transmit
  01F6           L65:
- 01F6                   .dbline 117
+ 01F6                   .dbline 119
  01F6 4F5F              subi R20,255  ; offset = 1
  01F8 5F4F              sbci R21,255
  01FA           L67:
- 01FA                   .dbline 117
+ 01FA                   .dbline 119
  01FA 4630              cpi R20,6
  01FC E0E0              ldi R30,0
  01FE 5E07              cpc R21,R30
  0200 90F3              brlo L64
  0202           X13:
- 0202                   .dbline 120
+ 0202                   .dbline 122
  0202           ; 
  0202           ;       for(i=0;i<6;i++) //发送命令0x1d
  0202 4427              clr R20
  0204 5527              clr R21
  0206 0AC0              xjmp L71
  0208           L68:
- 0208                   .dbline 121
+ 0208                   .dbline 123
  0208           ;               UART1_Send_Byte(FP_Templete_Num[i]);
  0208 80E0              ldi R24,<_FP_Templete_Num
  020A 90E0              ldi R25,>_FP_Templete_Num
@@ -822,11 +824,11 @@
  0212 0081              ldd R16,z+0
  0214 0E940000          xcall _USART1_Transmit
  0218           L69:
- 0218                   .dbline 120
+ 0218                   .dbline 122
  0218 4F5F              subi R20,255  ; offset = 1
  021A 5F4F              sbci R21,255
  021C           L71:
- 021C                   .dbline 120
+ 021C                   .dbline 122
  021C 4630              cpi R20,6
  021E E0E0              ldi R30,0
  0220 5E07              cpc R21,R30
@@ -848,20 +850,20 @@
  022C           _FINGERPRINT_Cmd_Search_Finger::
  022C 4A93              st -y,R20
  022E                   .dbline -1
- 022E                   .dbline 126
+ 022E                   .dbline 128
  022E           ; }
  022E           ; 
  022E           ; //搜索全部用户999枚
  022E           ; void FINGERPRINT_Cmd_Search_Finger(void)
  022E           ; {
- 022E                   .dbline 129
+ 022E                   .dbline 131
  022E           ;       unsigned char i;
  022E           ; 
  022E           ;       for(i=0;i<6;i++) //发送命令搜索指纹库
  022E 4427              clr R20
  0230 0AC0              xjmp L76
  0232           L73:
- 0232                   .dbline 130
+ 0232                   .dbline 132
  0232           ;               UART1_Send_Byte(FP_Pack_Head[i]);
  0232 80E0              ldi R24,<_FP_Pack_Head
  0234 90E0              ldi R25,>_FP_Pack_Head
@@ -872,20 +874,20 @@
  023E 0081              ldd R16,z+0
  0240 0E940000          xcall _USART1_Transmit
  0244           L74:
- 0244                   .dbline 129
+ 0244                   .dbline 131
  0244 4395              inc R20
  0246           L76:
- 0246                   .dbline 129
+ 0246                   .dbline 131
  0246 4630              cpi R20,6
  0248 A0F3              brlo L73
  024A           X15:
- 024A                   .dbline 132
+ 024A                   .dbline 134
  024A           ; 
  024A           ;       for(i=0;i<11;i++)
  024A 4427              clr R20
  024C 0AC0              xjmp L80
  024E           L77:
- 024E                   .dbline 133
+ 024E                   .dbline 135
  024E           ;               UART1_Send_Byte(FP_Search[i]);
  024E 80E0              ldi R24,<_FP_Search
  0250 90E0              ldi R25,>_FP_Search
@@ -896,10 +898,10 @@
  025A 0081              ldd R16,z+0
  025C 0E940000          xcall _USART1_Transmit
  0260           L78:
- 0260                   .dbline 132
+ 0260                   .dbline 134
  0260 4395              inc R20
  0262           L80:
- 0262                   .dbline 132
+ 0262                   .dbline 134
  0262 4B30              cpi R20,11
  0264 A0F3              brlo L77
  0266           X16:
@@ -916,21 +918,20 @@
  026A           _FINGERPRINT_Cmd_Search_Finger_Admin::
  026A 4A93              st -y,R20
  026C                   .dbline -1
- 026C                   .dbline 139
+ 026C                   .dbline 140
  026C           ; }
  026C           ; 
- 026C           ; 
- 026C           ; //搜索全部用户999枚
+ 026C           ; //搜索管理员用户10枚
  026C           ; void FINGERPRINT_Cmd_Search_Finger_Admin(void)
  026C           ; {
- 026C                   .dbline 142
+ 026C                   .dbline 143
  026C           ;       unsigned char i;
  026C           ; 
  026C           ;       for(i=0;i<6;i++) //发送命令搜索指纹库
  026C 4427              clr R20
  026E 0AC0              xjmp L85
  0270           L82:
- 0270                   .dbline 143
+ 0270                   .dbline 144
  0270           ;               UART1_Send_Byte(FP_Pack_Head[i]);
  0270 80E0              ldi R24,<_FP_Pack_Head
  0272 90E0              ldi R25,>_FP_Pack_Head
@@ -941,20 +942,20 @@
  027C 0081              ldd R16,z+0
  027E 0E940000          xcall _USART1_Transmit
  0282           L83:
- 0282                   .dbline 142
+ 0282                   .dbline 143
  0282 4395              inc R20
  0284           L85:
- 0284                   .dbline 142
+ 0284                   .dbline 143
  0284 4630              cpi R20,6
  0286 A0F3              brlo L82
  0288           X17:
- 0288                   .dbline 145
+ 0288                   .dbline 146
  0288           ; 
  0288           ;       for(i=0;i<11;i++)
  0288 4427              clr R20
  028A 0AC0              xjmp L89
  028C           L86:
- 028C                   .dbline 146
+ 028C                   .dbline 147
  028C           ;               UART1_Send_Byte(FP_Search_0_9[i]);
  028C 80E0              ldi R24,<_FP_Search_0_9
  028E 90E0              ldi R25,>_FP_Search_0_9
@@ -965,10 +966,10 @@
  0298 0081              ldd R16,z+0
  029A 0E940000          xcall _USART1_Transmit
  029E           L87:
- 029E                   .dbline 145
+ 029E                   .dbline 146
  029E 4395              inc R20
  02A0           L89:
- 02A0                   .dbline 145
+ 02A0                   .dbline 146
  02A0 4B30              cpi R20,11
  02A2 A0F3              brlo L86
  02A4           X18:
@@ -980,326 +981,487 @@
  02A8                   .dbsym r i 20 c
  02A8                   .dbend
  02A8                   .dbfunc e FINGERPRINT_Cmd_Save_Finger _FINGERPRINT_Cmd_Save_Finger fV
- 02A8           ;           temp -> y+0
+ 02A8           ;            sum -> y+0
  02A8           ;              i -> R10
- 02A8           ;       ucL_Char -> R10
- 02A8           ;       ucH_Char -> R12
+ 02A8           ;        Page_ID -> R10,R11
                         .even
  02A8           _FINGERPRINT_Cmd_Save_Finger::
- 02A8 0E940000          xcall push_xgsetF03C
- 02AC A22E              mov R10,R18
- 02AE C02E              mov R12,R16
- 02B0 2497              sbiw R28,4
- 02B2                   .dbline -1
- 02B2                   .dbline 150
- 02B2           ; }
- 02B2           ; 
- 02B2           ; void FINGERPRINT_Cmd_Save_Finger(unsigned char ucH_Char,unsigned char ucL_Char)
- 02B2           ; {
- 02B2                   .dbline 151
- 02B2           ;       unsigned long temp = 0;
- 02B2 80E0              ldi R24,0
- 02B4 8883              std y+0,R24
- 02B6 8983              std y+1,R24
- 02B8 8A83              std y+2,R24
- 02BA 8B83              std y+3,R24
- 02BC                   .dbline 156
- 02BC           ;       unsigned char i;
- 02BC           ; 
- 02BC           ;       //SAVE_FINGER[9]={0x01,0x00,0x06,0x06,0x01,0x00,0x0B,0x00,0x19}; //将BUFFER1中的特征码存放到指定的位置
- 02BC           ; 
- 02BC           ;       FP_Save_Finger[5] = ucH_Char;
- 02BC C0924700          sts _FP_Save_Finger+5,R12
- 02C0                   .dbline 157
- 02C0           ;       FP_Save_Finger[6] = ucL_Char;
- 02C0 A0924800          sts _FP_Save_Finger+6,R10
- 02C4                   .dbline 159
- 02C4           ; 
- 02C4           ;       for(i=0;i<7;i++) //计算校验和
- 02C4 AA24              clr R10
- 02C6 17C0              xjmp L96
- 02C8           L93:
- 02C8                   .dbline 160
- 02C8           ;               temp = temp + FP_Save_Finger[i];
- 02C8 80E0              ldi R24,<_FP_Save_Finger
- 02CA 90E0              ldi R25,>_FP_Save_Finger
- 02CC EA2D              mov R30,R10
- 02CE FF27              clr R31
- 02D0 E80F              add R30,R24
- 02D2 F91F              adc R31,R25
- 02D4 2080              ldd R2,z+0
- 02D6 3324              clr R3
- 02D8 4424              clr R4
- 02DA 5524              clr R5
- 02DC 6880              ldd R6,y+0
- 02DE 7980              ldd R7,y+1
- 02E0 8A80              ldd R8,y+2
- 02E2 9B80              ldd R9,y+3
- 02E4 620C              add R6,R2
- 02E6 731C              adc R7,R3
- 02E8 841C              adc R8,R4
- 02EA 951C              adc R9,R5
- 02EC 6882              std y+0,R6
- 02EE 7982              std y+1,R7
- 02F0 8A82              std y+2,R8
- 02F2 9B82              std y+3,R9
- 02F4           L94:
- 02F4                   .dbline 159
- 02F4 A394              inc R10
- 02F6           L96:
- 02F6                   .dbline 159
- 02F6 8A2D              mov R24,R10
- 02F8 8730              cpi R24,7
- 02FA 30F3              brlo L93
- 02FC           X19:
- 02FC                   .dbline 162
- 02FC           ; 
- 02FC           ;       FP_Save_Finger[7]=(temp & 0x00FF00) >> 8; //存放校验数据
- 02FC 40E0              ldi R20,0
- 02FE 5FEF              ldi R21,255
- 0300 60E0              ldi R22,0
- 0302 70E0              ldi R23,0
- 0304 0881              ldd R16,y+0
- 0306 1981              ldd R17,y+1
- 0308 2A81              ldd R18,y+2
- 030A 3B81              ldd R19,y+3
- 030C 0423              and R16,R20
- 030E 1523              and R17,R21
- 0310 2623              and R18,R22
- 0312 3723              and R19,R23
- 0314 88E0              ldi R24,8
- 0316 90E0              ldi R25,0
- 0318 8A93              st -y,R24
- 031A 0E940000          xcall lsr32
- 031E 00934900          sts _FP_Save_Finger+7,R16
- 0322                   .dbline 163
- 0322           ;       FP_Save_Finger[8]= temp & 0x0000FF;
- 0322 4FEF              ldi R20,255
- 0324 50E0              ldi R21,0
- 0326 60E0              ldi R22,0
- 0328 70E0              ldi R23,0
- 032A 2880              ldd R2,y+0
- 032C 3980              ldd R3,y+1
- 032E 4A80              ldd R4,y+2
- 0330 5B80              ldd R5,y+3
- 0332 2422              and R2,R20
- 0334 3522              and R3,R21
- 0336 4622              and R4,R22
- 0338 5722              and R5,R23
- 033A 20924A00          sts _FP_Save_Finger+8,R2
- 033E                   .dbline 165
- 033E           ; 
- 033E           ;       for(i=0;i<6;i++)
- 033E AA24              clr R10
- 0340 0AC0              xjmp L102
- 0342           L99:
- 0342                   .dbline 166
- 0342           ;               UART1_Send_Byte(FP_Pack_Head[i]); //发送包头
- 0342 80E0              ldi R24,<_FP_Pack_Head
- 0344 90E0              ldi R25,>_FP_Pack_Head
- 0346 EA2D              mov R30,R10
- 0348 FF27              clr R31
- 034A E80F              add R30,R24
- 034C F91F              adc R31,R25
- 034E 0081              ldd R16,z+0
- 0350 0E940000          xcall _USART1_Transmit
- 0354           L100:
- 0354                   .dbline 165
- 0354 A394              inc R10
- 0356           L102:
- 0356                   .dbline 165
- 0356 8A2D              mov R24,R10
- 0358 8630              cpi R24,6
- 035A 98F3              brlo L99
- 035C           X20:
- 035C                   .dbline 168
- 035C           ; 
- 035C           ;       for(i=0;i<9;i++)
- 035C AA24              clr R10
- 035E 0AC0              xjmp L106
- 0360           L103:
- 0360                   .dbline 169
- 0360           ;               UART1_Send_Byte(FP_Save_Finger[i]); //发送命令将图像转换成特征码存放在CHAR_buffer1
- 0360 80E0              ldi R24,<_FP_Save_Finger
- 0362 90E0              ldi R25,>_FP_Save_Finger
- 0364 EA2D              mov R30,R10
- 0366 FF27              clr R31
- 0368 E80F              add R30,R24
- 036A F91F              adc R31,R25
- 036C 0081              ldd R16,z+0
- 036E 0E940000          xcall _USART1_Transmit
- 0372           L104:
- 0372                   .dbline 168
- 0372 A394              inc R10
- 0374           L106:
- 0374                   .dbline 168
- 0374 8A2D              mov R24,R10
- 0376 8930              cpi R24,9
- 0378 98F3              brlo L103
- 037A           X21:
- 037A                   .dbline -2
- 037A           L90:
- 037A                   .dbline 0 ; func end
- 037A 2496              adiw R28,4
- 037C 0C940000          xjmp pop_xgsetF03C
- 0380                   .dbsym l temp 0 l
- 0380                   .dbsym r i 10 c
- 0380                   .dbsym r ucL_Char 10 c
- 0380                   .dbsym r ucH_Char 12 c
- 0380                   .dbend
- 0380                   .dbfunc e FINGERPRINT_Recevice_Data _FINGERPRINT_Recevice_Data fV
- 0380           ;              i -> R10
- 0380           ;       ucLength -> R12
+ 02A8 0E940000          xcall push_xgsetF00C
+ 02AC 5801              movw R10,R16
+ 02AE 2497              sbiw R28,4
+ 02B0                   .dbline -1
+ 02B0                   .dbline 152
+ 02B0           ; }
+ 02B0           ; 
+ 02B0           ; //保存指纹到指定的位置
+ 02B0           ; void FINGERPRINT_Cmd_Save_Finger(unsigned int Page_ID)
+ 02B0           ; {
+ 02B0                   .dbline 153
+ 02B0           ;       unsigned long sum = 0;
+ 02B0 80E0              ldi R24,0
+ 02B2 8883              std y+0,R24
+ 02B4 8983              std y+1,R24
+ 02B6 8A83              std y+2,R24
+ 02B8 8B83              std y+3,R24
+ 02BA                   .dbline 158
+ 02BA           ;       unsigned char i;
+ 02BA           ; 
+ 02BA           ;       //SAVE_FINGER[9]={0x01,0x00,0x06,0x06,0x01,0x00,0x0B,0x00,0x19}; //将BUFFER1中的特征码存放到指定的位置
+ 02BA           ; 
+ 02BA           ;       FP_Save_Finger[5] = (Page_ID & 0xFF00) >> 8;
+ 02BA C501              movw R24,R10
+ 02BC 8070              andi R24,0
+ 02BE 1C01              movw R2,R24
+ 02C0 232C              mov R2,R3
+ 02C2 3324              clr R3
+ 02C4 20924700          sts _FP_Save_Finger+5,R2
+ 02C8                   .dbline 159
+ 02C8           ;       FP_Save_Finger[6] = (Page_ID & 0x00FF);
+ 02C8 C501              movw R24,R10
+ 02CA 9070              andi R25,0
+ 02CC 80934800          sts _FP_Save_Finger+6,R24
+ 02D0                   .dbline 161
+ 02D0           ; 
+ 02D0           ;       for(i=0;i<7;i++) //计算校验和
+ 02D0 AA24              clr R10
+ 02D2 17C0              xjmp L96
+ 02D4           L93:
+ 02D4                   .dbline 162
+ 02D4           ;               sum = sum + FP_Save_Finger[i];
+ 02D4 80E0              ldi R24,<_FP_Save_Finger
+ 02D6 90E0              ldi R25,>_FP_Save_Finger
+ 02D8 EA2D              mov R30,R10
+ 02DA FF27              clr R31
+ 02DC E80F              add R30,R24
+ 02DE F91F              adc R31,R25
+ 02E0 2080              ldd R2,z+0
+ 02E2 3324              clr R3
+ 02E4 4424              clr R4
+ 02E6 5524              clr R5
+ 02E8 6880              ldd R6,y+0
+ 02EA 7980              ldd R7,y+1
+ 02EC 8A80              ldd R8,y+2
+ 02EE 9B80              ldd R9,y+3
+ 02F0 620C              add R6,R2
+ 02F2 731C              adc R7,R3
+ 02F4 841C              adc R8,R4
+ 02F6 951C              adc R9,R5
+ 02F8 6882              std y+0,R6
+ 02FA 7982              std y+1,R7
+ 02FC 8A82              std y+2,R8
+ 02FE 9B82              std y+3,R9
+ 0300           L94:
+ 0300                   .dbline 161
+ 0300 A394              inc R10
+ 0302           L96:
+ 0302                   .dbline 161
+ 0302 8A2D              mov R24,R10
+ 0304 8730              cpi R24,7
+ 0306 30F3              brlo L93
+ 0308           X19:
+ 0308                   .dbline 164
+ 0308           ; 
+ 0308           ;       FP_Save_Finger[7]=(sum & 0x00FF00) >> 8; //存放校验数据
+ 0308 40E0              ldi R20,0
+ 030A 5FEF              ldi R21,255
+ 030C 60E0              ldi R22,0
+ 030E 70E0              ldi R23,0
+ 0310 0881              ldd R16,y+0
+ 0312 1981              ldd R17,y+1
+ 0314 2A81              ldd R18,y+2
+ 0316 3B81              ldd R19,y+3
+ 0318 0423              and R16,R20
+ 031A 1523              and R17,R21
+ 031C 2623              and R18,R22
+ 031E 3723              and R19,R23
+ 0320 88E0              ldi R24,8
+ 0322 90E0              ldi R25,0
+ 0324 8A93              st -y,R24
+ 0326 0E940000          xcall lsr32
+ 032A 00934900          sts _FP_Save_Finger+7,R16
+ 032E                   .dbline 165
+ 032E           ;       FP_Save_Finger[8]= sum & 0x0000FF;
+ 032E 4FEF              ldi R20,255
+ 0330 50E0              ldi R21,0
+ 0332 60E0              ldi R22,0
+ 0334 70E0              ldi R23,0
+ 0336 2880              ldd R2,y+0
+ 0338 3980              ldd R3,y+1
+ 033A 4A80              ldd R4,y+2
+ 033C 5B80              ldd R5,y+3
+ 033E 2422              and R2,R20
+ 0340 3522              and R3,R21
+ 0342 4622              and R4,R22
+ 0344 5722              and R5,R23
+ 0346 20924A00          sts _FP_Save_Finger+8,R2
+ 034A                   .dbline 167
+ 034A           ; 
+ 034A           ;       for(i=0;i<6;i++)
+ 034A AA24              clr R10
+ 034C 0AC0              xjmp L102
+ 034E           L99:
+ 034E                   .dbline 168
+ 034E           ;               UART1_Send_Byte(FP_Pack_Head[i]); //发送包头
+ 034E 80E0              ldi R24,<_FP_Pack_Head
+ 0350 90E0              ldi R25,>_FP_Pack_Head
+ 0352 EA2D              mov R30,R10
+ 0354 FF27              clr R31
+ 0356 E80F              add R30,R24
+ 0358 F91F              adc R31,R25
+ 035A 0081              ldd R16,z+0
+ 035C 0E940000          xcall _USART1_Transmit
+ 0360           L100:
+ 0360                   .dbline 167
+ 0360 A394              inc R10
+ 0362           L102:
+ 0362                   .dbline 167
+ 0362 8A2D              mov R24,R10
+ 0364 8630              cpi R24,6
+ 0366 98F3              brlo L99
+ 0368           X20:
+ 0368                   .dbline 170
+ 0368           ; 
+ 0368           ;       for(i=0;i<9;i++)
+ 0368 AA24              clr R10
+ 036A 0AC0              xjmp L106
+ 036C           L103:
+ 036C                   .dbline 171
+ 036C           ;               UART1_Send_Byte(FP_Save_Finger[i]); //发送命令将图像转换成特征码存放在CHAR_buffer1
+ 036C 80E0              ldi R24,<_FP_Save_Finger
+ 036E 90E0              ldi R25,>_FP_Save_Finger
+ 0370 EA2D              mov R30,R10
+ 0372 FF27              clr R31
+ 0374 E80F              add R30,R24
+ 0376 F91F              adc R31,R25
+ 0378 0081              ldd R16,z+0
+ 037A 0E940000          xcall _USART1_Transmit
+ 037E           L104:
+ 037E                   .dbline 170
+ 037E A394              inc R10
+ 0380           L106:
+ 0380                   .dbline 170
+ 0380 8A2D              mov R24,R10
+ 0382 8930              cpi R24,9
+ 0384 98F3              brlo L103
+ 0386           X21:
+ 0386                   .dbline -2
+ 0386           L90:
+ 0386                   .dbline 0 ; func end
+ 0386 2496              adiw R28,4
+ 0388 0C940000          xjmp pop_xgsetF00C
+ 038C                   .dbsym l sum 0 l
+ 038C                   .dbsym r i 10 c
+ 038C                   .dbsym r Page_ID 10 i
+ 038C                   .dbend
+ 038C                   .dbfunc e FINGERPRINT_Recevice_Data _FINGERPRINT_Recevice_Data fV
+ 038C           ;              i -> R10
+ 038C           ;       ucLength -> R12
                         .even
- 0380           _FINGERPRINT_Recevice_Data::
- 0380 AA92              st -y,R10
- 0382 CA92              st -y,R12
- 0384 C02E              mov R12,R16
- 0386                   .dbline -1
- 0386                   .dbline 174
- 0386           ; }
- 0386           ; 
- 0386           ; //接收反馈数据缓冲
- 0386           ; void FINGERPRINT_Recevice_Data(unsigned char ucLength)
- 0386           ; {
- 0386                   .dbline 177
- 0386           ;       unsigned char i;
- 0386           ; 
- 0386           ;       for (i=0;i<ucLength;i++)
- 0386 AA24              clr R10
- 0388 0AC0              xjmp L111
- 038A           L108:
- 038A                   .dbline 178
- 038A           ;               UART1_FINGERPRINT_RECEVICE_BUFFER[i] = UART1_Receive_Byte();
- 038A 0E940000          xcall _USART1_Receive
- 038E 80E0              ldi R24,<_UART1_FINGERPRINT_RECEVICE_BUFFER
- 0390 90E0              ldi R25,>_UART1_FINGERPRINT_RECEVICE_BUFFER
- 0392 EA2D              mov R30,R10
- 0394 FF27              clr R31
- 0396 E80F              add R30,R24
- 0398 F91F              adc R31,R25
- 039A 0083              std z+0,R16
- 039C           L109:
- 039C                   .dbline 177
- 039C A394              inc R10
- 039E           L111:
- 039E                   .dbline 177
- 039E AC14              cp R10,R12
- 03A0 A0F3              brlo L108
- 03A2           X22:
- 03A2                   .dbline -2
- 03A2           L107:
- 03A2                   .dbline 0 ; func end
- 03A2 C990              ld R12,y+
- 03A4 A990              ld R10,y+
- 03A6 0895              ret
- 03A8                   .dbsym r i 10 c
- 03A8                   .dbsym r ucLength 12 c
- 03A8                   .dbend
- 03A8                   .dbfunc e FINGERPRINT_add_new_user _FINGERPRINT_add_new_user fc
- 03A8           ;       ucL_user -> R12
- 03A8           ;       ucH_user -> R10
+ 038C           _FINGERPRINT_Recevice_Data::
+ 038C AA92              st -y,R10
+ 038E CA92              st -y,R12
+ 0390 C02E              mov R12,R16
+ 0392                   .dbline -1
+ 0392                   .dbline 176
+ 0392           ; }
+ 0392           ; 
+ 0392           ; //接收反馈数据缓冲
+ 0392           ; void FINGERPRINT_Recevice_Data(unsigned char ucLength)
+ 0392           ; {
+ 0392                   .dbline 179
+ 0392           ;       unsigned char i;
+ 0392           ; 
+ 0392           ;       for (i=0;i<ucLength;i++)
+ 0392 AA24              clr R10
+ 0394 0AC0              xjmp L111
+ 0396           L108:
+ 0396                   .dbline 180
+ 0396           ;               UART1_FINGERPRINT_RECEVICE_BUFFER[i] = UART1_Receive_Byte();
+ 0396 0E940000          xcall _USART1_Receive
+ 039A 80E0              ldi R24,<_UART1_FINGERPRINT_RECEVICE_BUFFER
+ 039C 90E0              ldi R25,>_UART1_FINGERPRINT_RECEVICE_BUFFER
+ 039E EA2D              mov R30,R10
+ 03A0 FF27              clr R31
+ 03A2 E80F              add R30,R24
+ 03A4 F91F              adc R31,R25
+ 03A6 0083              std z+0,R16
+ 03A8           L109:
+ 03A8                   .dbline 179
+ 03A8 A394              inc R10
+ 03AA           L111:
+ 03AA                   .dbline 179
+ 03AA AC14              cp R10,R12
+ 03AC A0F3              brlo L108
+ 03AE           X22:
+ 03AE                   .dbline -2
+ 03AE           L107:
+ 03AE                   .dbline 0 ; func end
+ 03AE C990              ld R12,y+
+ 03B0 A990              ld R10,y+
+ 03B2 0895              ret
+ 03B4                   .dbsym r i 10 c
+ 03B4                   .dbsym r ucLength 12 c
+ 03B4                   .dbend
+ 03B4                   .dbfunc e FINGERPRINT_add_new_user _FINGERPRINT_add_new_user fc
+ 03B4           ;        Page_ID -> R10,R11
                         .even
- 03A8           _FINGERPRINT_add_new_user::
- 03A8 AA92              st -y,R10
- 03AA CA92              st -y,R12
- 03AC C22E              mov R12,R18
- 03AE A02E              mov R10,R16
- 03B0                   .dbline -1
- 03B0                   .dbline 183
- 03B0           ; }
- 03B0           ; 
- 03B0           ; //指纹添加新用户
- 03B0           ; unsigned char FINGERPRINT_add_new_user(unsigned char ucH_user,unsigned char ucL_user)
- 03B0           ; {
- 03B0           L113:
- 03B0                   .dbline 185
- 03B0           ;       do
- 03B0           ;       {
- 03B0                   .dbline 186
- 03B0           ;               FINGERPRINT_Cmd_Get_Img(); //获得指纹图像
- 03B0 27DE              xcall _FINGERPRINT_Cmd_Get_Img
- 03B2                   .dbline 187
- 03B2           ;               FINGERPRINT_Recevice_Data(12); //接收12个长度的反馈码
- 03B2 0CE0              ldi R16,12
- 03B4 E5DF              xcall _FINGERPRINT_Recevice_Data
- 03B6                   .dbline 188
- 03B6           ;       }
- 03B6           L114:
- 03B6                   .dbline 189
- 03B6           ;       while(UART1_FINGERPRINT_RECEVICE_BUFFER[9]!=0x0); //检测是否成功的按了指纹
- 03B6 20900900          lds R2,_UART1_FINGERPRINT_RECEVICE_BUFFER+9
- 03BA 2220              tst R2
- 03BC C9F7              brne L113
- 03BE           X23:
- 03BE                   .dbline 191
- 03BE           ; 
- 03BE           ;       FINGERPRINT_Cmd_Img_To_Buffer1(); //将图像转换成特征码存放在Buffer1中
- 03BE 3FDE              xcall _FINGERPRINT_Cmd_Img_To_Buffer1
- 03C0                   .dbline 192
- 03C0           ;       FINGERPRINT_Recevice_Data(12); //接收12个长度的反馈码
- 03C0 0CE0              ldi R16,12
- 03C2 DEDF              xcall _FINGERPRINT_Recevice_Data
- 03C4           L117:
- 03C4                   .dbline 195
+ 03B4           _FINGERPRINT_add_new_user::
+ 03B4 AA92              st -y,R10
+ 03B6 BA92              st -y,R11
+ 03B8 5801              movw R10,R16
+ 03BA                   .dbline -1
+ 03BA                   .dbline 187
+ 03BA           ; }
+ 03BA           ; 
+ 03BA           ; /*-------------------- 应用层接口函数 --------------------*/
+ 03BA           ; 
+ 03BA           ; //指纹添加新用户
+ 03BA           ; unsigned char FINGERPRINT_add_new_user(unsigned int Page_ID)
+ 03BA           ; {
+ 03BA                   .dbline 188
+ 03BA           ;       led_off_all(); //先关闭所有提示灯
+ 03BA 0E940000          xcall _led_off_all
+ 03BE                   .dbline 189
+ 03BE           ;       led_on(1); //打开第一个提示灯
+ 03BE 01E0              ldi R16,1
+ 03C0 0E940000          xcall _led_on
+ 03C4           L113:
+ 03C4                   .dbline 192
  03C4           ; 
  03C4           ;       do
  03C4           ;       {
- 03C4                   .dbline 196
+ 03C4                   .dbline 193
  03C4           ;               FINGERPRINT_Cmd_Get_Img(); //获得指纹图像
  03C4 1DDE              xcall _FINGERPRINT_Cmd_Get_Img
- 03C6                   .dbline 197
- 03C6           ;               FINGERPRINT_Recevice_Data(12); //接收12个长度的反馈码                    
+ 03C6                   .dbline 194
+ 03C6           ;               FINGERPRINT_Recevice_Data(12); //接收12个长度的反馈码
  03C6 0CE0              ldi R16,12
- 03C8 DBDF              xcall _FINGERPRINT_Recevice_Data
- 03CA                   .dbline 198
+ 03C8 E1DF              xcall _FINGERPRINT_Recevice_Data
+ 03CA                   .dbline 195
  03CA           ;       }
- 03CA           L118:
- 03CA                   .dbline 199
- 03CA           ;       while(UART1_FINGERPRINT_RECEVICE_BUFFER[9]!=0x0);
+ 03CA           L114:
+ 03CA                   .dbline 196
+ 03CA           ;       while(UART1_FINGERPRINT_RECEVICE_BUFFER[9]!=0x00); //检测是否成功的按了指纹
  03CA 20900900          lds R2,_UART1_FINGERPRINT_RECEVICE_BUFFER+9
  03CE 2220              tst R2
- 03D0 C9F7              brne L117
- 03D2           X24:
- 03D2                   .dbline 201
- 03D2           ; 
- 03D2           ;       FINGERPRINT_Cmd_Img_To_Buffer2(); //将图像转换成特征码存放在Buffer2中
- 03D2 54DE              xcall _FINGERPRINT_Cmd_Img_To_Buffer2
- 03D4                   .dbline 202
- 03D4           ;       FINGERPRINT_Recevice_Data(12); //接收12个长度的反馈码
- 03D4 0CE0              ldi R16,12
- 03D6 D4DF              xcall _FINGERPRINT_Recevice_Data
- 03D8                   .dbline 204
+ 03D0 C9F7              brne L113
+ 03D2           X23:
+ 03D2                   .dbline 198
+ 03D2           ;       
+ 03D2           ;       led_on(2); //第一个指纹录入完成, 打开第二个提示灯
+ 03D2 02E0              ldi R16,2
+ 03D4 0E940000          xcall _led_on
+ 03D8                   .dbline 200
  03D8           ; 
- 03D8           ;       FINGERPRINT_Cmd_Reg_Model(); //转换成特征码
- 03D8 70DE              xcall _FINGERPRINT_Cmd_Reg_Model
- 03DA                   .dbline 205
- 03DA           ;       FINGERPRINT_Recevice_Data(12);
+ 03D8           ;       FINGERPRINT_Cmd_Img_To_Buffer1(); //将图像转换成特征码存放在Buffer1中
+ 03D8 32DE              xcall _FINGERPRINT_Cmd_Img_To_Buffer1
+ 03DA                   .dbline 201
+ 03DA           ;       FINGERPRINT_Recevice_Data(12); //接收12个长度的反馈码
  03DA 0CE0              ldi R16,12
- 03DC D1DF              xcall _FINGERPRINT_Recevice_Data
- 03DE                   .dbline 207
+ 03DC D7DF              xcall _FINGERPRINT_Recevice_Data
+ 03DE           L117:
+ 03DE                   .dbline 204
  03DE           ; 
- 03DE           ;       FINGERPRINT_Cmd_Save_Finger(ucH_user,ucL_user);
- 03DE 2C2D              mov R18,R12
- 03E0 0A2D              mov R16,R10
- 03E2 62DF              xcall _FINGERPRINT_Cmd_Save_Finger
+ 03DE           ;       do
+ 03DE           ;       {
+ 03DE                   .dbline 205
+ 03DE           ;               FINGERPRINT_Cmd_Get_Img(); //获得指纹图像
+ 03DE 10DE              xcall _FINGERPRINT_Cmd_Get_Img
+ 03E0                   .dbline 206
+ 03E0           ;               FINGERPRINT_Recevice_Data(12); //接收12个长度的反馈码                    
+ 03E0 0CE0              ldi R16,12
+ 03E2 D4DF              xcall _FINGERPRINT_Recevice_Data
+ 03E4                   .dbline 207
+ 03E4           ;       }
+ 03E4           L118:
  03E4                   .dbline 208
- 03E4           ;       FINGERPRINT_Recevice_Data(12);
- 03E4 0CE0              ldi R16,12
- 03E6 CCDF              xcall _FINGERPRINT_Recevice_Data
- 03E8                   .dbline 210
- 03E8           ; 
- 03E8           ;       return 0;
- 03E8 0027              clr R16
- 03EA                   .dbline -2
- 03EA           L112:
- 03EA                   .dbline 0 ; func end
- 03EA C990              ld R12,y+
- 03EC A990              ld R10,y+
- 03EE 0895              ret
- 03F0                   .dbsym r ucL_user 12 c
- 03F0                   .dbsym r ucH_user 10 c
- 03F0                   .dbend
+ 03E4           ;       while(UART1_FINGERPRINT_RECEVICE_BUFFER[9]!=0x00);
+ 03E4 20900900          lds R2,_UART1_FINGERPRINT_RECEVICE_BUFFER+9
+ 03E8 2220              tst R2
+ 03EA C9F7              brne L117
+ 03EC           X24:
+ 03EC                   .dbline 210
+ 03EC           ;       
+ 03EC           ;       led_on(3); //第二个指纹录入完成, 打开第三个提示灯
+ 03EC 03E0              ldi R16,3
+ 03EE 0E940000          xcall _led_on
+ 03F2                   .dbline 212
+ 03F2           ; 
+ 03F2           ;       FINGERPRINT_Cmd_Img_To_Buffer2(); //将图像转换成特征码存放在Buffer2中
+ 03F2 44DE              xcall _FINGERPRINT_Cmd_Img_To_Buffer2
+ 03F4                   .dbline 213
+ 03F4           ;       FINGERPRINT_Recevice_Data(12); //接收12个长度的反馈码
+ 03F4 0CE0              ldi R16,12
+ 03F6 CADF              xcall _FINGERPRINT_Recevice_Data
+ 03F8                   .dbline 215
+ 03F8           ; 
+ 03F8           ;       FINGERPRINT_Cmd_Reg_Model(); //转换成特征码
+ 03F8 60DE              xcall _FINGERPRINT_Cmd_Reg_Model
+ 03FA                   .dbline 216
+ 03FA           ;       FINGERPRINT_Recevice_Data(12);
+ 03FA 0CE0              ldi R16,12
+ 03FC C7DF              xcall _FINGERPRINT_Recevice_Data
+ 03FE                   .dbline 217
+ 03FE           ;       if(UART1_FINGERPRINT_RECEVICE_BUFFER[9]!=0x00)
+ 03FE 20900900          lds R2,_UART1_FINGERPRINT_RECEVICE_BUFFER+9
+ 0402 2220              tst R2
+ 0404 11F0              breq L121
+ 0406           X25:
+ 0406                   .dbline 218
+ 0406           ;               return 0; //合并特征生成模板出错 返回0
+ 0406 0027              clr R16
+ 0408 14C0              xjmp L112
+ 040A           L121:
+ 040A                   .dbline 220
+ 040A           ; 
+ 040A           ;       FINGERPRINT_Cmd_Save_Finger(Page_ID);
+ 040A 8501              movw R16,R10
+ 040C 4DDF              xcall _FINGERPRINT_Cmd_Save_Finger
+ 040E                   .dbline 221
+ 040E           ;       FINGERPRINT_Recevice_Data(12);
+ 040E 0CE0              ldi R16,12
+ 0410 BDDF              xcall _FINGERPRINT_Recevice_Data
+ 0412                   .dbline 222
+ 0412           ;       if(UART1_FINGERPRINT_RECEVICE_BUFFER[9]!=0x00)
+ 0412 20900900          lds R2,_UART1_FINGERPRINT_RECEVICE_BUFFER+9
+ 0416 2220              tst R2
+ 0418 41F0              breq L124
+ 041A           X26:
+ 041A                   .dbline 223
+ 041A           ;       {
+ 041A                   .dbline 224
+ 041A           ;               if(UART1_FINGERPRINT_RECEVICE_BUFFER[9]==0x0B)
+ 041A 80910900          lds R24,_UART1_FINGERPRINT_RECEVICE_BUFFER+9
+ 041E 8B30              cpi R24,11
+ 0420 11F4              brne L127
+ 0422           X27:
+ 0422                   .dbline 225
+ 0422           ;                       return 2; //PageID超出指纹库范围 返回2
+ 0422 02E0              ldi R16,2
+ 0424 06C0              xjmp L112
+ 0426           L127:
+ 0426                   .dbline 226
+ 0426           ;               return 0; //储存模板出错 返回0
+ 0426 0027              clr R16
+ 0428 04C0              xjmp L112
+ 042A           L124:
+ 042A                   .dbline 229
+ 042A           ;       }
+ 042A           ; 
+ 042A           ;       led_on(4); //添加新用户完成, 打开全部提示灯
+ 042A 04E0              ldi R16,4
+ 042C 0E940000          xcall _led_on
+ 0430                   .dbline 230
+ 0430           ;       return 1; //全部执行无误 返回1
+ 0430 01E0              ldi R16,1
+ 0432                   .dbline -2
+ 0432           L112:
+ 0432                   .dbline 0 ; func end
+ 0432 B990              ld R11,y+
+ 0434 A990              ld R10,y+
+ 0436 0895              ret
+ 0438                   .dbsym r Page_ID 10 i
+ 0438                   .dbend
+ 0438                   .dbfunc e FINGERPRINT_search_reg_user _FINGERPRINT_search_reg_user fc
+                        .even
+ 0438           _FINGERPRINT_search_reg_user::
+ 0438                   .dbline -1
+ 0438                   .dbline 235
+ 0438           ; }
+ 0438           ; 
+ 0438           ; //指纹搜索是否为注册用户
+ 0438           ; unsigned char FINGERPRINT_search_reg_user(void)
+ 0438           ; {
+ 0438                   .dbline 236
+ 0438           ;       led_off_all(); //先关闭所有提示灯
+ 0438 0E940000          xcall _led_off_all
+ 043C                   .dbline 237
+ 043C           ;       led_on(1); //打开第一个提示灯
+ 043C 01E0              ldi R16,1
+ 043E 0E940000          xcall _led_on
+ 0442           L131:
+ 0442                   .dbline 240
+ 0442           ; 
+ 0442           ;       do
+ 0442           ;       {
+ 0442                   .dbline 241
+ 0442           ;               FINGERPRINT_Cmd_Get_Img(); //获得指纹图像
+ 0442 DEDD              xcall _FINGERPRINT_Cmd_Get_Img
+ 0444                   .dbline 242
+ 0444           ;               FINGERPRINT_Recevice_Data(12); //接收12个长度的反馈码
+ 0444 0CE0              ldi R16,12
+ 0446 A2DF              xcall _FINGERPRINT_Recevice_Data
+ 0448                   .dbline 243
+ 0448           ;       }
+ 0448           L132:
+ 0448                   .dbline 244
+ 0448           ;       while(UART1_FINGERPRINT_RECEVICE_BUFFER[9]!=0x00); //检测是否成功的按了指纹
+ 0448 20900900          lds R2,_UART1_FINGERPRINT_RECEVICE_BUFFER+9
+ 044C 2220              tst R2
+ 044E C9F7              brne L131
+ 0450           X28:
+ 0450                   .dbline 246
+ 0450           ;       
+ 0450           ;       led_on(2); //读取到指纹, 打开第二个提示灯
+ 0450 02E0              ldi R16,2
+ 0452 0E940000          xcall _led_on
+ 0456                   .dbline 248
+ 0456           ;       
+ 0456           ;       FINGERPRINT_Cmd_Img_To_Buffer1(); //将图像转换成特征码存放在Buffer1中
+ 0456 F3DD              xcall _FINGERPRINT_Cmd_Img_To_Buffer1
+ 0458                   .dbline 249
+ 0458           ;       FINGERPRINT_Recevice_Data(12); //接收12个长度的反馈码
+ 0458 0CE0              ldi R16,12
+ 045A 98DF              xcall _FINGERPRINT_Recevice_Data
+ 045C                   .dbline 251
+ 045C           ;       
+ 045C           ;       FINGERPRINT_Cmd_Search_Finger(); //搜索全部用户999枚
+ 045C E7DE              xcall _FINGERPRINT_Cmd_Search_Finger
+ 045E                   .dbline 252
+ 045E           ;       FINGERPRINT_Recevice_Data(16); //接收16个长度的反馈码
+ 045E 00E1              ldi R16,16
+ 0460 95DF              xcall _FINGERPRINT_Recevice_Data
+ 0462                   .dbline 253
+ 0462           ;       if(UART1_FINGERPRINT_RECEVICE_BUFFER[9]!=0x00)
+ 0462 20900900          lds R2,_UART1_FINGERPRINT_RECEVICE_BUFFER+9
+ 0466 2220              tst R2
+ 0468 59F0              breq L135
+ 046A           X29:
+ 046A                   .dbline 254
+ 046A           ;       {
+ 046A                   .dbline 255
+ 046A           ;               led_on(3); //发生错误, 打开第三个提示灯
+ 046A 03E0              ldi R16,3
+ 046C 0E940000          xcall _led_on
+ 0470                   .dbline 257
+ 0470           ;               
+ 0470           ;               if(UART1_FINGERPRINT_RECEVICE_BUFFER[9]==0x09)
+ 0470 80910900          lds R24,_UART1_FINGERPRINT_RECEVICE_BUFFER+9
+ 0474 8930              cpi R24,9
+ 0476 11F4              brne L138
+ 0478           X30:
+ 0478                   .dbline 258
+ 0478           ;                       return 2; //没搜索到 返回2
+ 0478 02E0              ldi R16,2
+ 047A 03C0              xjmp L130
+ 047C           L138:
+ 047C                   .dbline 259
+ 047C           ;               return 0; //其他错误 返回0
+ 047C 0027              clr R16
+ 047E 01C0              xjmp L130
+ 0480           L135:
+ 0480                   .dbline 262
+ 0480           ;       }
+ 0480           ; 
+ 0480           ;       led_on_all; //找到匹配的指纹, 打开全部提示灯
+ 0480                   .dbline 263
+ 0480           ;       return 1; //全部执行无误 返回1
+ 0480 01E0              ldi R16,1
+ 0482                   .dbline -2
+ 0482           L130:
+ 0482                   .dbline 0 ; func end
+ 0482 0895              ret
+ 0484                   .dbend
                         .area bss(ram, con, rel)
  0000                   .dbfile F:\工作\单片机\WorkSpace\AccessControlSystem\FingerprintOperate.c
  0000           _UART1_FINGERPRINT_RECEVICE_BUFFER::

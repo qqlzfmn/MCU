@@ -1,0 +1,106 @@
+//KeyboardOperate.c
+
+#include <iom128v.h>
+#include <macros.h>
+#include "KeyboardOperate.h"
+#include "GlobalDefine.h"
+
+//判断按下的是哪个按键
+unsigned char Keyboard_Scan(void)
+{
+	unsigned char temp; //设置PB口读取寄存位
+	unsigned char key = 0; //设置按键值寄存位(初值为0)
+	
+	//检测第一行按键
+	PORTB = 0xEF; //PB0以外全设为高电平
+	DDRB  = 0xF0; //PB低八位设为输入
+	temp  = PINB; //读出PB口的数值到temp
+	temp &= 0x0F; //检查低四位
+	if(temp != 0x0F) //若低四位不全是高电平, 说明有按键按下
+	{
+		delay(1); //消抖
+		temp  = PINB; //读出PB口的数值到temp
+		temp &= 0x0F; //再次检查低四位的电平
+		if(temp != 0x0F) //若低四位还不全是高电平, 说明确实有按键按下
+		{
+			temp = PINB; //读出PB口的数值到temp
+			switch(temp) //判断是哪个按键按下
+			{
+				case 0xEE: key = 1; break;
+				case 0xED: key = 2; break;
+				case 0xEB: key = 3; break;
+				case 0xE7: key = 4; break;
+			}
+		}
+	}
+	
+	//检测第二行按键
+	PORTB = 0xDF; //PB1以外全设为高电平
+	DDRB  = 0xF0; //PB低八位设为输入
+	temp  = PINB; //读出PB口的数值到temp
+	temp &= 0x0F; //检查低四位
+	if(temp != 0x0F) //若低四位不全是高电平, 说明有按键按下
+	{
+		delay(1); //消抖
+		temp  = PINB; //读出PB口的数值到temp
+		temp &= 0x0F; //再次检查低四位的电平
+		if(temp != 0x0F) //若低四位还不全是高电平, 说明确实有按键按下
+		{
+			temp = PINB; //读出PB口的数值到temp
+			switch(temp) //判断是哪个按键按下
+			{
+				case 0xDE: key = 5; break;
+				case 0xDD: key = 6; break;
+				case 0xDB: key = 7; break;
+				case 0xD7: key = 8; break;
+			}
+		}
+	}
+	
+	//检测第三行按键
+	PORTB = 0xBF; //PB2以外全设为高电平
+	DDRB  = 0xF0; //PB低八位设为输入
+	temp  = PINB; //读出PB口的数值到temp
+	temp &= 0x0F; //检查低四位
+	if(temp != 0x0F) //若低四位不全是高电平, 说明有按键按下
+	{
+		delay(1); //消抖
+		temp  = PINB; //读出PB口的数值到temp
+		temp &= 0x0F; //再次检查低四位的电平
+		if(temp != 0x0F) //若低四位还不全是高电平, 说明确实有按键按下
+		{
+			temp = PINB; //读出PB口的数值到temp
+			switch(temp) //判断是哪个按键按下
+			{
+				case 0xBE: key = 9; break;
+				case 0xBD: key = 10; break;
+				case 0xBB: key = 11; break;
+				case 0xB7: key = 12; break;
+			}
+		}
+	}
+	
+	//检测第四行按键
+	PORTB = 0x7F; //PB3以外全设为高电平
+	DDRB  = 0xF0; //PB低八位设为输入
+	temp  = PINB; //读出PB口的数值到temp
+	temp &= 0x0F; //检查低四位
+	if(temp != 0x0F) //若低四位不全是高电平, 说明有按键按下
+	{
+		delay(1); //消抖
+		temp  = PINB; //读出PB口的数值到temp
+		temp &= 0x0F; //再次检查低四位的电平
+		if(temp != 0x0F) //若低四位还不全是高电平, 说明确实有按键按下
+		{
+			temp = PINB; //读出PB口的数值到temp
+			switch(temp) //判断是哪个按键按下
+			{
+				case 0x7E: key = 13; break;
+				case 0x7D: key = 14; break;
+				case 0x7B: key = 15; break;
+				case 0x77: key = 16; break;
+			}
+		}
+	}
+	return key;
+}

@@ -26,4 +26,7 @@ unsigned char LCD_Busy(void);
 //LCD«Â∆¡
 void LCD_Clear_Screen(unsigned char *color);
 
+//LCDœ‘ æ
+void LCD_Display(void);
+
 #endif

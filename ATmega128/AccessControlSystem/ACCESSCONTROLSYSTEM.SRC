@@ -5,10 +5,12 @@ FingerprintOperate.c
 LCD_Operate.c
 KeyboardOperate.c
 GlobalDefine.c
+DeviceInitialize.c
 [Headers]
 USART_Operate.h
 FingerprintOperate.h
 LCD_Operate.h
 KeyboardOperate.h
 GlobalDefine.h
+DeviceInitialize.h
 [Documents]

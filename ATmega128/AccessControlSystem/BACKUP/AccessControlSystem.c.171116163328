@@ -1,0 +1,29 @@
+#include <iom128v.h>
+#include <macros.h>
+#include "USART_Operate.h"
+#include "FingerprintOperate.h"
+#include "LCD_Operate.h"
+#include "KeyboardOperate.h"
+#include "GlobalDefine.h"
+#include "DeviceInitialize.h"
+
+void main(void)
+{
+	init_devices();
+	//FINGERPRINT_add_new_user(0x00,0x0B);
+	
+	while(1)
+	{
+		//while(LCD_Busy());
+		//LCD_Clear_Screen(gray);
+		//USART0_Transmit_String("DS32(0,50,'实验室门禁系统',1);DS16(65,100,'显示模块测试',2);\r\n");
+		//delay(100);
+		while(Keyboard_Scan() == 1)
+		{
+			PORTA = 0x0F;
+			DDRA  = 0x0F;
+		}
+		PORTA = 0x00;
+		DDRA  = 0x00;
+	}
+}

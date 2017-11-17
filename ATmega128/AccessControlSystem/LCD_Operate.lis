@@ -6,84 +6,107 @@
                         .even
  0000           _LCD_Busy::
  0000                   .dbline -1
- 0000                   .dbline 10
+ 0000                   .dbline 11
  0000           ; //LCD_Operate.c
  0000           ; 
  0000           ; #include <iom128v.h>
  0000           ; #include <macros.h>
  0000           ; #include "LCD_Operate.h"
  0000           ; #include "USART_Operate.h"
+ 0000           ; #include "GlobalDefine.h"
  0000           ; 
  0000           ; //LCD测忙
  0000           ; unsigned char LCD_Busy(void)
  0000           ; {
- 0000                   .dbline 11
- 0000           ;       if(PINA & BIT(4))
- 0000 CC9B              sbis 0x19,4
- 0002 02C0              rjmp L2
- 0004           X0:
- 0004                   .dbline 12
- 0004           ;               return 1;
- 0004 01E0              ldi R16,1
- 0006 01C0              xjmp L1
- 0008           L2:
- 0008                   .dbline 14
- 0008           ;       else
- 0008           ;               return 0;
- 0008 0027              clr R16
- 000A                   .dbline -2
- 000A           L1:
- 000A                   .dbline 0 ; func end
- 000A 0895              ret
- 000C                   .dbend
- 000C                   .dbfunc e LCD_Clear_Screen _LCD_Clear_Screen fV
- 000C           ;          color -> R10,R11
+ 0000                   .dbline 12
+ 0000           ;       if(lcd_busy)
+ 0000                   .dbline 13
+ 0000           ;               return 1;
+ 0000 01E0              ldi R16,1
+ 0002 01C0              xjmp L1
+ 0004           L2:
+ 0004                   .dbline 15
+ 0004           ;       else
+ 0004           ;               return 0;
+ 0004 0027              clr R16
+ 0006                   .dbline -2
+ 0006           L1:
+ 0006                   .dbline 0 ; func end
+ 0006 0895              ret
+ 0008                   .dbend
+ 0008                   .dbfunc e LCD_Clear_Screen _LCD_Clear_Screen fV
+ 0008           ;          color -> R10,R11
                         .even
- 000C           _LCD_Clear_Screen::
- 000C AA92              st -y,R10
- 000E BA92              st -y,R11
- 0010 5801              movw R10,R16
- 0012                   .dbline -1
- 0012                   .dbline 19
- 0012           ; }
- 0012           ; 
- 0012           ; //LCD清屏
- 0012           ; void LCD_Clear_Screen(unsigned char *color)
- 0012           ; {
- 0012                   .dbline 20
- 0012           ;       USART0_Transmit_String("CLS(");
- 0012 00E0              ldi R16,<L5
- 0014 10E0              ldi R17,>L5
- 0016 0E940000          xcall _USART0_Transmit_String
- 001A                   .dbline 21
- 001A           ;       USART0_Transmit_String(color);
- 001A 8501              movw R16,R10
- 001C 0E940000          xcall _USART0_Transmit_String
- 0020                   .dbline 22
- 0020           ;       USART0_Transmit_String(");\r\n");
- 0020 00E0              ldi R16,<L6
- 0022 10E0              ldi R17,>L6
- 0024 0E940000          xcall _USART0_Transmit_String
- 0028                   .dbline -2
- 0028           L4:
- 0028                   .dbline 0 ; func end
- 0028 B990              ld R11,y+
- 002A A990              ld R10,y+
- 002C 0895              ret
- 002E                   .dbsym r color 10 pc
- 002E                   .dbend
+ 0008           _LCD_Clear_Screen::
+ 0008 AA92              st -y,R10
+ 000A BA92              st -y,R11
+ 000C 5801              movw R10,R16
+ 000E                   .dbline -1
+ 000E                   .dbline 20
+ 000E           ; }
+ 000E           ; 
+ 000E           ; //LCD用color颜色清屏
+ 000E           ; void LCD_Clear_Screen(unsigned char *color)
+ 000E           ; {
+ 000E                   .dbline 21
+ 000E           ;       USART0_Transmit_String("CLS(");
+ 000E 00E0              ldi R16,<L5
+ 0010 10E0              ldi R17,>L5
+ 0012 0E940000          xcall _USART0_Transmit_String
+ 0016                   .dbline 22
+ 0016           ;       USART0_Transmit_String(color);
+ 0016 8501              movw R16,R10
+ 0018 0E940000          xcall _USART0_Transmit_String
+ 001C                   .dbline 23
+ 001C           ;       USART0_Transmit_String(");\r\n");
+ 001C 00E0              ldi R16,<L6
+ 001E 10E0              ldi R17,>L6
+ 0020 0E940000          xcall _USART0_Transmit_String
+ 0024                   .dbline -2
+ 0024           L4:
+ 0024                   .dbline 0 ; func end
+ 0024 B990              ld R11,y+
+ 0026 A990              ld R10,y+
+ 0028 0895              ret
+ 002A                   .dbsym r color 10 pc
+ 002A                   .dbend
+ 002A                   .dbfunc e LCD_Display _LCD_Display fV
+                        .even
+ 002A           _LCD_Display::
+ 002A                   .dbline -1
+ 002A                   .dbline 28
+ 002A           ; }
+ 002A           ; 
+ 002A           ; //LCD显示
+ 002A           ; void LCD_Display(void)
+ 002A           ; {
+ 002A                   .dbline 29
+ 002A           ;       USART0_Transmit_String("\r\n");
+ 002A 00E0              ldi R16,<L8
+ 002C 10E0              ldi R17,>L8
+ 002E                   .dbline -2
+ 002E           L7:
+ 002E                   .dbline 0 ; func end
+ 002E 0C940000          xjmp _USART0_Transmit_String
+ 0032                   .dbend
                         .area data(ram, con, rel)
  0000                   .dbfile F:\工作\单片机\WorkSpace\AccessControlSystem\LCD_Operate.c
- 0000           L6:
- 0000                   .blkb 5
+ 0000           L8:
+ 0000                   .blkb 3
                         .area idata
- 0000 293B0D0A00        .byte 41,59,13,10,0
+ 0000 0D0A00            .byte 13,10,0
                         .area data(ram, con, rel)
- 0005                   .dbfile F:\工作\单片机\WorkSpace\AccessControlSystem\LCD_Operate.c
- 0005           L5:
- 0005                   .blkb 5
+ 0003                   .dbfile F:\工作\单片机\WorkSpace\AccessControlSystem\LCD_Operate.c
+ 0003           L6:
+ 0003                   .blkb 5
                         .area idata
- 0005 434C532800        .byte 'C,'L,'S,40,0
+ 0003 293B0D0A00        .byte 41,59,13,10,0
                         .area data(ram, con, rel)
- 000A                   .dbfile F:\工作\单片机\WorkSpace\AccessControlSystem\LCD_Operate.c
- 000A           ; }
+ 0008                   .dbfile F:\工作\单片机\WorkSpace\AccessControlSystem\LCD_Operate.c
+ 0008           L5:
+ 0008                   .blkb 5
+                        .area idata
+ 0008 434C532800        .byte 'C,'L,'S,40,0
+                        .area data(ram, con, rel)
+ 000D                   .dbfile F:\工作\单片机\WorkSpace\AccessControlSystem\LCD_Operate.c
+ 000D           ; }

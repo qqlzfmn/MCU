@@ -3,7 +3,7 @@
 #ifndef _FingerprintOperate_H
 #define _FingerprintOperate_H
 
-/*------------------ FINGERPRINT命令字 --------------------------*/
+/*-------------------- FINGERPRINT命令字 --------------------*/
 
 //FINGERPRINT_获得指纹图像命令
 void FINGERPRINT_Cmd_Get_Img(void);
@@ -21,7 +21,7 @@ void FINGERPRINT_Cmd_Reg_Model(void);
 void FINGERPRINT_Cmd_Delete_All_Model(void);
 
 //删除指纹模块里的指定指纹模版
-void FINGERPRINT_Cmd_Delete_Model(unsigned int uiID_temp);
+void FINGERPRINT_Cmd_Delete_Model(unsigned int Page_ID);
 
 //获得指纹模板数量
 void FINGERPRINT_Cmd_Get_Templete_Num(void);
@@ -29,15 +29,21 @@ void FINGERPRINT_Cmd_Get_Templete_Num(void);
 //搜索全部用户999枚
 void FINGERPRINT_Cmd_Search_Finger(void);
 
-//搜索全部用户999枚
+//搜索管理员用户10枚
 void FINGERPRINT_Cmd_Search_Finger_Admin(void);
 
-void FINGERPRINT_Cmd_Save_Finger(unsigned char ucH_Char,unsigned char ucL_Char);
+//保存指纹到指定的位置
+void FINGERPRINT_Cmd_Save_Finger(unsigned int Page_ID);
 
 //接收反馈数据缓冲
 void FINGERPRINT_Recevice_Data(unsigned char ucLength);
 
+/*-------------------- 应用层接口函数 --------------------*/
+
 //指纹添加新用户
-unsigned char FINGERPRINT_add_new_user(unsigned char ucH_user,unsigned char ucL_user);
+unsigned char FINGERPRINT_add_new_user(unsigned int Page_ID);
+
+//指纹搜索是否为注册用户
+unsigned char FINGERPRINT_search_reg_user(void);
 
 #endif

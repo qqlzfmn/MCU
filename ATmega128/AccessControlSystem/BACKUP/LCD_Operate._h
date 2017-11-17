@@ -26,4 +26,7 @@ unsigned char LCD_Busy(void);
 //LCD清屏
 void LCD_Clear_Screen(unsigned char *color);
 
+//LCD以size(值可以取12,16,24,32,48,64)大小, 以(x,y)为左上角起点, 以limitX为右侧终点, 用color颜色, 显示string
+void LCD_Display(unsigned char *size, *x, *y, *string, *color, *limitX);
+
 #endif

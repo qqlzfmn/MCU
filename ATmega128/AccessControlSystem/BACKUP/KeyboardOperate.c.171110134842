@@ -1,0 +1,173 @@
+//KeyboardOperate.c
+
+#include <iom128v.h>
+#include <macros.h>
+#include "KeyboardOperate.h"
+#include "GlobalDefine.h"
+
+//判断按键是否按下
+unsigned char Keyboard_Press(void)
+{
+	unsigned char temp;
+	
+	DDRB  = 0XFF; //设置PB口全为输出
+	PORTB = 0XF0; //设置PB高四位为高电平, 以便进行判断
+	DDRB  = 0X0F; //设置高四位为输入, 低四位为输出
+	temp  = PINB; //读出IO口状态
+	if(i == 0XF0) //如果它等于0xF0就执返回0
+	{
+		DDRD = 0XFF; //将IO口值读回来
+		return 0;
+	}
+	else //否则它就执返回1
+	{
+		DDRD = 0XFF;
+		return 1;
+	}
+}
+
+//判断按下的是哪个按键
+unsigned char Keyboard_Scan(void)
+{
+	unsigned char key,i=0X7F,j; //将变量I设置为01111111B
+	
+	if(Keyboard_Press()) //判断按键是否被按下了
+	{
+		delay(10);//如果被按下了, 消下抖
+		if(Keyboard_Press())//再次判断下按键是否被按下了
+		{
+			do//先执行一次
+			{
+				i=(i<<1|i>>7);/*将变量I内容左移1位, 11111110
+				然后将I右移7位，11111110，即实现11111110 
+				11111101 11111011 11110111*/
+				PORTD=i;//将移位后的值给PD口
+				DDRD=0X0F;//将PD口高位设为输入，低位设为输出
+				key=PIND;//将IO口高位值读一下
+				j=key&0XF0;//只需要读高4位
+			}
+			while(j==0XF0);//如果按键没有按下，则再执行上面的do语句
+		while(Keyboard_Press());//如果有按下则释放一下
+		switch(key)//确定有按键按下了就判断下到底是哪个值
+		{
+			case 0xEE:
+				key = 0x00;
+				break;
+			case 0xDE:
+				key = 0x01;
+				break; 
+			case 0xBE:
+				key = 0x02;
+				break;
+			case 0x7E:
+				key = 0x03;
+				break;
+			case 0xED:
+				key = 0x04;
+				break;
+			case 0xDD:
+				key = 0x05;
+				break;
+			case 0xBD:
+				key = 0x06;
+				break;
+			case 0x7D:
+				key = 0x07;
+				break;
+			case 0xEB:
+				key = 0x08;
+				break;
+			case 0xDB:
+				key = 0x09;
+				break;
+			case 0xBB:
+				key = 0x0A;
+				break;
+			case 0x7B:
+				key = 0x0B;
+				break;
+			case 0xE7:
+				key = 0x0C;
+				break;
+			case 0xD7:
+				key = 0x0D;
+				break;
+			case 0xB7:
+				key = 0x0E;
+				break;
+			case 0x77:
+				key = 0x0F;
+				break;
+  }
+  }
+  }
+  return key;//返回按键值
+}
+
+unsigned char keyscan(void)
+{
+		unsigned char temp;
+		PORTB = 0xBF;
+		DDRB  = 0xBF;
+		temp  = PINB;
+		DDRB ^= 0xFF;
+		temp  = temp & 0x0F;
+		if(temp!=0x0F)
+		{
+				delay(10);
+				temp=P2;
+				temp=temp&0x0F;
+				if(temp!=0x0F)
+				{
+						temp=P2;
+						switch(temp)
+						{
+								case 0xB7:return 1;break;
+								case 0xBB:return 2;break;
+								case 0xBD:return 3;break;
+								case 0xBE:return 4;break;
+						}
+				}
+		}
+		P2=0xDF;
+		temp=P2;
+		temp=temp&0x0F;
+		if(temp!=0x0F)
+		{
+				delay(10);
+				temp=P2;
+				temp=temp&0x0F;
+				if(temp!=0x0F)
+				{
+						temp=P2;
+						switch(temp)
+						{
+								case 0xD7:return 5;break;
+								case 0xDB:return 6;break;
+								case 0xDD:return 7;break;
+								case 0xDE:return 8;break;
+						}
+				}
+		}
+		P2=0xEF;
+		temp=P2;
+		temp=temp&0x0F;
+		if(temp!=0x0F)
+		{
+				delay(10);
+				temp=P2;
+				temp=temp&0x0F;
+				if(temp!=0x0F)
+				{
+						temp=P2;
+						switch(temp)
+						{
+								case 0xE7:return 9;break;
+								case 0xEB:return 10;break;
+								case 0xED:return 11;break;
+								case 0xEE:return 12;break;
+						}
+				}
+		}
+		return 0;
+}

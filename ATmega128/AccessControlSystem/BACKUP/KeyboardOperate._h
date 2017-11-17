@@ -1,0 +1,12 @@
+//#include "KeyboardOperate.h"
+
+#ifndef _KeyboardOperate_H
+#define _KeyboardOperate_H
+
+//判断按键是否按下
+unsigned char Keyboard_Press(void);
+
+//判断按下的是哪个按键
+unsigned char Keyboard_Scan(void);
+
+#endif

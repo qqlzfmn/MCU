@@ -1,6 +1,513 @@
                         .module KeyboardOperate.c
                         .area text(rom, con, rel)
  0000                   .dbfile KeyboardOperate.c
- 0000           ; //KeyboardOperate.c
- 0000           ; 
- 0000           ; #include "KeyboardOperate.h"
+ 0000                   .dbfile F:\工作\单片机\WorkSpace\AccessControlSystem\KeyboardOperate.c
+ 0000                   .dbfunc e Keyboard_Scan _Keyboard_Scan fc
+ 0000           ;            key -> R20
+ 0000           ;           temp -> R22
+                        .even
+ 0000           _Keyboard_Scan::
+ 0000 0E940000          xcall push_xgsetF00C
+ 0004                   .dbline -1
+ 0004                   .dbline 10
+ 0004           ; //KeyboardOperate.c
+ 0004           ; 
+ 0004           ; #include <iom128v.h>
+ 0004           ; #include <macros.h>
+ 0004           ; #include "KeyboardOperate.h"
+ 0004           ; #include "GlobalDefine.h"
+ 0004           ; 
+ 0004           ; //判断按下的是哪个按键
+ 0004           ; unsigned char Keyboard_Scan(void)
+ 0004           ; {
+ 0004                   .dbline 12
+ 0004           ;       unsigned char temp; //设置PB口读取寄存位
+ 0004           ;       unsigned char key = 0; //设置按键值寄存位(初值为0, 可以用于判断是否有按键按下)
+ 0004 4427              clr R20
+ 0006                   .dbline 15
+ 0006           ;       
+ 0006           ;       //检测第一行按键
+ 0006           ;       PORTB = 0xFE; //PB0以外全设为高电平
+ 0006 8EEF              ldi R24,254
+ 0008 88BB              out 0x18,R24
+ 000A                   .dbline 16
+ 000A           ;       DDRB  = 0x0F; //PB低四位设为输入
+ 000A 8FE0              ldi R24,15
+ 000C 87BB              out 0x17,R24
+ 000E                   .dbline 17
+ 000E           ;       temp  = PINB; //读出PB口的数值到temp
+ 000E 66B3              in R22,0x16
+ 0010                   .dbline 18
+ 0010           ;       temp &= 0xF0; //检查高四位
+ 0010 607F              andi R22,240
+ 0012                   .dbline 19
+ 0012           ;       if(temp != 0xF0) //若高四位不全是高电平, 说明有按键按下
+ 0012 603F              cpi R22,240
+ 0014 79F1              breq L2
+ 0016           X0:
+ 0016                   .dbline 20
+ 0016           ;       {
+ 0016                   .dbline 21
+ 0016           ;               delay(1); //消抖
+ 0016 01E0              ldi R16,1
+ 0018 0E940000          xcall _delay
+ 001C                   .dbline 22
+ 001C           ;               temp  = PINB; //读出PB口的数值到temp
+ 001C 66B3              in R22,0x16
+ 001E                   .dbline 23
+ 001E           ;               temp &= 0xF0; //再次检查高四位的电平
+ 001E 607F              andi R22,240
+ 0020                   .dbline 24
+ 0020           ;               if(temp != 0xF0) //若高四位还不全是高电平, 说明确实有按键按下
+ 0020 603F              cpi R22,240
+ 0022 41F1              breq L4
+ 0024           X1:
+ 0024                   .dbline 25
+ 0024           ;               {
+ 0024                   .dbline 26
+ 0024           ;                       temp = PINB; //读出PB口的数值到temp
+ 0024 66B3              in R22,0x16
+ 0026                   .dbline 27
+ 0026           ;                       switch(temp) //判断是哪个按键按下
+ 0026 A62E              mov R10,R22
+ 0028 BB24              clr R11
+ 002A C501              movw R24,R10
+ 002C 8E3B              cpi R24,190
+ 002E E0E0              ldi R30,0
+ 0030 9E07              cpc R25,R30
+ 0032 E9F0              breq L11
+ 0034           X2:
+ 0034 8EEB              ldi R24,190
+ 0036 8A15              cp R24,R10
+ 0038 9B05              cpc R25,R11
+ 003A 34F0              brlt L14
+ 003C           X3:
+ 003C           L13:
+ 003C C501              movw R24,R10
+ 003E 8E37              cpi R24,126
+ 0040 E0E0              ldi R30,0
+ 0042 9E07              cpc R25,R30
+ 0044 B1F0              breq L12
+ 0046           X4:
+ 0046 16C0              xjmp L6
+ 0048           L14:
+ 0048 C501              movw R24,R10
+ 004A 8E3D              cpi R24,222
+ 004C E0E0              ldi R30,0
+ 004E 9E07              cpc R25,R30
+ 0050 61F0              breq L10
+ 0052           X5:
+ 0052 8E3D              cpi R24,222
+ 0054 E0E0              ldi R30,0
+ 0056 9E07              cpc R25,R30
+ 0058 6CF0              brlt L6
+ 005A           X6:
+ 005A           L15:
+ 005A C501              movw R24,R10
+ 005C 8E3E              cpi R24,238
+ 005E E0E0              ldi R30,0
+ 0060 9E07              cpc R25,R30
+ 0062 09F0              breq L9
+ 0064           X7:
+ 0064 07C0              xjmp L6
+ 0066           L9:
+ 0066                   .dbline 29
+ 0066           ;                       {
+ 0066           ;                               case 0xEE: key = '1'; break;
+ 0066 41E3              ldi R20,49
+ 0068                   .dbline 29
+ 0068 05C0              xjmp L7
+ 006A           L10:
+ 006A                   .dbline 30
+ 006A           ;                               case 0xDE: key = '2'; break;
+ 006A 42E3              ldi R20,50
+ 006C                   .dbline 30
+ 006C 03C0              xjmp L7
+ 006E           L11:
+ 006E                   .dbline 31
+ 006E           ;                               case 0xBE: key = '3'; break;
+ 006E 43E3              ldi R20,51
+ 0070                   .dbline 31
+ 0070 01C0              xjmp L7
+ 0072           L12:
+ 0072                   .dbline 32
+ 0072           ;                               case 0x7E: key = 'A'; break;
+ 0072 41E4              ldi R20,65
+ 0074                   .dbline 32
+ 0074           L6:
+ 0074           L7:
+ 0074                   .dbline 34
+ 0074           ;                       }
+ 0074           ;               }
+ 0074           L4:
+ 0074                   .dbline 36
+ 0074           ;               //while(temp != 0xF0); //松手检测
+ 0074           ;       }
+ 0074           L2:
+ 0074                   .dbline 39
+ 0074           ;       
+ 0074           ;       //检测第二行按键
+ 0074           ;       PORTB = 0xFD; //PB1以外全设为高电平
+ 0074 8DEF              ldi R24,253
+ 0076 88BB              out 0x18,R24
+ 0078                   .dbline 40
+ 0078           ;       DDRB  = 0x0F; //PB低四位设为输入
+ 0078 8FE0              ldi R24,15
+ 007A 87BB              out 0x17,R24
+ 007C                   .dbline 41
+ 007C           ;       temp  = PINB; //读出PB口的数值到temp
+ 007C 66B3              in R22,0x16
+ 007E                   .dbline 42
+ 007E           ;       temp &= 0xF0; //检查高四位
+ 007E 607F              andi R22,240
+ 0080                   .dbline 43
+ 0080           ;       if(temp != 0xF0) //若高四位不全是高电平, 说明有按键按下
+ 0080 603F              cpi R22,240
+ 0082 79F1              breq L16
+ 0084           X8:
+ 0084                   .dbline 44
+ 0084           ;       {
+ 0084                   .dbline 45
+ 0084           ;               delay(1); //消抖
+ 0084 01E0              ldi R16,1
+ 0086 0E940000          xcall _delay
+ 008A                   .dbline 46
+ 008A           ;               temp  = PINB; //读出PB口的数值到temp
+ 008A 66B3              in R22,0x16
+ 008C                   .dbline 47
+ 008C           ;               temp &= 0xF0; //再次检查高四位的电平
+ 008C 607F              andi R22,240
+ 008E                   .dbline 48
+ 008E           ;               if(temp != 0xF0) //若高四位还不全是高电平, 说明确实有按键按下
+ 008E 603F              cpi R22,240
+ 0090 41F1              breq L18
+ 0092           X9:
+ 0092                   .dbline 49
+ 0092           ;               {
+ 0092                   .dbline 50
+ 0092           ;                       temp = PINB; //读出PB口的数值到temp
+ 0092 66B3              in R22,0x16
+ 0094                   .dbline 51
+ 0094           ;                       switch(temp) //判断是哪个按键按下
+ 0094 A62E              mov R10,R22
+ 0096 BB24              clr R11
+ 0098 C501              movw R24,R10
+ 009A 8D3B              cpi R24,189
+ 009C E0E0              ldi R30,0
+ 009E 9E07              cpc R25,R30
+ 00A0 E9F0              breq L25
+ 00A2           X10:
+ 00A2 8DEB              ldi R24,189
+ 00A4 8A15              cp R24,R10
+ 00A6 9B05              cpc R25,R11
+ 00A8 34F0              brlt L28
+ 00AA           X11:
+ 00AA           L27:
+ 00AA C501              movw R24,R10
+ 00AC 8D37              cpi R24,125
+ 00AE E0E0              ldi R30,0
+ 00B0 9E07              cpc R25,R30
+ 00B2 B1F0              breq L26
+ 00B4           X12:
+ 00B4 16C0              xjmp L20
+ 00B6           L28:
+ 00B6 C501              movw R24,R10
+ 00B8 8D3D              cpi R24,221
+ 00BA E0E0              ldi R30,0
+ 00BC 9E07              cpc R25,R30
+ 00BE 61F0              breq L24
+ 00C0           X13:
+ 00C0 8D3D              cpi R24,221
+ 00C2 E0E0              ldi R30,0
+ 00C4 9E07              cpc R25,R30
+ 00C6 6CF0              brlt L20
+ 00C8           X14:
+ 00C8           L29:
+ 00C8 C501              movw R24,R10
+ 00CA 8D3E              cpi R24,237
+ 00CC E0E0              ldi R30,0
+ 00CE 9E07              cpc R25,R30
+ 00D0 09F0              breq L23
+ 00D2           X15:
+ 00D2 07C0              xjmp L20
+ 00D4           L23:
+ 00D4                   .dbline 53
+ 00D4           ;                       {
+ 00D4           ;                               case 0xED: key = '4'; break;
+ 00D4 44E3              ldi R20,52
+ 00D6                   .dbline 53
+ 00D6 05C0              xjmp L21
+ 00D8           L24:
+ 00D8                   .dbline 54
+ 00D8           ;                               case 0xDD: key = '5'; break;
+ 00D8 45E3              ldi R20,53
+ 00DA                   .dbline 54
+ 00DA 03C0              xjmp L21
+ 00DC           L25:
+ 00DC                   .dbline 55
+ 00DC           ;                               case 0xBD: key = '6'; break;
+ 00DC 46E3              ldi R20,54
+ 00DE                   .dbline 55
+ 00DE 01C0              xjmp L21
+ 00E0           L26:
+ 00E0                   .dbline 56
+ 00E0           ;                               case 0x7D: key = 'B'; break;
+ 00E0 42E4              ldi R20,66
+ 00E2                   .dbline 56
+ 00E2           L20:
+ 00E2           L21:
+ 00E2                   .dbline 58
+ 00E2           ;                       }
+ 00E2           ;               }
+ 00E2           L18:
+ 00E2                   .dbline 60
+ 00E2           ;               //while(temp != 0xF0); //松手检测
+ 00E2           ;       }
+ 00E2           L16:
+ 00E2                   .dbline 63
+ 00E2           ;       
+ 00E2           ;       //检测第三行按键
+ 00E2           ;       PORTB = 0xFB; //PB2以外全设为高电平
+ 00E2 8BEF              ldi R24,251
+ 00E4 88BB              out 0x18,R24
+ 00E6                   .dbline 64
+ 00E6           ;       DDRB  = 0x0F; //PB低四位设为输入
+ 00E6 8FE0              ldi R24,15
+ 00E8 87BB              out 0x17,R24
+ 00EA                   .dbline 65
+ 00EA           ;       temp  = PINB; //读出PB口的数值到temp
+ 00EA 66B3              in R22,0x16
+ 00EC                   .dbline 66
+ 00EC           ;       temp &= 0xF0; //检查高四位
+ 00EC 607F              andi R22,240
+ 00EE                   .dbline 67
+ 00EE           ;       if(temp != 0xF0) //若高四位不全是高电平, 说明有按键按下
+ 00EE 603F              cpi R22,240
+ 00F0 79F1              breq L30
+ 00F2           X16:
+ 00F2                   .dbline 68
+ 00F2           ;       {
+ 00F2                   .dbline 69
+ 00F2           ;               delay(1); //消抖
+ 00F2 01E0              ldi R16,1
+ 00F4 0E940000          xcall _delay
+ 00F8                   .dbline 70
+ 00F8           ;               temp  = PINB; //读出PB口的数值到temp
+ 00F8 66B3              in R22,0x16
+ 00FA                   .dbline 71
+ 00FA           ;               temp &= 0xF0; //再次检查高四位的电平
+ 00FA 607F              andi R22,240
+ 00FC                   .dbline 72
+ 00FC           ;               if(temp != 0xF0) //若高四位还不全是高电平, 说明确实有按键按下
+ 00FC 603F              cpi R22,240
+ 00FE 41F1              breq L32
+ 0100           X17:
+ 0100                   .dbline 73
+ 0100           ;               {
+ 0100                   .dbline 74
+ 0100           ;                       temp = PINB; //读出PB口的数值到temp
+ 0100 66B3              in R22,0x16
+ 0102                   .dbline 75
+ 0102           ;                       switch(temp) //判断是哪个按键按下
+ 0102 A62E              mov R10,R22
+ 0104 BB24              clr R11
+ 0106 C501              movw R24,R10
+ 0108 8B3B              cpi R24,187
+ 010A E0E0              ldi R30,0
+ 010C 9E07              cpc R25,R30
+ 010E E9F0              breq L39
+ 0110           X18:
+ 0110 8BEB              ldi R24,187
+ 0112 8A15              cp R24,R10
+ 0114 9B05              cpc R25,R11
+ 0116 34F0              brlt L42
+ 0118           X19:
+ 0118           L41:
+ 0118 C501              movw R24,R10
+ 011A 8B37              cpi R24,123
+ 011C E0E0              ldi R30,0
+ 011E 9E07              cpc R25,R30
+ 0120 B1F0              breq L40
+ 0122           X20:
+ 0122 16C0              xjmp L34
+ 0124           L42:
+ 0124 C501              movw R24,R10
+ 0126 8B3D              cpi R24,219
+ 0128 E0E0              ldi R30,0
+ 012A 9E07              cpc R25,R30
+ 012C 61F0              breq L38
+ 012E           X21:
+ 012E 8B3D              cpi R24,219
+ 0130 E0E0              ldi R30,0
+ 0132 9E07              cpc R25,R30
+ 0134 6CF0              brlt L34
+ 0136           X22:
+ 0136           L43:
+ 0136 C501              movw R24,R10
+ 0138 8B3E              cpi R24,235
+ 013A E0E0              ldi R30,0
+ 013C 9E07              cpc R25,R30
+ 013E 09F0              breq L37
+ 0140           X23:
+ 0140 07C0              xjmp L34
+ 0142           L37:
+ 0142                   .dbline 77
+ 0142           ;                       {
+ 0142           ;                               case 0xEB: key = '7'; break;
+ 0142 47E3              ldi R20,55
+ 0144                   .dbline 77
+ 0144 05C0              xjmp L35
+ 0146           L38:
+ 0146                   .dbline 78
+ 0146           ;                               case 0xDB: key = '8'; break;
+ 0146 48E3              ldi R20,56
+ 0148                   .dbline 78
+ 0148 03C0              xjmp L35
+ 014A           L39:
+ 014A                   .dbline 79
+ 014A           ;                               case 0xBB: key = '9'; break;
+ 014A 49E3              ldi R20,57
+ 014C                   .dbline 79
+ 014C 01C0              xjmp L35
+ 014E           L40:
+ 014E                   .dbline 80
+ 014E           ;                               case 0x7B: key = 'C'; break;
+ 014E 43E4              ldi R20,67
+ 0150                   .dbline 80
+ 0150           L34:
+ 0150           L35:
+ 0150                   .dbline 82
+ 0150           ;                       }
+ 0150           ;               }
+ 0150           L32:
+ 0150                   .dbline 84
+ 0150           ;               //while(temp != 0xF0); //松手检测
+ 0150           ;       }
+ 0150           L30:
+ 0150                   .dbline 87
+ 0150           ;       
+ 0150           ;       //检测第四行按键
+ 0150           ;       PORTB = 0xF7; //PB3以外全设为高电平
+ 0150 87EF              ldi R24,247
+ 0152 88BB              out 0x18,R24
+ 0154                   .dbline 88
+ 0154           ;       DDRB  = 0x0F; //PB低四位设为输入
+ 0154 8FE0              ldi R24,15
+ 0156 87BB              out 0x17,R24
+ 0158                   .dbline 89
+ 0158           ;       temp  = PINB; //读出PB口的数值到temp
+ 0158 66B3              in R22,0x16
+ 015A                   .dbline 90
+ 015A           ;       temp &= 0xF0; //检查高四位
+ 015A 607F              andi R22,240
+ 015C                   .dbline 91
+ 015C           ;       if(temp != 0xF0) //若高四位不全是高电平, 说明有按键按下
+ 015C 603F              cpi R22,240
+ 015E 59F1              breq L44
+ 0160           X24:
+ 0160                   .dbline 92
+ 0160           ;       {
+ 0160                   .dbline 93
+ 0160           ;               delay(1); //消抖
+ 0160 01E0              ldi R16,1
+ 0162 0E940000          xcall _delay
+ 0166                   .dbline 94
+ 0166           ;               temp  = PINB; //读出PB口的数值到temp
+ 0166 66B3              in R22,0x16
+ 0168                   .dbline 95
+ 0168           ;               temp &= 0xF0; //再次检查高四位的电平
+ 0168 607F              andi R22,240
+ 016A                   .dbline 96
+ 016A           ;               if(temp != 0xF0) //若高四位还不全是高电平, 说明确实有按键按下
+ 016A 603F              cpi R22,240
+ 016C 21F1              breq L46
+ 016E           X25:
+ 016E                   .dbline 97
+ 016E           ;               {
+ 016E                   .dbline 98
+ 016E           ;                       temp = PINB; //读出PB口的数值到temp
+ 016E 66B3              in R22,0x16
+ 0170                   .dbline 99
+ 0170           ;                       switch(temp) //判断是哪个按键按下
+ 0170 7727              clr R23
+ 0172 673B              cpi R22,183
+ 0174 E0E0              ldi R30,0
+ 0176 7E07              cpc R23,R30
+ 0178 D9F0              breq L53
+ 017A           X26:
+ 017A 87EB              ldi R24,183
+ 017C 90E0              ldi R25,0
+ 017E 8617              cp R24,R22
+ 0180 9707              cpc R25,R23
+ 0182 2CF0              brlt L56
+ 0184           X27:
+ 0184           L55:
+ 0184 6737              cpi R22,119
+ 0186 E0E0              ldi R30,0
+ 0188 7E07              cpc R23,R30
+ 018A A1F0              breq L54
+ 018C           X28:
+ 018C 14C0              xjmp L48
+ 018E           L56:
+ 018E 673D              cpi R22,215
+ 0190 E0E0              ldi R30,0
+ 0192 7E07              cpc R23,R30
+ 0194 59F0              breq L52
+ 0196           X29:
+ 0196 673D              cpi R22,215
+ 0198 E0E0              ldi R30,0
+ 019A 7E07              cpc R23,R30
+ 019C 64F0              brlt L48
+ 019E           X30:
+ 019E           L57:
+ 019E 673E              cpi R22,231
+ 01A0 E0E0              ldi R30,0
+ 01A2 7E07              cpc R23,R30
+ 01A4 09F0              breq L51
+ 01A6           X31:
+ 01A6 07C0              xjmp L48
+ 01A8           L51:
+ 01A8                   .dbline 101
+ 01A8           ;                       {
+ 01A8           ;                               case 0xE7: key = '*'; break;
+ 01A8 4AE2              ldi R20,42
+ 01AA                   .dbline 101
+ 01AA 05C0              xjmp L49
+ 01AC           L52:
+ 01AC                   .dbline 102
+ 01AC           ;                               case 0xD7: key = '0'; break;
+ 01AC 40E3              ldi R20,48
+ 01AE                   .dbline 102
+ 01AE 03C0              xjmp L49
+ 01B0           L53:
+ 01B0                   .dbline 103
+ 01B0           ;                               case 0xB7: key = '#'; break;
+ 01B0 43E2              ldi R20,35
+ 01B2                   .dbline 103
+ 01B2 01C0              xjmp L49
+ 01B4           L54:
+ 01B4                   .dbline 104
+ 01B4           ;                               case 0x77: key = 'D'; break;
+ 01B4 44E4              ldi R20,68
+ 01B6                   .dbline 104
+ 01B6           L48:
+ 01B6           L49:
+ 01B6                   .dbline 106
+ 01B6           ;                       }
+ 01B6           ;               }
+ 01B6           L46:
+ 01B6                   .dbline 108
+ 01B6           ;               //while(temp != 0xF0); //松手检测
+ 01B6           ;       }
+ 01B6           L44:
+ 01B6                   .dbline 109
+ 01B6           ;       return key; //返回读到的按键值
+ 01B6 042F              mov R16,R20
+ 01B8                   .dbline -2
+ 01B8           L1:
+ 01B8                   .dbline 0 ; func end
+ 01B8 0C940000          xjmp pop_xgsetF00C
+ 01BC                   .dbsym r key 20 c
+ 01BC                   .dbsym r temp 22 c
+ 01BC                   .dbend
+ 01BC           ; }

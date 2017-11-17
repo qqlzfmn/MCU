@@ -1,0 +1,65 @@
+//GlobalDefine.c
+
+#include <iom128v.h>
+#include <macros.h>
+#include "GlobalDefine.h"
+
+//—” ±∫Ø ˝
+void delay(unsigned char i)
+{
+	unsigned char j, k;
+	
+	for(i; i>0; i--)
+		for(j=0xFF; j>0; j--)
+			for(k=0xFF; k>0; k--);
+}
+
+//µ„¡¡LED
+void led_on(unsigned char i)
+{
+	DDRA  = 0x00;
+	PORTA = 0x00;
+	switch(i)
+	{
+		case 1:
+			DDRA   = BIT(0);
+			PORTA |= BIT(0);
+			break;
+		case 2:
+			DDRA   = BIT(1);
+			PORTA |= BIT(1);
+			break;
+		case 3:
+			DDRA   = BIT(2);
+			PORTA |= BIT(2);
+			break;
+		case 4:
+			DDRA   = BIT(3);
+			PORTA |= BIT(3);
+			break;
+	}
+}
+
+//œ®√LED
+void led_off(unsigned char i)
+{
+	switch(i)
+	{
+		case 1:
+			DDRA   = BIT(0);
+			PORTA &=~BIT(0);
+			break;
+		case 2:
+			DDRA   = BIT(1);
+			PORTA &=~BIT(1);
+			break;
+		case 3:
+			DDRA   = BIT(2);
+			PORTA &=~BIT(2);
+			break;
+		case 4:
+			DDRA   = BIT(3);
+			PORTA &=~BIT(3);
+			break;
+	}
+}

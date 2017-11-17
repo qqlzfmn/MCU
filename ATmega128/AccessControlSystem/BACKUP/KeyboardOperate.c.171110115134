@@ -1,0 +1,69 @@
+//KeyboardOperate.c
+
+#include "KeyboardOperate.h"
+
+unsigned char keyscan(void)
+{
+		unsigned char temp;
+		P2=0xBF;
+		temp=P2;
+		temp=temp&0x0F;
+		if(temp!=0x0F)
+		{
+				delay(10);
+				temp=P2;
+				temp=temp&0x0F;
+				if(temp!=0x0F)
+				{
+						temp=P2;
+						switch(temp)
+						{
+								case 0xB7:return 1;break;
+								case 0xBB:return 2;break;
+								case 0xBD:return 3;break;
+								case 0xBE:return 4;break;
+						}
+				}
+		}
+		P2=0xDF;
+		temp=P2;
+		temp=temp&0x0F;
+		if(temp!=0x0F)
+		{
+				delay(10);
+				temp=P2;
+				temp=temp&0x0F;
+				if(temp!=0x0F)
+				{
+						temp=P2;
+						switch(temp)
+						{
+								case 0xD7:return 5;break;
+								case 0xDB:return 6;break;
+								case 0xDD:return 7;break;
+								case 0xDE:return 8;break;
+						}
+				}
+		}
+		P2=0xEF;
+		temp=P2;
+		temp=temp&0x0F;
+		if(temp!=0x0F)
+		{
+				delay(10);
+				temp=P2;
+				temp=temp&0x0F;
+				if(temp!=0x0F)
+				{
+						temp=P2;
+						switch(temp)
+						{
+								case 0xE7:return 9;break;
+								case 0xEB:return 10;break;
+								case 0xED:return 11;break;
+								case 0xEE:return 12;break;
+						}
+				}
+		}
+		return 0;
+}

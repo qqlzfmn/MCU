@@ -1,48 +1,43 @@
 Interrupt Vectors
-    00000 940C 0078 JMP	__start|__text_start
+    00000 940C 007E JMP	__start|__text_start
 
 Program Code (text area)
 __start|__text_start:
-    00078 EFCF      LDI	R28,0xFF
-    00079 E1D0      LDI	R29,0x10
-    0007A BFCD      OUT	0x3D,R28
-    0007B BFDE      OUT	0x3E,R29
-    0007C 51CE      SUBI	R28,0x1E
-    0007D 40D0      SBCI	R29,0
-    0007E EA0A      LDI	R16,0xAA
-    0007F 8308      ST	Y,R16
-    00080 2400      CLR	R0
-    00081 E6E3      LDI	R30,0x63
-    00082 E0F1      LDI	R31,1
-    00083 E011      LDI	R17,1
-    00084 37EB      CPI	R30,0x7B
-    00085 07F1      CPC	R31,R17
-    00086 F011      BEQ	0x0089
-    00087 9201      ST	Z+,R0
-    00088 CFFB      RJMP	0x0084
-    00089 8300      ST	Z,R16
-    0008A E8EC      LDI	R30,0x8C
-    0008B E0F0      LDI	R31,0
-    0008C E0A0      LDI	R26,0
-    0008D E0B1      LDI	R27,1
-    0008E E010      LDI	R17,0
-    0008F E000      LDI	R16,0
-    00090 BF0B      OUT	0x3B,R16
-    00091 3EEF      CPI	R30,0xEF
-    00092 07F1      CPC	R31,R17
-    00093 F021      BEQ	0x0098
-    00094 95C8      LPM
-    00095 9631      ADIW	R30,1
-    00096 920D      ST	X+,R0
-    00097 CFF9      RJMP	0x0091
-    00098 940E 00AE CALL	_main
+    0007E EFCF      LDI	R28,0xFF
+    0007F E1D0      LDI	R29,0x10
+    00080 BFCD      OUT	0x3D,R28
+    00081 BFDE      OUT	0x3E,R29
+    00082 51CE      SUBI	R28,0x1E
+    00083 40D0      SBCI	R29,0
+    00084 EA0A      LDI	R16,0xAA
+    00085 8308      ST	Y,R16
+    00086 2400      CLR	R0
+    00087 E6EF      LDI	R30,0x6F
+    00088 E0F1      LDI	R31,1
+    00089 E011      LDI	R17,1
+    0008A 38E8      CPI	R30,0x88
+    0008B 07F1      CPC	R31,R17
+    0008C F011      BEQ	0x008F
+    0008D 9201      ST	Z+,R0
+    0008E CFFB      RJMP	0x008A
+    0008F 8300      ST	Z,R16
+    00090 E8EC      LDI	R30,0x8C
+    00091 E0F0      LDI	R31,0
+    00092 E0A0      LDI	R26,0
+    00093 E0B1      LDI	R27,1
+    00094 E010      LDI	R17,0
+    00095 E000      LDI	R16,0
+    00096 BF0B      OUT	0x3B,R16
+    00097 3FEB      CPI	R30,0xFB
+    00098 07F1      CPC	R31,R17
+    00099 F021      BEQ	0x009E
+    0009A 95C8      LPM
+    0009B 9631      ADIW	R30,1
+    0009C 920D      ST	X+,R0
+    0009D CFF9      RJMP	0x0097
+    0009E 940E 00A1 CALL	_main
 _exit:
-    0009A CFFF      RJMP	_exit
-_delay:
-  i                    --> R20
-  ms                   --> R16
-    0009B 934A      ST	-Y,R20
-    0009C 935A      ST	-Y,R21
+    000A0 CFFF      RJMP	_exit
 FILE: F:\工作\单片机\WorkSpace\AccessControlSystem\AccessControlSystem.c
 (0001) #include <iom128v.h>
 (0002) #include <macros.h>
@@ -51,1109 +46,1168 @@ FILE: F:\工作\单片机\WorkSpace\AccessControlSystem\AccessControlSystem.c
 (0005) #include "LCD_Operate.h"
 (0006) #include "KeyboardOperate.h"
 (0007) #include "GlobalDefine.h"
-(0008) 
-(0009) #define uart0_send_string USART0_Transmit_String
-(0010) 
-(0011) void delay(unsigned int ms)
-(0012) {
-(0013) 	unsigned int i;
-(0014) 	for(ms;ms>0;ms--)
-    0009D C00A      RJMP	0x00A8
-(0015) 		for(i=1200;i>0;i--);
-    0009E EB40      LDI	R20,0xB0
-    0009F E054      LDI	R21,4
-    000A0 C002      RJMP	0x00A3
-    000A1 5041      SUBI	R20,1
-    000A2 4050      SBCI	R21,0
-    000A3 3040      CPI	R20,0
-    000A4 0745      CPC	R20,R21
-    000A5 F7D9      BNE	0x00A1
-    000A6 5001      SUBI	R16,1
-    000A7 4010      SBCI	R17,0
-    000A8 3000      CPI	R16,0
-    000A9 0701      CPC	R16,R17
-    000AA F799      BNE	0x009E
-    000AB 9159      LD	R21,Y+
-    000AC 9149      LD	R20,Y+
-    000AD 9508      RET
-(0016) }
-(0017) 
-(0018) void main(void)
-(0019) {
-(0020) 	USART0_Init(MYUBRR0);
+(0008) #include "DeviceInitialize.h"
+(0009) 
+(0010) unsigned char key_temp;
+(0011) 
+(0012) void main(void)
+(0013) {
+(0014) 	init_devices(); //设备初始化
 _main:
-    000AE E005      LDI	R16,5
-    000AF E010      LDI	R17,0
-    000B0 940E 00D8 CALL	_USART0_Init
-(0021) 	PORTA = 0x81;
-    000B2 E881      LDI	R24,0x81
-    000B3 BB8B      OUT	0x1B,R24
-(0022)  	DDRA  = 0x81;
-    000B4 BB8A      OUT	0x1A,R24
-    000B5 C020      RJMP	0x00D6
-(0023) 	
-(0024) 	//FINGERPRINT_add_new_user(0x00,0x0B);
-(0025) 	
-(0026) 	while(1)
-(0027) 	{
-(0028) 		while(LCD_Busy());
-    000B6 940E 0373 CALL	_LCD_Busy
-    000B8 2300      TST	R16
-    000B9 F7E1      BNE	0x00B6
-(0029) 		LCD_Clear_Screen(cyan);
-    000BA E002      LDI	R16,2
-    000BB E011      LDI	R17,1
-    000BC 940E 0379 CALL	_LCD_Clear_Screen
-(0030) 		//uart0_send_string("DS32(0,50,'实验室门禁系统',1);DS16(65,100,'显示模块测试',2);\r\n");
-(0031) 		while(LCD_Busy());
-    000BE 940E 0373 CALL	_LCD_Busy
-    000C0 2300      TST	R16
-    000C1 F7E1      BNE	0x00BE
-(0032) 		delay(5000);
-    000C2 E808      LDI	R16,0x88
-    000C3 E113      LDI	R17,0x13
-    000C4 DFD6      RCALL	_delay
-(0033) 		while(LCD_Busy());
-    000C5 940E 0373 CALL	_LCD_Busy
-    000C7 2EA0      MOV	R10,R16
-    000C8 2300      TST	R16
-    000C9 F7D9      BNE	0x00C5
-(0034) 		LCD_Clear_Screen(gray);
-    000CA E000      LDI	R16,0
-    000CB E011      LDI	R17,1
-    000CC 940E 0379 CALL	_LCD_Clear_Screen
-(0035) 		//uart0_send_string("DS32(0,50,'实验室门禁系统',1);DS16(65,100,'显示模块测试',2);\r\n");
-(0036) 		while(LCD_Busy());
-    000CE 940E 0373 CALL	_LCD_Busy
-    000D0 2EA0      MOV	R10,R16
-    000D1 2300      TST	R16
-    000D2 F7D9      BNE	0x00CE
-(0037) 		delay(5000);
-    000D3 E808      LDI	R16,0x88
-    000D4 E113      LDI	R17,0x13
-    000D5 DFC5      RCALL	_delay
-    000D6 CFDF      RJMP	0x00B6
-    000D7 9508      RET
+    000A1 940E 0538 CALL	_init_devices
+(0015) 	
+(0016) 	delay(10); //等待设备初始化完成
+    000A3 E00A      LDI	R16,0xA
+    000A4 940E 0496 CALL	_delay
+(0017) 	led_blink(3); //指示灯闪烁3次提示设备初始化完成
+    000A6 E003      LDI	R16,3
+    000A7 940E 04FB CALL	_led_blink
+(0018) 	
+(0019) 	USART0_Transmit_String("Hello World!");
+    000A9 E000      LDI	R16,0
+    000AA E011      LDI	R17,1
+    000AB 940E 00F7 CALL	_USART0_Transmit_String
+    000AD C024      RJMP	0x00D2
+(0020) 	
+(0021) 	while(1) //待机
+(0022) 	{
+(0023) 		//while(LCD_Busy());
+(0024) 		//LCD_Clear_Screen(gray);
+(0025) 		//USART0_Transmit_String("DS32(0,50,'实验室门禁系统',1);DS16(65,100,'显示模块测试',2);\r\n");
+(0026) 		//delay(100);
+(0027) 		switch(Keyboard_Scan())
+    000AE 940E 03B8 CALL	_Keyboard_Scan
+    000B0 2F40      MOV	R20,R16
+    000B1 2755      CLR	R21
+    000B2 3441      CPI	R20,0x41
+    000B3 E0E0      LDI	R30,0
+    000B4 075E      CPC	R21,R30
+    000B5 F069      BEQ	0x00C3
+    000B6 3442      CPI	R20,0x42
+    000B7 E0E0      LDI	R30,0
+    000B8 075E      CPC	R21,R30
+    000B9 F071      BEQ	0x00C8
+    000BA 3443      CPI	R20,0x43
+    000BB E0E0      LDI	R30,0
+    000BC 075E      CPC	R21,R30
+    000BD F069      BEQ	0x00CB
+    000BE 3444      CPI	R20,0x44
+    000BF E0E0      LDI	R30,0
+    000C0 075E      CPC	R21,R30
+    000C1 F069      BEQ	0x00CF
+    000C2 C00F      RJMP	0x00D2
+(0028) 		{
+(0029) 			case 'A': FINGERPRINT_add_new_user(0); break;
+    000C3 2700      CLR	R16
+    000C4 2711      CLR	R17
+    000C5 940E 0337 CALL	_FINGERPRINT_add_new_user
+    000C7 C00A      RJMP	0x00D2
+(0030) 			case 'B': FINGERPRINT_search_reg_user();break;
+    000C8 940E 0379 CALL	_FINGERPRINT_search_reg_user
+    000CA C007      RJMP	0x00D2
+(0031) 			case 'C': led_on(3); break;
+    000CB E003      LDI	R16,3
+    000CC 940E 04AC CALL	_led_on
+    000CE C003      RJMP	0x00D2
+(0032) 			case 'D': led_on(4); break;
+    000CF E004      LDI	R16,4
+    000D0 940E 04AC CALL	_led_on
+    000D2 CFDB      RJMP	0x00AE
+    000D3 9508      RET
 FILE: F:\工作\单片机\WorkSpace\AccessControlSystem\USART_Operate.c
 (0001) //USART_Operate.c
 (0002) 
 (0003) #include <iom128v.h>
 (0004) #include "USART_Operate.h"
-(0005) 
-(0006) //USART0初始化
-(0007) void USART0_Init(unsigned int ubrr)
-(0008) {
-(0009) 	UBRR0H = (unsigned char)(ubrr>>8); //设置波特率
-_USART0_Init:
-  ubrr                 --> R16
-    000D8 0118      MOVW	R2,R16
-    000D9 2C23      MOV	R2,R3
-    000DA 2433      CLR	R3
-    000DB 9220 0090 STS	0x90,R2
-(0010) 	UBRR0L = (unsigned char)ubrr;
-    000DD B909      OUT	0x09,R16
-(0011) 	UCSR0B = (1<<RXEN0)|(1<<TXEN0); //使能接收器与发送器
-    000DE E188      LDI	R24,0x18
-    000DF B98A      OUT	0x0A,R24
-(0012) 	UCSR0C = (1<<USBS0)|(3<<UCSZ00); //设置帧格式: 8个数据位, 2个停止位
-    000E0 E08E      LDI	R24,0xE
-    000E1 9380 0095 STS	0x95,R24
-    000E3 9508      RET
-(0013) }
-(0014) 
-(0015) //USART0以5到8个数据位的方式发送帧
-(0016) void USART0_Transmit(unsigned char data)
-(0017) {
-(0018) 	while(!(UCSR0A & (1<<UDRE0))); //等待发送缓冲器为空
+(0005) #include "DeviceInitialize.h"
+(0006) 
+(0007) /*-------------------- USART0 --------------------*/
+(0008) 
+(0009) //USART0以5到8个数据位的方式发送帧
+(0010) void USART0_Transmit(unsigned char data)
+(0011) {
+(0012) 	while(!(UCSR0A & (1<<UDRE0))); //等待发送缓冲器为空
 _USART0_Transmit:
   data                 --> R16
-    000E4 9B5D      SBIS	0x0B,5
-    000E5 CFFE      RJMP	_USART0_Transmit
-(0019) 	UDR0 = data; //将数据放入缓冲器, 发送数据
-    000E6 B90C      OUT	0x0C,R16
-    000E7 9508      RET
-(0020) }
-(0021) 
-(0022) //USART0以9个数据位的方式发送帧
-(0023) void USART0_Transmit_9bits(unsigned int data)
-(0024) {
-(0025) 	while(!(UCSR0A & (1<<UDRE0))); //等待发送缓冲器为空
+    000D4 9B5D      SBIS	0x0B,5
+    000D5 CFFE      RJMP	_USART0_Transmit
+(0013) 	UDR0 = data; //将数据放入缓冲器, 发送数据
+    000D6 B90C      OUT	0x0C,R16
+    000D7 9508      RET
+(0014) }
+(0015) 
+(0016) //USART0以9个数据位的方式发送帧
+(0017) void USART0_Transmit_9bits(unsigned int data)
+(0018) {
+(0019) 	while(!(UCSR0A & (1<<UDRE0))); //等待发送缓冲器为空
 _USART0_Transmit_9bits:
   data                 --> R16
-    000E8 9B5D      SBIS	0x0B,5
-    000E9 CFFE      RJMP	_USART0_Transmit_9bits
-(0026) 	UCSR0B &= ~(1<<TXB80); //将第9位复制到TXB8
-    000EA 9850      CBI	0x0A,0
-(0027) 	if(data & 0x0100)
-    000EB FF10      SBRS	R17,0
-    000EC C001      RJMP	0x00EE
-(0028) 		UCSR0B |= (1<<TXB80);
-    000ED 9A50      SBI	0x0A,0
-(0029) 	UDR0 = data; //将数据放入缓冲器, 发送数据
-    000EE B90C      OUT	0x0C,R16
-    000EF 9508      RET
-(0030) }
-(0031) 
-(0032) //USART0以5到8个数据位的方式接收帧
-(0033) unsigned char USART0_Receive(void)
-(0034) {
-(0035) 	while(!(UCSR0A & (1<<RXC0))); //等待接收数据
+    000D8 9B5D      SBIS	0x0B,5
+    000D9 CFFE      RJMP	_USART0_Transmit_9bits
+(0020) 	UCSR0B &= ~(1<<TXB80); //将第9位复制到TXB8
+    000DA 9850      CBI	0x0A,0
+(0021) 	if(data & 0x0100)
+    000DB FF10      SBRS	R17,0
+    000DC C001      RJMP	0x00DE
+(0022) 		UCSR0B |= (1<<TXB80);
+    000DD 9A50      SBI	0x0A,0
+(0023) 	UDR0 = data; //将数据放入缓冲器, 发送数据
+    000DE B90C      OUT	0x0C,R16
+    000DF 9508      RET
+(0024) }
+(0025) 
+(0026) //USART0以5到8个数据位的方式接收帧
+(0027) unsigned char USART0_Receive(void)
+(0028) {
+(0029) 	while(!(UCSR0A & (1<<RXC0))); //等待接收数据
 _USART0_Receive:
-    000F0 9B5F      SBIS	0x0B,7
-    000F1 CFFE      RJMP	_USART0_Receive
-(0036) 	return UDR0; //从缓冲器中获取并返回数据
-    000F2 B10C      IN	R16,0x0C
-    000F3 9508      RET
+    000E0 9B5F      SBIS	0x0B,7
+    000E1 CFFE      RJMP	_USART0_Receive
+(0030) 	return UDR0; //从缓冲器中获取并返回数据
+    000E2 B10C      IN	R16,0x0C
+    000E3 9508      RET
 _USART0_Receive_9bits:
   resl                 --> R18
   status               --> R20
   resh                 --> R16
-    000F4 934A      ST	-Y,R20
-(0037) }
-(0038) 
-(0039) //USART0以9个数据位的方式接收帧
-(0040) unsigned int USART0_Receive_9bits(void)
-(0041) {
-(0042) 	unsigned char status, resh, resl;
-(0043) 
-(0044) 	while(!(UCSR0A & (1<<RXC0))); //等待接收数据
-    000F5 9B5F      SBIS	0x0B,7
-    000F6 CFFE      RJMP	0x00F5
-(0045) 	status = UCSR0A; //从缓冲器中获得状态、第9位及数据
-    000F7 B14B      IN	R20,0x0B
-(0046) 	resh = UCSR0B;
-    000F8 B10A      IN	R16,0x0A
-(0047) 	resl = UDR0;
-    000F9 B12C      IN	R18,0x0C
-(0048) 	if(status & (1<<FE0) | (1<<DOR0) | (1<<UPE0)) //如果出错, 返回-1
-    000FA 2F84      MOV	R24,R20
-    000FB 7180      ANDI	R24,0x10
-    000FC 608C      ORI	R24,0xC
-    000FD F019      BEQ	0x0101
-(0049) 		return -1;
-    000FE EF0F      LDI	R16,0xFF
-    000FF EF1F      LDI	R17,0xFF
-    00100 C004      RJMP	0x0105
-(0050) 	resh = (resh >> 1) & 0x01; //过滤第9位数据, 然后返回
-    00101 9506      LSR	R16
-    00102 7001      ANDI	R16,1
-(0051) 	return ((resh << 8) | resl);
-    00103 2F10      MOV	R17,R16
-    00104 2F02      MOV	R16,R18
-    00105 9149      LD	R20,Y+
-    00106 9508      RET
+    000E4 934A      ST	-Y,R20
+(0031) }
+(0032) 
+(0033) //USART0以9个数据位的方式接收帧
+(0034) unsigned int USART0_Receive_9bits(void)
+(0035) {
+(0036) 	unsigned char status, resh, resl;
+(0037) 
+(0038) 	while(!(UCSR0A & (1<<RXC0))); //等待接收数据
+    000E5 9B5F      SBIS	0x0B,7
+    000E6 CFFE      RJMP	0x00E5
+(0039) 	status = UCSR0A; //从缓冲器中获得状态、第9位及数据
+    000E7 B14B      IN	R20,0x0B
+(0040) 	resh = UCSR0B;
+    000E8 B10A      IN	R16,0x0A
+(0041) 	resl = UDR0;
+    000E9 B12C      IN	R18,0x0C
+(0042) 	if(status & (1<<FE0) | (1<<DOR0) | (1<<UPE0)) //如果出错, 返回-1
+    000EA 2F84      MOV	R24,R20
+    000EB 7180      ANDI	R24,0x10
+    000EC 608C      ORI	R24,0xC
+    000ED F019      BEQ	0x00F1
+(0043) 		return -1;
+    000EE EF0F      LDI	R16,0xFF
+    000EF EF1F      LDI	R17,0xFF
+    000F0 C004      RJMP	0x00F5
+(0044) 	resh = (resh >> 1) & 0x01; //过滤第9位数据, 然后返回
+    000F1 9506      LSR	R16
+    000F2 7001      ANDI	R16,1
+(0045) 	return ((resh << 8) | resl);
+    000F3 2F10      MOV	R17,R16
+    000F4 2F02      MOV	R16,R18
+    000F5 9149      LD	R20,Y+
+    000F6 9508      RET
 _USART0_Transmit_String:
   p                    --> R20
-    00107 934A      ST	-Y,R20
-    00108 935A      ST	-Y,R21
-    00109 01A8      MOVW	R20,R16
-(0052) }
-(0053) 
-(0054) //USART0以5到8个数据位的方式发送字符串
-(0055) void USART0_Transmit_String(unsigned char *p)
-(0056) {
-    0010A C005      RJMP	0x0110
-(0057)     while(*p)
-(0058)     {
-(0059)         USART0_Transmit(*p);
-    0010B 01FA      MOVW	R30,R20
-    0010C 8100      LD	R16,Z
-    0010D DFD6      RCALL	_USART0_Transmit
-(0060)         p++;
-    0010E 5F4F      SUBI	R20,0xFF
-    0010F 4F5F      SBCI	R21,0xFF
-    00110 01FA      MOVW	R30,R20
-    00111 8020      LD	R2,Z
-    00112 2022      TST	R2
-    00113 F7B9      BNE	0x010B
-    00114 9159      LD	R21,Y+
-    00115 9149      LD	R20,Y+
-    00116 9508      RET
-(0061)     }
-(0062) }
-(0063) 
-(0064) //USART0刷新接收缓冲器
-(0065) void USART0_Flush(void)
-(0066) {
+    000F7 934A      ST	-Y,R20
+    000F8 935A      ST	-Y,R21
+    000F9 01A8      MOVW	R20,R16
+(0046) }
+(0047) 
+(0048) //USART0以5到8个数据位的方式发送字符串
+(0049) void USART0_Transmit_String(unsigned char *p)
+(0050) {
+    000FA C005      RJMP	0x0100
+(0051)     while(*p)
+(0052)     {
+(0053)         USART0_Transmit(*p);
+    000FB 01FA      MOVW	R30,R20
+    000FC 8100      LD	R16,Z
+    000FD DFD6      RCALL	_USART0_Transmit
+(0054)         p++;
+    000FE 5F4F      SUBI	R20,0xFF
+    000FF 4F5F      SBCI	R21,0xFF
+    00100 01FA      MOVW	R30,R20
+    00101 8020      LD	R2,Z
+    00102 2022      TST	R2
+    00103 F7B9      BNE	0x00FB
+    00104 9159      LD	R21,Y+
+    00105 9149      LD	R20,Y+
+    00106 9508      RET
+(0055)     }
+(0056) }
+(0057) 
+(0058) //USART0刷新接收缓冲器
+(0059) void USART0_Flush(void)
+(0060) {
 _USART0_Flush:
   dummy                --> R16
-    00117 C001      RJMP	0x0119
-(0067) 	unsigned char dummy;
-(0068) 	while(UCSR0A & (1<<RXC0))
-(0069) 		dummy = UDR0;
-    00118 B10C      IN	R16,0x0C
-    00119 995F      SBIC	0x0B,7
-    0011A CFFD      RJMP	0x0118
-    0011B 9508      RET
-(0070) }
-(0071) 
-(0072) //USART1初始化
-(0073) void USART1_Init(unsigned int ubrr)
-(0074) {
-(0075) 	UBRR1H = (unsigned char)(ubrr>>8); //设置波特率
-_USART1_Init:
-  ubrr                 --> R16
-    0011C 0118      MOVW	R2,R16
-    0011D 2C23      MOV	R2,R3
-    0011E 2433      CLR	R3
-    0011F 9220 0098 STS	0x98,R2
-(0076) 	UBRR1L = (unsigned char)ubrr;
-    00121 9300 0099 STS	0x99,R16
-(0077) 	UCSR1B = (1<<RXEN1)|(1<<TXEN1); //使能接收器与发送器
-    00123 E188      LDI	R24,0x18
-    00124 9380 009A STS	0x9A,R24
-(0078) 	UCSR1C = (1<<USBS1)|(3<<UCSZ01); //设置帧格式: 8个数据位, 2个停止位
-    00126 E08C      LDI	R24,0xC
-    00127 9380 009D STS	0x9D,R24
-    00129 9508      RET
-(0079) }
-(0080) 
-(0081) //USART1以5到8个数据位的方式发送帧
-(0082) void USART1_Transmit(unsigned char data)
-(0083) {
-(0084) 	while(!(UCSR1A & (1<<UDRE1))); //等待发送缓冲器为空
+    00107 C001      RJMP	0x0109
+(0061) 	unsigned char dummy;
+(0062) 	while(UCSR0A & (1<<RXC0))
+(0063) 		dummy = UDR0;
+    00108 B10C      IN	R16,0x0C
+    00109 995F      SBIC	0x0B,7
+    0010A CFFD      RJMP	0x0108
+    0010B 9508      RET
+(0064) }
+(0065) 
+(0066) /*-------------------- USART1 --------------------*/
+(0067) 
+(0068) //USART1以5到8个数据位的方式发送帧
+(0069) void USART1_Transmit(unsigned char data)
+(0070) {
+(0071) 	while(!(UCSR1A & (1<<UDRE1))); //等待发送缓冲器为空
 _USART1_Transmit:
   data                 --> R16
-    0012A 9020 009B LDS	R2,0x9B
-    0012C FE25      SBRS	R2,5
-    0012D CFFC      RJMP	_USART1_Transmit
-(0085) 	UDR1 = data; //将数据放入缓冲器, 发送数据
-    0012E 9300 009C STS	0x9C,R16
-    00130 9508      RET
-(0086) }
-(0087) 
-(0088) //USART1以9个数据位的方式发送帧
-(0089) void USART1_Transmit_9bits(unsigned int data)
-(0090) {
-(0091) 	while(!(UCSR1A & (1<<UDRE1))); //等待发送缓冲器为空
+    0010C 9020 009B LDS	R2,0x9B
+    0010E FE25      SBRS	R2,5
+    0010F CFFC      RJMP	_USART1_Transmit
+(0072) 	UDR1 = data; //将数据放入缓冲器, 发送数据
+    00110 9300 009C STS	0x9C,R16
+    00112 9508      RET
+(0073) }
+(0074) 
+(0075) //USART1以9个数据位的方式发送帧
+(0076) void USART1_Transmit_9bits(unsigned int data)
+(0077) {
+(0078) 	while(!(UCSR1A & (1<<UDRE1))); //等待发送缓冲器为空
 _USART1_Transmit_9bits:
   data                 --> R16
-    00131 9020 009B LDS	R2,0x9B
-    00133 FE25      SBRS	R2,5
-    00134 CFFC      RJMP	_USART1_Transmit_9bits
-(0092) 	UCSR1B &= ~(1<<TXB81); //将第9位复制到TXB8
-    00135 9180 009A LDS	R24,0x9A
-    00137 7F8E      ANDI	R24,0xFE
-    00138 9380 009A STS	0x9A,R24
-(0093) 	if(data & 0x0100)
-    0013A FF10      SBRS	R17,0
-    0013B C005      RJMP	0x0141
-(0094) 		UCSR1B |= (1<<TXB81);
-    0013C 9180 009A LDS	R24,0x9A
-    0013E 6081      ORI	R24,1
-    0013F 9380 009A STS	0x9A,R24
-(0095) 	UDR1 = data; //将数据放入缓冲器, 发送数据
-    00141 9300 009C STS	0x9C,R16
-    00143 9508      RET
-(0096) }
-(0097) 
-(0098) //USART1以5到8个数据位的方式接收帧
-(0099) unsigned char USART1_Receive(void)
-(0100) {
-(0101) 	while(!(UCSR1A & (1<<RXC1))); //等待接收数据
+    00113 9020 009B LDS	R2,0x9B
+    00115 FE25      SBRS	R2,5
+    00116 CFFC      RJMP	_USART1_Transmit_9bits
+(0079) 	UCSR1B &= ~(1<<TXB81); //将第9位复制到TXB8
+    00117 9180 009A LDS	R24,0x9A
+    00119 7F8E      ANDI	R24,0xFE
+    0011A 9380 009A STS	0x9A,R24
+(0080) 	if(data & 0x0100)
+    0011C FF10      SBRS	R17,0
+    0011D C005      RJMP	0x0123
+(0081) 		UCSR1B |= (1<<TXB81);
+    0011E 9180 009A LDS	R24,0x9A
+    00120 6081      ORI	R24,1
+    00121 9380 009A STS	0x9A,R24
+(0082) 	UDR1 = data; //将数据放入缓冲器, 发送数据
+    00123 9300 009C STS	0x9C,R16
+    00125 9508      RET
+(0083) }
+(0084) 
+(0085) //USART1以5到8个数据位的方式接收帧
+(0086) unsigned char USART1_Receive(void)
+(0087) {
+(0088) 	while(!(UCSR1A & (1<<RXC1))); //等待接收数据
 _USART1_Receive:
-    00144 9020 009B LDS	R2,0x9B
-    00146 FE27      SBRS	R2,7
-    00147 CFFC      RJMP	_USART1_Receive
-(0102) 	return UDR1; //从缓冲器中获取并返回数据
-    00148 9100 009C LDS	R16,0x9C
-    0014A 9508      RET
+    00126 9020 009B LDS	R2,0x9B
+    00128 FE27      SBRS	R2,7
+    00129 CFFC      RJMP	_USART1_Receive
+(0089) 	return UDR1; //从缓冲器中获取并返回数据
+    0012A 9100 009C LDS	R16,0x9C
+    0012C 9508      RET
 _USART1_Receive_9bits:
   resl                 --> R18
   status               --> R20
   resh                 --> R16
-    0014B 934A      ST	-Y,R20
-(0103) }
-(0104) 
-(0105) //USART1以9个数据位的方式接收帧
-(0106) unsigned int USART1_Receive_9bits(void)
-(0107) {
-(0108) 	unsigned char status, resh, resl;
-(0109) 
-(0110) 	while(!(UCSR1A & (1<<RXC1))); //等待接收数据
-    0014C 9020 009B LDS	R2,0x9B
-    0014E FE27      SBRS	R2,7
-    0014F CFFC      RJMP	0x014C
-(0111) 	status = UCSR1A; //从缓冲器中获得状态、第9位及数据
-    00150 9140 009B LDS	R20,0x9B
-(0112) 	resh = UCSR1B;
-    00152 9100 009A LDS	R16,0x9A
-(0113) 	resl = UDR1;
-    00154 9120 009C LDS	R18,0x9C
-(0114) 	if(status & (1<<FE1) | (1<<DOR1) | (1<<UPE1)) //如果出错, 返回-1
-    00156 2F84      MOV	R24,R20
-    00157 7180      ANDI	R24,0x10
-    00158 608C      ORI	R24,0xC
-    00159 F019      BEQ	0x015D
-(0115) 		return -1;
-    0015A EF0F      LDI	R16,0xFF
-    0015B EF1F      LDI	R17,0xFF
-    0015C C004      RJMP	0x0161
-(0116) 	resh = (resh >> 1) & 0x01; //过滤第9位数据, 然后返回
-    0015D 9506      LSR	R16
-    0015E 7001      ANDI	R16,1
-(0117) 	return ((resh << 8) | resl);
-    0015F 2F10      MOV	R17,R16
-    00160 2F02      MOV	R16,R18
-    00161 9149      LD	R20,Y+
-    00162 9508      RET
+    0012D 934A      ST	-Y,R20
+(0090) }
+(0091) 
+(0092) //USART1以9个数据位的方式接收帧
+(0093) unsigned int USART1_Receive_9bits(void)
+(0094) {
+(0095) 	unsigned char status, resh, resl;
+(0096) 
+(0097) 	while(!(UCSR1A & (1<<RXC1))); //等待接收数据
+    0012E 9020 009B LDS	R2,0x9B
+    00130 FE27      SBRS	R2,7
+    00131 CFFC      RJMP	0x012E
+(0098) 	status = UCSR1A; //从缓冲器中获得状态、第9位及数据
+    00132 9140 009B LDS	R20,0x9B
+(0099) 	resh = UCSR1B;
+    00134 9100 009A LDS	R16,0x9A
+(0100) 	resl = UDR1;
+    00136 9120 009C LDS	R18,0x9C
+(0101) 	if(status & (1<<FE1) | (1<<DOR1) | (1<<UPE1)) //如果出错, 返回-1
+    00138 2F84      MOV	R24,R20
+    00139 7180      ANDI	R24,0x10
+    0013A 608C      ORI	R24,0xC
+    0013B F019      BEQ	0x013F
+(0102) 		return -1;
+    0013C EF0F      LDI	R16,0xFF
+    0013D EF1F      LDI	R17,0xFF
+    0013E C004      RJMP	0x0143
+(0103) 	resh = (resh >> 1) & 0x01; //过滤第9位数据, 然后返回
+    0013F 9506      LSR	R16
+    00140 7001      ANDI	R16,1
+(0104) 	return ((resh << 8) | resl);
+    00141 2F10      MOV	R17,R16
+    00142 2F02      MOV	R16,R18
+    00143 9149      LD	R20,Y+
+    00144 9508      RET
 _USART1_Transmit_String:
   p                    --> R20
-    00163 934A      ST	-Y,R20
-    00164 935A      ST	-Y,R21
-    00165 01A8      MOVW	R20,R16
-(0118) }
-(0119) 
-(0120) //USART1以5到8个数据位的方式发送字符串
-(0121) void USART1_Transmit_String(unsigned char *p)
-(0122) {
-    00166 C005      RJMP	0x016C
-(0123)     while(*p)
-(0124)     {
-(0125)         USART1_Transmit(*p);
-    00167 01FA      MOVW	R30,R20
-    00168 8100      LD	R16,Z
-    00169 DFC0      RCALL	_USART1_Transmit
-(0126)         p++;
-    0016A 5F4F      SUBI	R20,0xFF
-    0016B 4F5F      SBCI	R21,0xFF
-    0016C 01FA      MOVW	R30,R20
-    0016D 8020      LD	R2,Z
-    0016E 2022      TST	R2
-    0016F F7B9      BNE	0x0167
-    00170 9159      LD	R21,Y+
-    00171 9149      LD	R20,Y+
-    00172 9508      RET
-(0127)     }
-(0128) }
-(0129) 
-(0130) //USART1刷新接收缓冲器
-(0131) void USART1_Flush(void)
-(0132) {
+    00145 934A      ST	-Y,R20
+    00146 935A      ST	-Y,R21
+    00147 01A8      MOVW	R20,R16
+(0105) }
+(0106) 
+(0107) //USART1以5到8个数据位的方式发送字符串
+(0108) void USART1_Transmit_String(unsigned char *p)
+(0109) {
+    00148 C005      RJMP	0x014E
+(0110)     while(*p)
+(0111)     {
+(0112)         USART1_Transmit(*p);
+    00149 01FA      MOVW	R30,R20
+    0014A 8100      LD	R16,Z
+    0014B DFC0      RCALL	_USART1_Transmit
+(0113)         p++;
+    0014C 5F4F      SUBI	R20,0xFF
+    0014D 4F5F      SBCI	R21,0xFF
+    0014E 01FA      MOVW	R30,R20
+    0014F 8020      LD	R2,Z
+    00150 2022      TST	R2
+    00151 F7B9      BNE	0x0149
+    00152 9159      LD	R21,Y+
+    00153 9149      LD	R20,Y+
+    00154 9508      RET
+(0114)     }
+(0115) }
+(0116) 
+(0117) //USART1刷新接收缓冲器
+(0118) void USART1_Flush(void)
+(0119) {
 _USART1_Flush:
   dummy                --> R16
-    00173 C002      RJMP	0x0176
-(0133) 	unsigned char dummy;
-(0134) 	while(UCSR1A & (1<<RXC1))
-(0135) 		dummy = UDR1;
-    00174 9100 009C LDS	R16,0x9C
-    00176 9020 009B LDS	R2,0x9B
-    00178 FC27      SBRC	R2,7
-    00179 CFFA      RJMP	0x0174
-    0017A 9508      RET
+    00155 C002      RJMP	0x0158
+(0120) 	unsigned char dummy;
+(0121) 	while(UCSR1A & (1<<RXC1))
+(0122) 		dummy = UDR1;
+    00156 9100 009C LDS	R16,0x9C
+    00158 9020 009B LDS	R2,0x9B
+    0015A FC27      SBRC	R2,7
+    0015B CFFA      RJMP	0x0156
+    0015C 9508      RET
 _FINGERPRINT_Cmd_Get_Img:
   i                    --> R20
-    0017B 934A      ST	-Y,R20
+    0015D 934A      ST	-Y,R20
 FILE: F:\工作\单片机\WorkSpace\AccessControlSystem\FingerprintOperate.c
 (0001) //FingerprintOperate.c
 (0002) 
 (0003) #include "FingerprintOperate.h"
 (0004) #include "USART_Operate.h"
-(0005) 
-(0006) #define UART1_Send_Byte USART1_Transmit
-(0007) #define UART1_Receive_Byte USART1_Receive
-(0008) 
-(0009) volatile unsigned char UART1_FINGERPRINT_RECEVICE_BUFFER[24];
-(0010) 
-(0011) //FINGERPRINT通信协议定义
-(0012) unsigned char FP_Pack_Head[6]={0xEF,0x01,0xFF,0xFF,0xFF,0xFF}; //协议包头
-(0013) unsigned char FP_Get_Img[6]={0x01,0x00,0x03,0x01,0x00,0x05}; //获得指纹图像
-(0014) unsigned char FP_Templete_Num[6]={0x01,0x00,0x03,0x1D,0x00,0x21}; //获得模版总数
-(0015) unsigned char FP_Search[11]={0x01,0x00,0x08,0x04,0x01,0x00,0x00,0x03,0xA1,0x00,0xB2}; //搜索指纹搜索范围0 - 929
-(0016) unsigned char FP_Search_0_9[11]={0x01,0x00,0x08,0x04,0x01,0x00,0x00,0x00,0x13,0x00,0x21}; //搜索0-9号指纹
-(0017) unsigned char FP_Img_To_Buffer1[7]={0x01,0x00,0x04,0x02,0x01,0x00,0x08}; //将图像放入到BUFFER1
-(0018) unsigned char FP_Img_To_Buffer2[7]={0x01,0x00,0x04,0x02,0x02,0x00,0x09}; //将图像放入到BUFFER2
-(0019) unsigned char FP_Reg_Model[6]={0x01,0x00,0x03,0x05,0x00,0x09}; //将BUFFER1跟BUFFER2合成特征模版
-(0020) unsigned char FP_Delet_All_Model[6]={0x01,0x00,0x03,0x0d,0x00,0x11}; //删除指纹模块里所有的模版
-(0021) volatile unsigned char FP_Save_Finger[9]={0x01,0x00,0x06,0x06,0x01,0x00,0x0B,0x00,0x19}; //将BUFFER1中的特征码存放到指定的位置
-(0022) volatile unsigned char FP_Delete_Model[10]={0x01,0x00,0x07,0x0C,0x00,0x00,0x00,0x1,0x00,0x00}; //删除指定的模版
-(0023) //volatile unsigned char FINGER_NUM;
-(0024) 
-(0025) /*------------------ FINGERPRINT命令字 --------------------------*/
-(0026) 
-(0027) //获得指纹图像命令
-(0028) void FINGERPRINT_Cmd_Get_Img(void)
-(0029) {
-(0030) 	unsigned char i;
-(0031) 
-(0032) 	for(i=0;i<6;i++) //发送包头
-    0017C 2744      CLR	R20
-    0017D C00A      RJMP	0x0188
-(0033) 		UART1_Send_Byte(FP_Pack_Head[i]);
-    0017E E084      LDI	R24,4
-    0017F E091      LDI	R25,1
-    00180 2FE4      MOV	R30,R20
-    00181 27FF      CLR	R31
-    00182 0FE8      ADD	R30,R24
-    00183 1FF9      ADC	R31,R25
-    00184 8100      LD	R16,Z
-    00185 940E 012A CALL	_USART1_Transmit
-    00187 9543      INC	R20
-    00188 3046      CPI	R20,6
-    00189 F3A0      BCS	0x017E
-(0034) 
-(0035) 	for(i=0;i<6;i++) //发送命令0x1d
-    0018A 2744      CLR	R20
-    0018B C00A      RJMP	0x0196
-(0036) 		UART1_Send_Byte(FP_Get_Img[i]);
-    0018C E08A      LDI	R24,0xA
-    0018D E091      LDI	R25,1
-    0018E 2FE4      MOV	R30,R20
-    0018F 27FF      CLR	R31
-    00190 0FE8      ADD	R30,R24
-    00191 1FF9      ADC	R31,R25
-    00192 8100      LD	R16,Z
-    00193 940E 012A CALL	_USART1_Transmit
-    00195 9543      INC	R20
-    00196 3046      CPI	R20,6
-    00197 F3A0      BCS	0x018C
-    00198 9149      LD	R20,Y+
-    00199 9508      RET
+(0005) #include "GlobalDefine.h"
+(0006) 
+(0007) #define UART1_Send_Byte USART1_Transmit
+(0008) #define UART1_Receive_Byte USART1_Receive
+(0009) 
+(0010) volatile unsigned char UART1_FINGERPRINT_RECEVICE_BUFFER[24];
+(0011) 
+(0012) //FINGERPRINT通信协议定义
+(0013) unsigned char FP_Pack_Head[6]={0xEF,0x01,0xFF,0xFF,0xFF,0xFF}; //协议包头
+(0014) unsigned char FP_Get_Img[6]={0x01,0x00,0x03,0x01,0x00,0x05}; //获得指纹图像
+(0015) unsigned char FP_Templete_Num[6]={0x01,0x00,0x03,0x1D,0x00,0x21}; //获得模版总数
+(0016) unsigned char FP_Search[11]={0x01,0x00,0x08,0x04,0x01,0x00,0x00,0x03,0xE7,0x00,0xF8}; //搜索指纹搜索范围0-999
+(0017) unsigned char FP_Search_0_9[11]={0x01,0x00,0x08,0x04,0x01,0x00,0x00,0x00,0x0A,0x00,0x18}; //搜索0-9号指纹
+(0018) unsigned char FP_Img_To_Buffer1[7]={0x01,0x00,0x04,0x02,0x01,0x00,0x08}; //将图像放入到BUFFER1
+(0019) unsigned char FP_Img_To_Buffer2[7]={0x01,0x00,0x04,0x02,0x02,0x00,0x09}; //将图像放入到BUFFER2
+(0020) unsigned char FP_Reg_Model[6]={0x01,0x00,0x03,0x05,0x00,0x09}; //将BUFFER1跟BUFFER2合成特征模版
+(0021) unsigned char FP_Delet_All_Model[6]={0x01,0x00,0x03,0x0d,0x00,0x11}; //删除指纹模块里所有的模版
+(0022) volatile unsigned char FP_Save_Finger[9]={0x01,0x00,0x06,0x06,0x01,0x00,0x0B,0x00,0x19}; //将BUFFER1中的特征码存放到指定的位置
+(0023) volatile unsigned char FP_Delete_Model[10]={0x01,0x00,0x07,0x0C,0x00,0x00,0x00,0x1,0x00,0x00}; //删除指定的模版
+(0024) //volatile unsigned char FINGER_NUM;
+(0025) 
+(0026) /*-------------------- FINGERPRINT命令字 --------------------*/
+(0027) 
+(0028) //获得指纹图像命令
+(0029) void FINGERPRINT_Cmd_Get_Img(void)
+(0030) {
+(0031) 	unsigned char i;
+(0032) 
+(0033) 	for(i=0;i<6;i++) //发送包头
+    0015E 2744      CLR	R20
+    0015F C00A      RJMP	0x016A
+(0034) 		UART1_Send_Byte(FP_Pack_Head[i]);
+    00160 E08D      LDI	R24,0xD
+    00161 E091      LDI	R25,1
+    00162 2FE4      MOV	R30,R20
+    00163 27FF      CLR	R31
+    00164 0FE8      ADD	R30,R24
+    00165 1FF9      ADC	R31,R25
+    00166 8100      LD	R16,Z
+    00167 940E 010C CALL	_USART1_Transmit
+    00169 9543      INC	R20
+    0016A 3046      CPI	R20,6
+    0016B F3A0      BCS	0x0160
+(0035) 
+(0036) 	for(i=0;i<6;i++) //发送命令0x1d
+    0016C 2744      CLR	R20
+    0016D C00A      RJMP	0x0178
+(0037) 		UART1_Send_Byte(FP_Get_Img[i]);
+    0016E E183      LDI	R24,0x13
+    0016F E091      LDI	R25,1
+    00170 2FE4      MOV	R30,R20
+    00171 27FF      CLR	R31
+    00172 0FE8      ADD	R30,R24
+    00173 1FF9      ADC	R31,R25
+    00174 8100      LD	R16,Z
+    00175 940E 010C CALL	_USART1_Transmit
+    00177 9543      INC	R20
+    00178 3046      CPI	R20,6
+    00179 F3A0      BCS	0x016E
+    0017A 9149      LD	R20,Y+
+    0017B 9508      RET
 _FINGERPRINT_Cmd_Img_To_Buffer1:
   i                    --> R20
-    0019A 934A      ST	-Y,R20
-(0037) }
-(0038) 
-(0039) //将图像转换成特征码存放在Buffer1中
-(0040) void FINGERPRINT_Cmd_Img_To_Buffer1(void)
-(0041) {
-(0042) 	unsigned char i;
-(0043) 
-(0044) 	for(i=0;i<6;i++) //发送包头
-    0019B 2744      CLR	R20
-    0019C C00A      RJMP	0x01A7
-(0045) 		UART1_Send_Byte(FP_Pack_Head[i]);
-    0019D E084      LDI	R24,4
-    0019E E091      LDI	R25,1
-    0019F 2FE4      MOV	R30,R20
-    001A0 27FF      CLR	R31
-    001A1 0FE8      ADD	R30,R24
-    001A2 1FF9      ADC	R31,R25
-    001A3 8100      LD	R16,Z
-    001A4 940E 012A CALL	_USART1_Transmit
-    001A6 9543      INC	R20
-    001A7 3046      CPI	R20,6
-    001A8 F3A0      BCS	0x019D
-(0046) 
-(0047) 	for(i=0;i<7;i++) //发送命令将图像转换成特征码存放在CHAR_buffer1
-    001A9 2744      CLR	R20
-    001AA C00A      RJMP	0x01B5
-(0048) 		UART1_Send_Byte(FP_Img_To_Buffer1[i]);
-    001AB E28C      LDI	R24,0x2C
-    001AC E091      LDI	R25,1
-    001AD 2FE4      MOV	R30,R20
-    001AE 27FF      CLR	R31
-    001AF 0FE8      ADD	R30,R24
-    001B0 1FF9      ADC	R31,R25
-    001B1 8100      LD	R16,Z
-    001B2 940E 012A CALL	_USART1_Transmit
-    001B4 9543      INC	R20
-    001B5 3047      CPI	R20,7
-    001B6 F3A0      BCS	0x01AB
-    001B7 9149      LD	R20,Y+
-    001B8 9508      RET
+    0017C 934A      ST	-Y,R20
+(0038) }
+(0039) 
+(0040) //将图像转换成特征码存放在Buffer1中
+(0041) void FINGERPRINT_Cmd_Img_To_Buffer1(void)
+(0042) {
+(0043) 	unsigned char i;
+(0044) 
+(0045) 	for(i=0;i<6;i++) //发送包头
+    0017D 2744      CLR	R20
+    0017E C00A      RJMP	0x0189
+(0046) 		UART1_Send_Byte(FP_Pack_Head[i]);
+    0017F E08D      LDI	R24,0xD
+    00180 E091      LDI	R25,1
+    00181 2FE4      MOV	R30,R20
+    00182 27FF      CLR	R31
+    00183 0FE8      ADD	R30,R24
+    00184 1FF9      ADC	R31,R25
+    00185 8100      LD	R16,Z
+    00186 940E 010C CALL	_USART1_Transmit
+    00188 9543      INC	R20
+    00189 3046      CPI	R20,6
+    0018A F3A0      BCS	0x017F
+(0047) 
+(0048) 	for(i=0;i<7;i++) //发送命令将图像转换成特征码存放在CHAR_buffer1
+    0018B 2744      CLR	R20
+    0018C C00A      RJMP	0x0197
+(0049) 		UART1_Send_Byte(FP_Img_To_Buffer1[i]);
+    0018D E385      LDI	R24,0x35
+    0018E E091      LDI	R25,1
+    0018F 2FE4      MOV	R30,R20
+    00190 27FF      CLR	R31
+    00191 0FE8      ADD	R30,R24
+    00192 1FF9      ADC	R31,R25
+    00193 8100      LD	R16,Z
+    00194 940E 010C CALL	_USART1_Transmit
+    00196 9543      INC	R20
+    00197 3047      CPI	R20,7
+    00198 F3A0      BCS	0x018D
+    00199 9149      LD	R20,Y+
+    0019A 9508      RET
 _FINGERPRINT_Cmd_Img_To_Buffer2:
   i                    --> R20
-    001B9 934A      ST	-Y,R20
-(0049) }
-(0050) 
-(0051) //将图像转换成特征码存放在Buffer2中
-(0052) void FINGERPRINT_Cmd_Img_To_Buffer2(void)
-(0053) {
-(0054) 	unsigned char i;
-(0055) 
-(0056) 	for(i=0;i<6;i++) //发送包头
-    001BA 2744      CLR	R20
-    001BB C00A      RJMP	0x01C6
-(0057) 		UART1_Send_Byte(FP_Pack_Head[i]);
-    001BC E084      LDI	R24,4
-    001BD E091      LDI	R25,1
-    001BE 2FE4      MOV	R30,R20
-    001BF 27FF      CLR	R31
-    001C0 0FE8      ADD	R30,R24
-    001C1 1FF9      ADC	R31,R25
-    001C2 8100      LD	R16,Z
-    001C3 940E 012A CALL	_USART1_Transmit
-    001C5 9543      INC	R20
-    001C6 3046      CPI	R20,6
-    001C7 F3A0      BCS	0x01BC
-(0058) 
-(0059) 	for(i=0;i<7;i++) //发送命令将图像转换成特征码存放在CHAR_buffer2
-    001C8 2744      CLR	R20
-    001C9 C00A      RJMP	0x01D4
-(0060) 		UART1_Send_Byte(FP_Img_To_Buffer2[i]);
-    001CA E383      LDI	R24,0x33
-    001CB E091      LDI	R25,1
-    001CC 2FE4      MOV	R30,R20
-    001CD 27FF      CLR	R31
-    001CE 0FE8      ADD	R30,R24
-    001CF 1FF9      ADC	R31,R25
-    001D0 8100      LD	R16,Z
-    001D1 940E 012A CALL	_USART1_Transmit
-    001D3 9543      INC	R20
-    001D4 3047      CPI	R20,7
-    001D5 F3A0      BCS	0x01CA
-    001D6 9149      LD	R20,Y+
-    001D7 9508      RET
+    0019B 934A      ST	-Y,R20
+(0050) }
+(0051) 
+(0052) //将图像转换成特征码存放在Buffer2中
+(0053) void FINGERPRINT_Cmd_Img_To_Buffer2(void)
+(0054) {
+(0055) 	unsigned char i;
+(0056) 
+(0057) 	for(i=0;i<6;i++) //发送包头
+    0019C 2744      CLR	R20
+    0019D C00A      RJMP	0x01A8
+(0058) 		UART1_Send_Byte(FP_Pack_Head[i]);
+    0019E E08D      LDI	R24,0xD
+    0019F E091      LDI	R25,1
+    001A0 2FE4      MOV	R30,R20
+    001A1 27FF      CLR	R31
+    001A2 0FE8      ADD	R30,R24
+    001A3 1FF9      ADC	R31,R25
+    001A4 8100      LD	R16,Z
+    001A5 940E 010C CALL	_USART1_Transmit
+    001A7 9543      INC	R20
+    001A8 3046      CPI	R20,6
+    001A9 F3A0      BCS	0x019E
+(0059) 
+(0060) 	for(i=0;i<7;i++) //发送命令将图像转换成特征码存放在CHAR_buffer2
+    001AA 2744      CLR	R20
+    001AB C00A      RJMP	0x01B6
+(0061) 		UART1_Send_Byte(FP_Img_To_Buffer2[i]);
+    001AC E38C      LDI	R24,0x3C
+    001AD E091      LDI	R25,1
+    001AE 2FE4      MOV	R30,R20
+    001AF 27FF      CLR	R31
+    001B0 0FE8      ADD	R30,R24
+    001B1 1FF9      ADC	R31,R25
+    001B2 8100      LD	R16,Z
+    001B3 940E 010C CALL	_USART1_Transmit
+    001B5 9543      INC	R20
+    001B6 3047      CPI	R20,7
+    001B7 F3A0      BCS	0x01AC
+    001B8 9149      LD	R20,Y+
+    001B9 9508      RET
 _FINGERPRINT_Cmd_Reg_Model:
   i                    --> R20
-    001D8 934A      ST	-Y,R20
-(0061) }
-(0062) 
-(0063) //将BUFFER1跟BUFFER2中的特征码合并成指纹模版
-(0064) void FINGERPRINT_Cmd_Reg_Model(void)
-(0065) {
-(0066) 	unsigned char i;
-(0067) 
-(0068) 	for(i=0;i<6;i++) //包头
-    001D9 2744      CLR	R20
-    001DA C00A      RJMP	0x01E5
-(0069) 		UART1_Send_Byte(FP_Pack_Head[i]);
-    001DB E084      LDI	R24,4
-    001DC E091      LDI	R25,1
-    001DD 2FE4      MOV	R30,R20
-    001DE 27FF      CLR	R31
-    001DF 0FE8      ADD	R30,R24
-    001E0 1FF9      ADC	R31,R25
-    001E1 8100      LD	R16,Z
-    001E2 940E 012A CALL	_USART1_Transmit
-    001E4 9543      INC	R20
-    001E5 3046      CPI	R20,6
-    001E6 F3A0      BCS	0x01DB
-(0070) 
-(0071) 	for(i=0;i<6;i++) //命令合并指纹模版
-    001E7 2744      CLR	R20
-    001E8 C00A      RJMP	0x01F3
-(0072) 		UART1_Send_Byte(FP_Reg_Model[i]);
-    001E9 E38A      LDI	R24,0x3A
-    001EA E091      LDI	R25,1
-    001EB 2FE4      MOV	R30,R20
-    001EC 27FF      CLR	R31
-    001ED 0FE8      ADD	R30,R24
-    001EE 1FF9      ADC	R31,R25
-    001EF 8100      LD	R16,Z
-    001F0 940E 012A CALL	_USART1_Transmit
-    001F2 9543      INC	R20
-    001F3 3046      CPI	R20,6
-    001F4 F3A0      BCS	0x01E9
-    001F5 9149      LD	R20,Y+
-    001F6 9508      RET
+    001BA 934A      ST	-Y,R20
+(0062) }
+(0063) 
+(0064) //将BUFFER1跟BUFFER2中的特征码合并成指纹模版
+(0065) void FINGERPRINT_Cmd_Reg_Model(void)
+(0066) {
+(0067) 	unsigned char i;
+(0068) 
+(0069) 	for(i=0;i<6;i++) //包头
+    001BB 2744      CLR	R20
+    001BC C00A      RJMP	0x01C7
+(0070) 		UART1_Send_Byte(FP_Pack_Head[i]);
+    001BD E08D      LDI	R24,0xD
+    001BE E091      LDI	R25,1
+    001BF 2FE4      MOV	R30,R20
+    001C0 27FF      CLR	R31
+    001C1 0FE8      ADD	R30,R24
+    001C2 1FF9      ADC	R31,R25
+    001C3 8100      LD	R16,Z
+    001C4 940E 010C CALL	_USART1_Transmit
+    001C6 9543      INC	R20
+    001C7 3046      CPI	R20,6
+    001C8 F3A0      BCS	0x01BD
+(0071) 
+(0072) 	for(i=0;i<6;i++) //命令合并指纹模版
+    001C9 2744      CLR	R20
+    001CA C00A      RJMP	0x01D5
+(0073) 		UART1_Send_Byte(FP_Reg_Model[i]);
+    001CB E483      LDI	R24,0x43
+    001CC E091      LDI	R25,1
+    001CD 2FE4      MOV	R30,R20
+    001CE 27FF      CLR	R31
+    001CF 0FE8      ADD	R30,R24
+    001D0 1FF9      ADC	R31,R25
+    001D1 8100      LD	R16,Z
+    001D2 940E 010C CALL	_USART1_Transmit
+    001D4 9543      INC	R20
+    001D5 3046      CPI	R20,6
+    001D6 F3A0      BCS	0x01CB
+    001D7 9149      LD	R20,Y+
+    001D8 9508      RET
 _FINGERPRINT_Cmd_Delete_All_Model:
   i                    --> R20
-    001F7 934A      ST	-Y,R20
-(0073) }
-(0074) 
-(0075) //删除指纹模块里的所有指纹模版
-(0076) void FINGERPRINT_Cmd_Delete_All_Model(void)
-(0077) {
-(0078) 	unsigned char i;
-(0079) 
-(0080) 	for(i=0;i<6;i++) //包头
-    001F8 2744      CLR	R20
-    001F9 C00A      RJMP	0x0204
-(0081) 		UART1_Send_Byte(FP_Pack_Head[i]);
-    001FA E084      LDI	R24,4
-    001FB E091      LDI	R25,1
-    001FC 2FE4      MOV	R30,R20
-    001FD 27FF      CLR	R31
-    001FE 0FE8      ADD	R30,R24
-    001FF 1FF9      ADC	R31,R25
-    00200 8100      LD	R16,Z
-    00201 940E 012A CALL	_USART1_Transmit
-    00203 9543      INC	R20
-    00204 3046      CPI	R20,6
-    00205 F3A0      BCS	0x01FA
-(0082) 
-(0083) 	for(i=0;i<6;i++) //命令合并指纹模版
-    00206 2744      CLR	R20
-    00207 C00A      RJMP	0x0212
-(0084) 		UART1_Send_Byte(FP_Delet_All_Model[i]);
-    00208 E480      LDI	R24,0x40
-    00209 E091      LDI	R25,1
-    0020A 2FE4      MOV	R30,R20
-    0020B 27FF      CLR	R31
-    0020C 0FE8      ADD	R30,R24
-    0020D 1FF9      ADC	R31,R25
-    0020E 8100      LD	R16,Z
-    0020F 940E 012A CALL	_USART1_Transmit
-    00211 9543      INC	R20
-    00212 3046      CPI	R20,6
-    00213 F3A0      BCS	0x0208
-    00214 9149      LD	R20,Y+
-    00215 9508      RET
+    001D9 934A      ST	-Y,R20
+(0074) }
+(0075) 
+(0076) //删除指纹模块里的所有指纹模版
+(0077) void FINGERPRINT_Cmd_Delete_All_Model(void)
+(0078) {
+(0079) 	unsigned char i;
+(0080) 
+(0081) 	for(i=0;i<6;i++) //包头
+    001DA 2744      CLR	R20
+    001DB C00A      RJMP	0x01E6
+(0082) 		UART1_Send_Byte(FP_Pack_Head[i]);
+    001DC E08D      LDI	R24,0xD
+    001DD E091      LDI	R25,1
+    001DE 2FE4      MOV	R30,R20
+    001DF 27FF      CLR	R31
+    001E0 0FE8      ADD	R30,R24
+    001E1 1FF9      ADC	R31,R25
+    001E2 8100      LD	R16,Z
+    001E3 940E 010C CALL	_USART1_Transmit
+    001E5 9543      INC	R20
+    001E6 3046      CPI	R20,6
+    001E7 F3A0      BCS	0x01DC
+(0083) 
+(0084) 	for(i=0;i<6;i++) //命令合并指纹模版
+    001E8 2744      CLR	R20
+    001E9 C00A      RJMP	0x01F4
+(0085) 		UART1_Send_Byte(FP_Delet_All_Model[i]);
+    001EA E489      LDI	R24,0x49
+    001EB E091      LDI	R25,1
+    001EC 2FE4      MOV	R30,R20
+    001ED 27FF      CLR	R31
+    001EE 0FE8      ADD	R30,R24
+    001EF 1FF9      ADC	R31,R25
+    001F0 8100      LD	R16,Z
+    001F1 940E 010C CALL	_USART1_Transmit
+    001F3 9543      INC	R20
+    001F4 3046      CPI	R20,6
+    001F5 F3A0      BCS	0x01EA
+    001F6 9149      LD	R20,Y+
+    001F7 9508      RET
 _FINGERPRINT_Cmd_Delete_Model:
-  uiSum_temp           --> Y,+0
+  sum                  --> Y,+0
   i                    --> R20
-  uiID_temp            --> R20
-    00216 934A      ST	-Y,R20
-    00217 935A      ST	-Y,R21
-    00218 01A8      MOVW	R20,R16
-    00219 9722      SBIW	R28,2
-(0085) }
-(0086) 
-(0087) //删除指纹模块里的指定指纹模版
-(0088) void FINGERPRINT_Cmd_Delete_Model(unsigned int uiID_temp)
-(0089) {
-(0090) 	volatile unsigned int uiSum_temp = 0;
-    0021A 2422      CLR	R2
-    0021B 2433      CLR	R3
-    0021C 8239      STD	Y+1,R3
-    0021D 8228      ST	Y,R2
-(0091) 	unsigned char i;
-(0092) 
-(0093) 	FP_Delete_Model[4]=(uiID_temp&0xFF00)>>8;
-    0021E 01CA      MOVW	R24,R20
-    0021F 7080      ANDI	R24,0
-    00220 2F89      MOV	R24,R25
-    00221 2799      CLR	R25
-    00222 9380 0153 STS	FP_Delete_Model+4,R24
-(0094) 	FP_Delete_Model[5]=(uiID_temp&0x00FF);
-    00224 01CA      MOVW	R24,R20
-    00225 7090      ANDI	R25,0
-    00226 9380 0154 STS	FP_Delete_Model+5,R24
+  Page_ID              --> R20
+    001F8 934A      ST	-Y,R20
+    001F9 935A      ST	-Y,R21
+    001FA 01A8      MOVW	R20,R16
+    001FB 9722      SBIW	R28,2
+(0086) }
+(0087) 
+(0088) //删除指纹模块里的指定指纹模版
+(0089) void FINGERPRINT_Cmd_Delete_Model(unsigned int Page_ID)
+(0090) {
+(0091) 	volatile unsigned int sum = 0;
+    001FC 2422      CLR	R2
+    001FD 2433      CLR	R3
+    001FE 8239      STD	Y+1,R3
+    001FF 8228      ST	Y,R2
+(0092) 	unsigned char i;
+(0093) 
+(0094) 	//Delete_MODEL[10]={0x01,0x00,0x07,0x0C,0x00,0x00,0x00,0x1,0x00,0x00}; //删除指定的模版
 (0095) 
-(0096) 	for(i=0;i<8;i++)
-    00228 2744      CLR	R20
-    00229 C00F      RJMP	0x0239
-(0097) 		uiSum_temp = uiSum_temp + FP_Delete_Model[i];
-    0022A E48F      LDI	R24,0x4F
-    0022B E091      LDI	R25,1
-    0022C 2FE4      MOV	R30,R20
-    0022D 27FF      CLR	R31
-    0022E 0FE8      ADD	R30,R24
-    0022F 1FF9      ADC	R31,R25
-    00230 8020      LD	R2,Z
-    00231 2433      CLR	R3
-    00232 8048      LD	R4,Y
-    00233 8059      LDD	R5,Y+1
-    00234 0C42      ADD	R4,R2
-    00235 1C53      ADC	R5,R3
-    00236 8259      STD	Y+1,R5
-    00237 8248      ST	Y,R4
-    00238 9543      INC	R20
-    00239 3048      CPI	R20,0x8
-    0023A F378      BCS	0x022A
-(0098) 	
-(0099) 	//UART0_Send_Byte(uiSum_temp);
-(0100) 			
-(0101) 	FP_Delete_Model[8]=(uiSum_temp&0xFF00)>>8;
-    0023B 8188      LD	R24,Y
-    0023C 8199      LDD	R25,Y+1
-    0023D 7080      ANDI	R24,0
-    0023E 011C      MOVW	R2,R24
-    0023F 2C23      MOV	R2,R3
-    00240 2433      CLR	R3
-    00241 9220 0157 STS	FP_Delete_Model+8,R2
-(0102) 	FP_Delete_Model[9]=uiSum_temp&0x00FF;
-    00243 8188      LD	R24,Y
-    00244 8199      LDD	R25,Y+1
-    00245 7090      ANDI	R25,0
-    00246 9380 0158 STS	FP_Delete_Model+9,R24
-(0103) 
-(0104) 	for(i=0;i<6;i++) //包头
-    00248 2744      CLR	R20
-    00249 C00A      RJMP	0x0254
-(0105) 		UART1_Send_Byte(FP_Pack_Head[i]);
-    0024A E084      LDI	R24,4
-    0024B E091      LDI	R25,1
-    0024C 2FE4      MOV	R30,R20
-    0024D 27FF      CLR	R31
-    0024E 0FE8      ADD	R30,R24
-    0024F 1FF9      ADC	R31,R25
-    00250 8100      LD	R16,Z
-    00251 940E 012A CALL	_USART1_Transmit
-    00253 9543      INC	R20
-    00254 3046      CPI	R20,6
-    00255 F3A0      BCS	0x024A
-(0106) 
-(0107) 	for(i=0;i<10;i++) //命令合并指纹模版
-    00256 2744      CLR	R20
-    00257 C00A      RJMP	0x0262
-(0108) 		UART1_Send_Byte(FP_Delete_Model[i]);
-    00258 E48F      LDI	R24,0x4F
-    00259 E091      LDI	R25,1
-    0025A 2FE4      MOV	R30,R20
-    0025B 27FF      CLR	R31
-    0025C 0FE8      ADD	R30,R24
-    0025D 1FF9      ADC	R31,R25
-    0025E 8100      LD	R16,Z
-    0025F 940E 012A CALL	_USART1_Transmit
-    00261 9543      INC	R20
-    00262 304A      CPI	R20,0xA
-    00263 F3A0      BCS	0x0258
-    00264 9622      ADIW	R28,2
-    00265 9159      LD	R21,Y+
-    00266 9149      LD	R20,Y+
-    00267 9508      RET
+(0096) 	FP_Delete_Model[4] = (Page_ID & 0xFF00) >> 8;
+    00200 01CA      MOVW	R24,R20
+    00201 7080      ANDI	R24,0
+    00202 2F89      MOV	R24,R25
+    00203 2799      CLR	R25
+    00204 9380 015C STS	FP_Delete_Model+4,R24
+(0097) 	FP_Delete_Model[5] = (Page_ID & 0x00FF);
+    00206 01CA      MOVW	R24,R20
+    00207 7090      ANDI	R25,0
+    00208 9380 015D STS	FP_Delete_Model+5,R24
+(0098) 
+(0099) 	for(i=0;i<8;i++)
+    0020A 2744      CLR	R20
+    0020B C00F      RJMP	0x021B
+(0100) 		sum = sum + FP_Delete_Model[i];
+    0020C E588      LDI	R24,0x58
+    0020D E091      LDI	R25,1
+    0020E 2FE4      MOV	R30,R20
+    0020F 27FF      CLR	R31
+    00210 0FE8      ADD	R30,R24
+    00211 1FF9      ADC	R31,R25
+    00212 8020      LD	R2,Z
+    00213 2433      CLR	R3
+    00214 8048      LD	R4,Y
+    00215 8059      LDD	R5,Y+1
+    00216 0C42      ADD	R4,R2
+    00217 1C53      ADC	R5,R3
+    00218 8259      STD	Y+1,R5
+    00219 8248      ST	Y,R4
+    0021A 9543      INC	R20
+    0021B 3048      CPI	R20,0x8
+    0021C F378      BCS	0x020C
+(0101) 
+(0102) 	//UART1_Send_Byte(sum);
+(0103) 	FP_Delete_Model[8] = (sum & 0xFF00)>>8;
+    0021D 8188      LD	R24,Y
+    0021E 8199      LDD	R25,Y+1
+    0021F 7080      ANDI	R24,0
+    00220 011C      MOVW	R2,R24
+    00221 2C23      MOV	R2,R3
+    00222 2433      CLR	R3
+    00223 9220 0160 STS	FP_Delete_Model+8,R2
+(0104) 	FP_Delete_Model[9] =  sum & 0x00FF;
+    00225 8188      LD	R24,Y
+    00226 8199      LDD	R25,Y+1
+    00227 7090      ANDI	R25,0
+    00228 9380 0161 STS	FP_Delete_Model+9,R24
+(0105) 
+(0106) 	for(i=0;i<6;i++) //包头
+    0022A 2744      CLR	R20
+    0022B C00A      RJMP	0x0236
+(0107) 		UART1_Send_Byte(FP_Pack_Head[i]);
+    0022C E08D      LDI	R24,0xD
+    0022D E091      LDI	R25,1
+    0022E 2FE4      MOV	R30,R20
+    0022F 27FF      CLR	R31
+    00230 0FE8      ADD	R30,R24
+    00231 1FF9      ADC	R31,R25
+    00232 8100      LD	R16,Z
+    00233 940E 010C CALL	_USART1_Transmit
+    00235 9543      INC	R20
+    00236 3046      CPI	R20,6
+    00237 F3A0      BCS	0x022C
+(0108) 
+(0109) 	for(i=0;i<10;i++) //命令合并指纹模版
+    00238 2744      CLR	R20
+    00239 C00A      RJMP	0x0244
+(0110) 		UART1_Send_Byte(FP_Delete_Model[i]);
+    0023A E588      LDI	R24,0x58
+    0023B E091      LDI	R25,1
+    0023C 2FE4      MOV	R30,R20
+    0023D 27FF      CLR	R31
+    0023E 0FE8      ADD	R30,R24
+    0023F 1FF9      ADC	R31,R25
+    00240 8100      LD	R16,Z
+    00241 940E 010C CALL	_USART1_Transmit
+    00243 9543      INC	R20
+    00244 304A      CPI	R20,0xA
+    00245 F3A0      BCS	0x023A
+    00246 9622      ADIW	R28,2
+    00247 9159      LD	R21,Y+
+    00248 9149      LD	R20,Y+
+    00249 9508      RET
 _FINGERPRINT_Cmd_Get_Templete_Num:
   temp                 --> Y,+0
   i                    --> R20
-    00268 934A      ST	-Y,R20
-    00269 935A      ST	-Y,R21
-    0026A 972E      SBIW	R28,0xE
-(0109) }
-(0110) 
-(0111) //获得指纹模板数量
-(0112) void FINGERPRINT_Cmd_Get_Templete_Num(void)
-(0113) {
-(0114) 	unsigned int i;
-(0115) 	unsigned char temp[14];
-(0116) 
-(0117) 	for(i=0;i<6;i++) //包头
-    0026B 2744      CLR	R20
-    0026C 2755      CLR	R21
-    0026D C00A      RJMP	0x0278
-(0118) 		UART1_Send_Byte(FP_Pack_Head[i]);
-    0026E E084      LDI	R24,4
-    0026F E091      LDI	R25,1
-    00270 01FA      MOVW	R30,R20
-    00271 0FE8      ADD	R30,R24
-    00272 1FF9      ADC	R31,R25
-    00273 8100      LD	R16,Z
-    00274 940E 012A CALL	_USART1_Transmit
-    00276 5F4F      SUBI	R20,0xFF
-    00277 4F5F      SBCI	R21,0xFF
-    00278 3046      CPI	R20,6
-    00279 E0E0      LDI	R30,0
-    0027A 075E      CPC	R21,R30
-    0027B F390      BCS	0x026E
-(0119) 
-(0120) 	for(i=0;i<6;i++) //发送命令0x1d
-    0027C 2744      CLR	R20
-    0027D 2755      CLR	R21
-    0027E C00A      RJMP	0x0289
-(0121) 		UART1_Send_Byte(FP_Templete_Num[i]);
-    0027F E180      LDI	R24,0x10
-    00280 E091      LDI	R25,1
-    00281 01FA      MOVW	R30,R20
-    00282 0FE8      ADD	R30,R24
-    00283 1FF9      ADC	R31,R25
-    00284 8100      LD	R16,Z
-    00285 940E 012A CALL	_USART1_Transmit
-    00287 5F4F      SUBI	R20,0xFF
-    00288 4F5F      SBCI	R21,0xFF
-    00289 3046      CPI	R20,6
-    0028A E0E0      LDI	R30,0
-    0028B 075E      CPC	R21,R30
-    0028C F390      BCS	0x027F
-    0028D 962E      ADIW	R28,0xE
-    0028E 9159      LD	R21,Y+
-    0028F 9149      LD	R20,Y+
-    00290 9508      RET
+    0024A 934A      ST	-Y,R20
+    0024B 935A      ST	-Y,R21
+    0024C 972E      SBIW	R28,0xE
+(0111) }
+(0112) 
+(0113) //获得指纹模板数量
+(0114) void FINGERPRINT_Cmd_Get_Templete_Num(void)
+(0115) {
+(0116) 	unsigned int i;
+(0117) 	unsigned char temp[14];
+(0118) 
+(0119) 	for(i=0;i<6;i++) //包头
+    0024D 2744      CLR	R20
+    0024E 2755      CLR	R21
+    0024F C00A      RJMP	0x025A
+(0120) 		UART1_Send_Byte(FP_Pack_Head[i]);
+    00250 E08D      LDI	R24,0xD
+    00251 E091      LDI	R25,1
+    00252 01FA      MOVW	R30,R20
+    00253 0FE8      ADD	R30,R24
+    00254 1FF9      ADC	R31,R25
+    00255 8100      LD	R16,Z
+    00256 940E 010C CALL	_USART1_Transmit
+    00258 5F4F      SUBI	R20,0xFF
+    00259 4F5F      SBCI	R21,0xFF
+    0025A 3046      CPI	R20,6
+    0025B E0E0      LDI	R30,0
+    0025C 075E      CPC	R21,R30
+    0025D F390      BCS	0x0250
+(0121) 
+(0122) 	for(i=0;i<6;i++) //发送命令0x1d
+    0025E 2744      CLR	R20
+    0025F 2755      CLR	R21
+    00260 C00A      RJMP	0x026B
+(0123) 		UART1_Send_Byte(FP_Templete_Num[i]);
+    00261 E189      LDI	R24,0x19
+    00262 E091      LDI	R25,1
+    00263 01FA      MOVW	R30,R20
+    00264 0FE8      ADD	R30,R24
+    00265 1FF9      ADC	R31,R25
+    00266 8100      LD	R16,Z
+    00267 940E 010C CALL	_USART1_Transmit
+    00269 5F4F      SUBI	R20,0xFF
+    0026A 4F5F      SBCI	R21,0xFF
+    0026B 3046      CPI	R20,6
+    0026C E0E0      LDI	R30,0
+    0026D 075E      CPC	R21,R30
+    0026E F390      BCS	0x0261
+    0026F 962E      ADIW	R28,0xE
+    00270 9159      LD	R21,Y+
+    00271 9149      LD	R20,Y+
+    00272 9508      RET
 _FINGERPRINT_Cmd_Search_Finger:
   i                    --> R20
-    00291 934A      ST	-Y,R20
-(0122) }
-(0123) 
-(0124) //搜索全部用户999枚
-(0125) void FINGERPRINT_Cmd_Search_Finger(void)
-(0126) {
-(0127) 	unsigned char i;
-(0128) 
-(0129) 	for(i=0;i<6;i++) //发送命令搜索指纹库
-    00292 2744      CLR	R20
-    00293 C00A      RJMP	0x029E
-(0130) 		UART1_Send_Byte(FP_Pack_Head[i]);
-    00294 E084      LDI	R24,4
-    00295 E091      LDI	R25,1
-    00296 2FE4      MOV	R30,R20
-    00297 27FF      CLR	R31
-    00298 0FE8      ADD	R30,R24
-    00299 1FF9      ADC	R31,R25
-    0029A 8100      LD	R16,Z
-    0029B 940E 012A CALL	_USART1_Transmit
-    0029D 9543      INC	R20
-    0029E 3046      CPI	R20,6
-    0029F F3A0      BCS	0x0294
-(0131) 
-(0132) 	for(i=0;i<11;i++)
-    002A0 2744      CLR	R20
-    002A1 C00A      RJMP	0x02AC
-(0133) 		UART1_Send_Byte(FP_Search[i]);
-    002A2 E186      LDI	R24,0x16
-    002A3 E091      LDI	R25,1
-    002A4 2FE4      MOV	R30,R20
-    002A5 27FF      CLR	R31
-    002A6 0FE8      ADD	R30,R24
-    002A7 1FF9      ADC	R31,R25
-    002A8 8100      LD	R16,Z
-    002A9 940E 012A CALL	_USART1_Transmit
-    002AB 9543      INC	R20
-    002AC 304B      CPI	R20,0xB
-    002AD F3A0      BCS	0x02A2
-    002AE 9149      LD	R20,Y+
-    002AF 9508      RET
+    00273 934A      ST	-Y,R20
+(0124) }
+(0125) 
+(0126) //搜索全部用户999枚
+(0127) void FINGERPRINT_Cmd_Search_Finger(void)
+(0128) {
+(0129) 	unsigned char i;
+(0130) 
+(0131) 	for(i=0;i<6;i++) //发送命令搜索指纹库
+    00274 2744      CLR	R20
+    00275 C00A      RJMP	0x0280
+(0132) 		UART1_Send_Byte(FP_Pack_Head[i]);
+    00276 E08D      LDI	R24,0xD
+    00277 E091      LDI	R25,1
+    00278 2FE4      MOV	R30,R20
+    00279 27FF      CLR	R31
+    0027A 0FE8      ADD	R30,R24
+    0027B 1FF9      ADC	R31,R25
+    0027C 8100      LD	R16,Z
+    0027D 940E 010C CALL	_USART1_Transmit
+    0027F 9543      INC	R20
+    00280 3046      CPI	R20,6
+    00281 F3A0      BCS	0x0276
+(0133) 
+(0134) 	for(i=0;i<11;i++)
+    00282 2744      CLR	R20
+    00283 C00A      RJMP	0x028E
+(0135) 		UART1_Send_Byte(FP_Search[i]);
+    00284 E18F      LDI	R24,0x1F
+    00285 E091      LDI	R25,1
+    00286 2FE4      MOV	R30,R20
+    00287 27FF      CLR	R31
+    00288 0FE8      ADD	R30,R24
+    00289 1FF9      ADC	R31,R25
+    0028A 8100      LD	R16,Z
+    0028B 940E 010C CALL	_USART1_Transmit
+    0028D 9543      INC	R20
+    0028E 304B      CPI	R20,0xB
+    0028F F3A0      BCS	0x0284
+    00290 9149      LD	R20,Y+
+    00291 9508      RET
 _FINGERPRINT_Cmd_Search_Finger_Admin:
   i                    --> R20
-    002B0 934A      ST	-Y,R20
-(0134) }
-(0135) 
-(0136) 
-(0137) //搜索全部用户999枚
-(0138) void FINGERPRINT_Cmd_Search_Finger_Admin(void)
-(0139) {
-(0140) 	unsigned char i;
-(0141) 
-(0142) 	for(i=0;i<6;i++) //发送命令搜索指纹库
-    002B1 2744      CLR	R20
-    002B2 C00A      RJMP	0x02BD
-(0143) 		UART1_Send_Byte(FP_Pack_Head[i]);
-    002B3 E084      LDI	R24,4
-    002B4 E091      LDI	R25,1
-    002B5 2FE4      MOV	R30,R20
-    002B6 27FF      CLR	R31
-    002B7 0FE8      ADD	R30,R24
-    002B8 1FF9      ADC	R31,R25
-    002B9 8100      LD	R16,Z
-    002BA 940E 012A CALL	_USART1_Transmit
-    002BC 9543      INC	R20
-    002BD 3046      CPI	R20,6
-    002BE F3A0      BCS	0x02B3
-(0144) 
-(0145) 	for(i=0;i<11;i++)
-    002BF 2744      CLR	R20
-    002C0 C00A      RJMP	0x02CB
-(0146) 		UART1_Send_Byte(FP_Search_0_9[i]);
-    002C1 E281      LDI	R24,0x21
-    002C2 E091      LDI	R25,1
-    002C3 2FE4      MOV	R30,R20
-    002C4 27FF      CLR	R31
-    002C5 0FE8      ADD	R30,R24
-    002C6 1FF9      ADC	R31,R25
-    002C7 8100      LD	R16,Z
-    002C8 940E 012A CALL	_USART1_Transmit
-    002CA 9543      INC	R20
-    002CB 304B      CPI	R20,0xB
-    002CC F3A0      BCS	0x02C1
-    002CD 9149      LD	R20,Y+
-    002CE 9508      RET
+    00292 934A      ST	-Y,R20
+(0136) }
+(0137) 
+(0138) //搜索管理员用户10枚
+(0139) void FINGERPRINT_Cmd_Search_Finger_Admin(void)
+(0140) {
+(0141) 	unsigned char i;
+(0142) 
+(0143) 	for(i=0;i<6;i++) //发送命令搜索指纹库
+    00293 2744      CLR	R20
+    00294 C00A      RJMP	0x029F
+(0144) 		UART1_Send_Byte(FP_Pack_Head[i]);
+    00295 E08D      LDI	R24,0xD
+    00296 E091      LDI	R25,1
+    00297 2FE4      MOV	R30,R20
+    00298 27FF      CLR	R31
+    00299 0FE8      ADD	R30,R24
+    0029A 1FF9      ADC	R31,R25
+    0029B 8100      LD	R16,Z
+    0029C 940E 010C CALL	_USART1_Transmit
+    0029E 9543      INC	R20
+    0029F 3046      CPI	R20,6
+    002A0 F3A0      BCS	0x0295
+(0145) 
+(0146) 	for(i=0;i<11;i++)
+    002A1 2744      CLR	R20
+    002A2 C00A      RJMP	0x02AD
+(0147) 		UART1_Send_Byte(FP_Search_0_9[i]);
+    002A3 E28A      LDI	R24,0x2A
+    002A4 E091      LDI	R25,1
+    002A5 2FE4      MOV	R30,R20
+    002A6 27FF      CLR	R31
+    002A7 0FE8      ADD	R30,R24
+    002A8 1FF9      ADC	R31,R25
+    002A9 8100      LD	R16,Z
+    002AA 940E 010C CALL	_USART1_Transmit
+    002AC 9543      INC	R20
+    002AD 304B      CPI	R20,0xB
+    002AE F3A0      BCS	0x02A3
+    002AF 9149      LD	R20,Y+
+    002B0 9508      RET
 _FINGERPRINT_Cmd_Save_Finger:
-  temp                 --> Y,+0
+  sum                  --> Y,+0
   i                    --> R10
-  ucL_Char             --> R10
-  ucH_Char             --> R12
-    002CF 940E 038A CALL	push_xgsetF03C
-    002D1 2EA2      MOV	R10,R18
-    002D2 2EC0      MOV	R12,R16
-    002D3 9724      SBIW	R28,4
-(0147) }
-(0148) 
-(0149) void FINGERPRINT_Cmd_Save_Finger(unsigned char ucH_Char,unsigned char ucL_Char)
-(0150) {
-(0151) 	unsigned long temp = 0;
-    002D4 E080      LDI	R24,0
-    002D5 8388      ST	Y,R24
-    002D6 8389      STD	Y+1,R24
-    002D7 838A      STD	Y+2,R24
-    002D8 838B      STD	Y+3,R24
-(0152) 	unsigned char i;
-(0153) 
-(0154) 	//SAVE_FINGER[9]={0x01,0x00,0x06,0x06,0x01,0x00,0x0B,0x00,0x19}; //将BUFFER1中的特征码存放到指定的位置
+  Page_ID              --> R10
+    002B1 940E 054F CALL	push_xgsetF00C
+    002B3 0158      MOVW	R10,R16
+    002B4 9724      SBIW	R28,4
+(0148) }
+(0149) 
+(0150) //保存指纹到指定的位置
+(0151) void FINGERPRINT_Cmd_Save_Finger(unsigned int Page_ID)
+(0152) {
+(0153) 	unsigned long sum = 0;
+    002B5 E080      LDI	R24,0
+    002B6 8388      ST	Y,R24
+    002B7 8389      STD	Y+1,R24
+    002B8 838A      STD	Y+2,R24
+    002B9 838B      STD	Y+3,R24
+(0154) 	unsigned char i;
 (0155) 
-(0156) 	FP_Save_Finger[5] = ucH_Char;
-    002D9 92C0 014B STS	FP_Save_Finger+5,R12
-(0157) 	FP_Save_Finger[6] = ucL_Char;
-    002DB 92A0 014C STS	FP_Save_Finger+6,R10
-(0158) 
-(0159) 	for(i=0;i<7;i++) //计算校验和
-    002DD 24AA      CLR	R10
-    002DE C017      RJMP	0x02F6
-(0160) 		temp = temp + FP_Save_Finger[i];
-    002DF E486      LDI	R24,0x46
-    002E0 E091      LDI	R25,1
-    002E1 2DEA      MOV	R30,R10
-    002E2 27FF      CLR	R31
-    002E3 0FE8      ADD	R30,R24
-    002E4 1FF9      ADC	R31,R25
-    002E5 8020      LD	R2,Z
-    002E6 2433      CLR	R3
-    002E7 2444      CLR	R4
-    002E8 2455      CLR	R5
-    002E9 8068      LD	R6,Y
-    002EA 8079      LDD	R7,Y+1
-    002EB 808A      LDD	R8,Y+2
-    002EC 809B      LDD	R9,Y+3
-    002ED 0C62      ADD	R6,R2
-    002EE 1C73      ADC	R7,R3
-    002EF 1C84      ADC	R8,R4
-    002F0 1C95      ADC	R9,R5
-    002F1 8268      ST	Y,R6
-    002F2 8279      STD	Y+1,R7
-    002F3 828A      STD	Y+2,R8
-    002F4 829B      STD	Y+3,R9
-    002F5 94A3      INC	R10
-    002F6 2D8A      MOV	R24,R10
-    002F7 3087      CPI	R24,7
-    002F8 F330      BCS	0x02DF
-(0161) 
-(0162) 	FP_Save_Finger[7]=(temp & 0x00FF00) >> 8; //存放校验数据
-    002F9 E040      LDI	R20,0
-    002FA EF5F      LDI	R21,0xFF
-    002FB E060      LDI	R22,0
-    002FC E070      LDI	R23,0
-    002FD 8108      LD	R16,Y
-    002FE 8119      LDD	R17,Y+1
-    002FF 812A      LDD	R18,Y+2
-    00300 813B      LDD	R19,Y+3
-    00301 2304      AND	R16,R20
-    00302 2315      AND	R17,R21
-    00303 2326      AND	R18,R22
-    00304 2337      AND	R19,R23
-    00305 E088      LDI	R24,0x8
-    00306 E090      LDI	R25,0
-    00307 938A      ST	-Y,R24
-    00308 940E 039C CALL	lsr32
-    0030A 9300 014D STS	FP_Save_Finger+7,R16
-(0163) 	FP_Save_Finger[8]= temp & 0x0000FF;
-    0030C EF4F      LDI	R20,0xFF
-    0030D E050      LDI	R21,0
-    0030E E060      LDI	R22,0
-    0030F E070      LDI	R23,0
-    00310 8028      LD	R2,Y
-    00311 8039      LDD	R3,Y+1
-    00312 804A      LDD	R4,Y+2
-    00313 805B      LDD	R5,Y+3
-    00314 2224      AND	R2,R20
-    00315 2235      AND	R3,R21
-    00316 2246      AND	R4,R22
-    00317 2257      AND	R5,R23
-    00318 9220 014E STS	FP_Save_Finger+8,R2
-(0164) 
-(0165) 	for(i=0;i<6;i++)
-    0031A 24AA      CLR	R10
-    0031B C00A      RJMP	0x0326
-(0166) 		UART1_Send_Byte(FP_Pack_Head[i]); //发送包头
-    0031C E084      LDI	R24,4
-    0031D E091      LDI	R25,1
-    0031E 2DEA      MOV	R30,R10
-    0031F 27FF      CLR	R31
-    00320 0FE8      ADD	R30,R24
-    00321 1FF9      ADC	R31,R25
-    00322 8100      LD	R16,Z
-    00323 940E 012A CALL	_USART1_Transmit
-    00325 94A3      INC	R10
-    00326 2D8A      MOV	R24,R10
-    00327 3086      CPI	R24,6
-    00328 F398      BCS	0x031C
-(0167) 
-(0168) 	for(i=0;i<9;i++)
-    00329 24AA      CLR	R10
-    0032A C00A      RJMP	0x0335
-(0169) 		UART1_Send_Byte(FP_Save_Finger[i]); //发送命令将图像转换成特征码存放在CHAR_buffer1
-    0032B E486      LDI	R24,0x46
-    0032C E091      LDI	R25,1
-    0032D 2DEA      MOV	R30,R10
-    0032E 27FF      CLR	R31
-    0032F 0FE8      ADD	R30,R24
-    00330 1FF9      ADC	R31,R25
-    00331 8100      LD	R16,Z
-    00332 940E 012A CALL	_USART1_Transmit
-    00334 94A3      INC	R10
-    00335 2D8A      MOV	R24,R10
-    00336 3089      CPI	R24,0x9
-    00337 F398      BCS	0x032B
-    00338 9624      ADIW	R28,4
-    00339 940C 0393 JMP	pop_xgsetF03C
+(0156) 	//SAVE_FINGER[9]={0x01,0x00,0x06,0x06,0x01,0x00,0x0B,0x00,0x19}; //将BUFFER1中的特征码存放到指定的位置
+(0157) 
+(0158) 	FP_Save_Finger[5] = (Page_ID & 0xFF00) >> 8;
+    002BA 01C5      MOVW	R24,R10
+    002BB 7080      ANDI	R24,0
+    002BC 011C      MOVW	R2,R24
+    002BD 2C23      MOV	R2,R3
+    002BE 2433      CLR	R3
+    002BF 9220 0154 STS	FP_Save_Finger+5,R2
+(0159) 	FP_Save_Finger[6] = (Page_ID & 0x00FF);
+    002C1 01C5      MOVW	R24,R10
+    002C2 7090      ANDI	R25,0
+    002C3 9380 0155 STS	FP_Save_Finger+6,R24
+(0160) 
+(0161) 	for(i=0;i<7;i++) //计算校验和
+    002C5 24AA      CLR	R10
+    002C6 C017      RJMP	0x02DE
+(0162) 		sum = sum + FP_Save_Finger[i];
+    002C7 E48F      LDI	R24,0x4F
+    002C8 E091      LDI	R25,1
+    002C9 2DEA      MOV	R30,R10
+    002CA 27FF      CLR	R31
+    002CB 0FE8      ADD	R30,R24
+    002CC 1FF9      ADC	R31,R25
+    002CD 8020      LD	R2,Z
+    002CE 2433      CLR	R3
+    002CF 2444      CLR	R4
+    002D0 2455      CLR	R5
+    002D1 8068      LD	R6,Y
+    002D2 8079      LDD	R7,Y+1
+    002D3 808A      LDD	R8,Y+2
+    002D4 809B      LDD	R9,Y+3
+    002D5 0C62      ADD	R6,R2
+    002D6 1C73      ADC	R7,R3
+    002D7 1C84      ADC	R8,R4
+    002D8 1C95      ADC	R9,R5
+    002D9 8268      ST	Y,R6
+    002DA 8279      STD	Y+1,R7
+    002DB 828A      STD	Y+2,R8
+    002DC 829B      STD	Y+3,R9
+    002DD 94A3      INC	R10
+    002DE 2D8A      MOV	R24,R10
+    002DF 3087      CPI	R24,7
+    002E0 F330      BCS	0x02C7
+(0163) 
+(0164) 	FP_Save_Finger[7]=(sum & 0x00FF00) >> 8; //存放校验数据
+    002E1 E040      LDI	R20,0
+    002E2 EF5F      LDI	R21,0xFF
+    002E3 E060      LDI	R22,0
+    002E4 E070      LDI	R23,0
+    002E5 8108      LD	R16,Y
+    002E6 8119      LDD	R17,Y+1
+    002E7 812A      LDD	R18,Y+2
+    002E8 813B      LDD	R19,Y+3
+    002E9 2304      AND	R16,R20
+    002EA 2315      AND	R17,R21
+    002EB 2326      AND	R18,R22
+    002EC 2337      AND	R19,R23
+    002ED E088      LDI	R24,0x8
+    002EE E090      LDI	R25,0
+    002EF 938A      ST	-Y,R24
+    002F0 940E 055D CALL	lsr32
+    002F2 9300 0156 STS	FP_Save_Finger+7,R16
+(0165) 	FP_Save_Finger[8]= sum & 0x0000FF;
+    002F4 EF4F      LDI	R20,0xFF
+    002F5 E050      LDI	R21,0
+    002F6 E060      LDI	R22,0
+    002F7 E070      LDI	R23,0
+    002F8 8028      LD	R2,Y
+    002F9 8039      LDD	R3,Y+1
+    002FA 804A      LDD	R4,Y+2
+    002FB 805B      LDD	R5,Y+3
+    002FC 2224      AND	R2,R20
+    002FD 2235      AND	R3,R21
+    002FE 2246      AND	R4,R22
+    002FF 2257      AND	R5,R23
+    00300 9220 0157 STS	FP_Save_Finger+8,R2
+(0166) 
+(0167) 	for(i=0;i<6;i++)
+    00302 24AA      CLR	R10
+    00303 C00A      RJMP	0x030E
+(0168) 		UART1_Send_Byte(FP_Pack_Head[i]); //发送包头
+    00304 E08D      LDI	R24,0xD
+    00305 E091      LDI	R25,1
+    00306 2DEA      MOV	R30,R10
+    00307 27FF      CLR	R31
+    00308 0FE8      ADD	R30,R24
+    00309 1FF9      ADC	R31,R25
+    0030A 8100      LD	R16,Z
+    0030B 940E 010C CALL	_USART1_Transmit
+    0030D 94A3      INC	R10
+    0030E 2D8A      MOV	R24,R10
+    0030F 3086      CPI	R24,6
+    00310 F398      BCS	0x0304
+(0169) 
+(0170) 	for(i=0;i<9;i++)
+    00311 24AA      CLR	R10
+    00312 C00A      RJMP	0x031D
+(0171) 		UART1_Send_Byte(FP_Save_Finger[i]); //发送命令将图像转换成特征码存放在CHAR_buffer1
+    00313 E48F      LDI	R24,0x4F
+    00314 E091      LDI	R25,1
+    00315 2DEA      MOV	R30,R10
+    00316 27FF      CLR	R31
+    00317 0FE8      ADD	R30,R24
+    00318 1FF9      ADC	R31,R25
+    00319 8100      LD	R16,Z
+    0031A 940E 010C CALL	_USART1_Transmit
+    0031C 94A3      INC	R10
+    0031D 2D8A      MOV	R24,R10
+    0031E 3089      CPI	R24,0x9
+    0031F F398      BCS	0x0313
+    00320 9624      ADIW	R28,4
+    00321 940C 0556 JMP	pop_xgsetF00C
 _FINGERPRINT_Recevice_Data:
   i                    --> R10
   ucLength             --> R12
-    0033B 92AA      ST	-Y,R10
-    0033C 92CA      ST	-Y,R12
-    0033D 2EC0      MOV	R12,R16
-(0170) }
-(0171) 
-(0172) //接收反馈数据缓冲
-(0173) void FINGERPRINT_Recevice_Data(unsigned char ucLength)
-(0174) {
-(0175) 	unsigned char i;
-(0176) 
-(0177) 	for (i=0;i<ucLength;i++)
-    0033E 24AA      CLR	R10
-    0033F C00A      RJMP	0x034A
-(0178) 		UART1_FINGERPRINT_RECEVICE_BUFFER[i] = UART1_Receive_Byte();
-    00340 940E 0144 CALL	_USART1_Receive
-    00342 E683      LDI	R24,0x63
-    00343 E091      LDI	R25,1
-    00344 2DEA      MOV	R30,R10
-    00345 27FF      CLR	R31
-    00346 0FE8      ADD	R30,R24
-    00347 1FF9      ADC	R31,R25
-    00348 8300      ST	Z,R16
-    00349 94A3      INC	R10
-    0034A 14AC      CP	R10,R12
-    0034B F3A0      BCS	0x0340
-    0034C 90C9      LD	R12,Y+
-    0034D 90A9      LD	R10,Y+
-    0034E 9508      RET
+    00323 92AA      ST	-Y,R10
+    00324 92CA      ST	-Y,R12
+    00325 2EC0      MOV	R12,R16
+(0172) }
+(0173) 
+(0174) //接收反馈数据缓冲
+(0175) void FINGERPRINT_Recevice_Data(unsigned char ucLength)
+(0176) {
+(0177) 	unsigned char i;
+(0178) 
+(0179) 	for (i=0;i<ucLength;i++)
+    00326 24AA      CLR	R10
+    00327 C00A      RJMP	0x0332
+(0180) 		UART1_FINGERPRINT_RECEVICE_BUFFER[i] = UART1_Receive_Byte();
+    00328 940E 0126 CALL	_USART1_Receive
+    0032A E780      LDI	R24,0x70
+    0032B E091      LDI	R25,1
+    0032C 2DEA      MOV	R30,R10
+    0032D 27FF      CLR	R31
+    0032E 0FE8      ADD	R30,R24
+    0032F 1FF9      ADC	R31,R25
+    00330 8300      ST	Z,R16
+    00331 94A3      INC	R10
+    00332 14AC      CP	R10,R12
+    00333 F3A0      BCS	0x0328
+    00334 90C9      LD	R12,Y+
+    00335 90A9      LD	R10,Y+
+    00336 9508      RET
 _FINGERPRINT_add_new_user:
-  ucL_user             --> R12
-  ucH_user             --> R10
-    0034F 92AA      ST	-Y,R10
-    00350 92CA      ST	-Y,R12
-    00351 2EC2      MOV	R12,R18
-    00352 2EA0      MOV	R10,R16
-(0179) }
-(0180) 
-(0181) //指纹添加新用户
-(0182) unsigned char FINGERPRINT_add_new_user(unsigned char ucH_user,unsigned char ucL_user)
-(0183) {
-(0184) 	do
-(0185) 	{
-(0186) 		FINGERPRINT_Cmd_Get_Img(); //获得指纹图像
-    00353 DE27      RCALL	_FINGERPRINT_Cmd_Get_Img
-(0187) 		FINGERPRINT_Recevice_Data(12); //接收12个长度的反馈码
-    00354 E00C      LDI	R16,0xC
-    00355 DFE5      RCALL	_FINGERPRINT_Recevice_Data
-(0188) 	}
-(0189) 	while(UART1_FINGERPRINT_RECEVICE_BUFFER[9]!=0x0); //检测是否成功的按了指纹
-    00356 9020 016C LDS	R2,UART1_FINGERPRINT_RECEVICE_BUFFER+9
-    00358 2022      TST	R2
-    00359 F7C9      BNE	0x0353
+  Page_ID              --> R10
+    00337 92AA      ST	-Y,R10
+    00338 92BA      ST	-Y,R11
+    00339 0158      MOVW	R10,R16
+(0181) }
+(0182) 
+(0183) /*-------------------- 应用层接口函数 --------------------*/
+(0184) 
+(0185) //指纹添加新用户
+(0186) unsigned char FINGERPRINT_add_new_user(unsigned int Page_ID)
+(0187) {
+(0188) 	led_off_all(); //先关闭所有提示灯
+    0033A 940E 04F6 CALL	_led_off_all
+(0189) 	led_on(1); //打开第一个提示灯
+    0033C E001      LDI	R16,1
+    0033D 940E 04AC CALL	_led_on
 (0190) 
-(0191) 	FINGERPRINT_Cmd_Img_To_Buffer1(); //将图像转换成特征码存放在Buffer1中
-    0035A DE3F      RCALL	_FINGERPRINT_Cmd_Img_To_Buffer1
-(0192) 	FINGERPRINT_Recevice_Data(12); //接收12个长度的反馈码
-    0035B E00C      LDI	R16,0xC
-    0035C DFDE      RCALL	_FINGERPRINT_Recevice_Data
-(0193) 
-(0194) 	do
-(0195) 	{
-(0196) 		FINGERPRINT_Cmd_Get_Img(); //获得指纹图像
-    0035D DE1D      RCALL	_FINGERPRINT_Cmd_Get_Img
-(0197) 		FINGERPRINT_Recevice_Data(12); //接收12个长度的反馈码			 
-    0035E E00C      LDI	R16,0xC
-    0035F DFDB      RCALL	_FINGERPRINT_Recevice_Data
-(0198) 	}
-(0199) 	while(UART1_FINGERPRINT_RECEVICE_BUFFER[9]!=0x0);
-    00360 9020 016C LDS	R2,UART1_FINGERPRINT_RECEVICE_BUFFER+9
-    00362 2022      TST	R2
-    00363 F7C9      BNE	0x035D
-(0200) 
-(0201) 	FINGERPRINT_Cmd_Img_To_Buffer2(); //将图像转换成特征码存放在Buffer2中
-    00364 DE54      RCALL	_FINGERPRINT_Cmd_Img_To_Buffer2
-(0202) 	FINGERPRINT_Recevice_Data(12); //接收12个长度的反馈码
-    00365 E00C      LDI	R16,0xC
-    00366 DFD4      RCALL	_FINGERPRINT_Recevice_Data
-(0203) 
-(0204) 	FINGERPRINT_Cmd_Reg_Model(); //转换成特征码
-    00367 DE70      RCALL	_FINGERPRINT_Cmd_Reg_Model
-(0205) 	FINGERPRINT_Recevice_Data(12);
-    00368 E00C      LDI	R16,0xC
-    00369 DFD1      RCALL	_FINGERPRINT_Recevice_Data
-(0206) 
-(0207) 	FINGERPRINT_Cmd_Save_Finger(ucH_user,ucL_user);
-    0036A 2D2C      MOV	R18,R12
-    0036B 2D0A      MOV	R16,R10
-    0036C DF62      RCALL	_FINGERPRINT_Cmd_Save_Finger
-(0208) 	FINGERPRINT_Recevice_Data(12);
-    0036D E00C      LDI	R16,0xC
-    0036E DFCC      RCALL	_FINGERPRINT_Recevice_Data
-(0209) 
-(0210) 	return 0;
-    0036F 2700      CLR	R16
-    00370 90C9      LD	R12,Y+
-    00371 90A9      LD	R10,Y+
-    00372 9508      RET
+(0191) 	do
+(0192) 	{
+(0193) 		FINGERPRINT_Cmd_Get_Img(); //获得指纹图像
+    0033F DE1D      RCALL	_FINGERPRINT_Cmd_Get_Img
+(0194) 		FINGERPRINT_Recevice_Data(12); //接收12个长度的反馈码
+    00340 E00C      LDI	R16,0xC
+    00341 DFE1      RCALL	_FINGERPRINT_Recevice_Data
+(0195) 	}
+(0196) 	while(UART1_FINGERPRINT_RECEVICE_BUFFER[9]!=0x00); //检测是否成功的按了指纹
+    00342 9020 0179 LDS	R2,UART1_FINGERPRINT_RECEVICE_BUFFER+9
+    00344 2022      TST	R2
+    00345 F7C9      BNE	0x033F
+(0197) 	
+(0198) 	led_on(2); //第一个指纹录入完成, 打开第二个提示灯
+    00346 E002      LDI	R16,2
+    00347 940E 04AC CALL	_led_on
+(0199) 
+(0200) 	FINGERPRINT_Cmd_Img_To_Buffer1(); //将图像转换成特征码存放在Buffer1中
+    00349 DE32      RCALL	_FINGERPRINT_Cmd_Img_To_Buffer1
+(0201) 	FINGERPRINT_Recevice_Data(12); //接收12个长度的反馈码
+    0034A E00C      LDI	R16,0xC
+    0034B DFD7      RCALL	_FINGERPRINT_Recevice_Data
+(0202) 
+(0203) 	do
+(0204) 	{
+(0205) 		FINGERPRINT_Cmd_Get_Img(); //获得指纹图像
+    0034C DE10      RCALL	_FINGERPRINT_Cmd_Get_Img
+(0206) 		FINGERPRINT_Recevice_Data(12); //接收12个长度的反馈码			 
+    0034D E00C      LDI	R16,0xC
+    0034E DFD4      RCALL	_FINGERPRINT_Recevice_Data
+(0207) 	}
+(0208) 	while(UART1_FINGERPRINT_RECEVICE_BUFFER[9]!=0x00);
+    0034F 9020 0179 LDS	R2,UART1_FINGERPRINT_RECEVICE_BUFFER+9
+    00351 2022      TST	R2
+    00352 F7C9      BNE	0x034C
+(0209) 	
+(0210) 	led_on(3); //第二个指纹录入完成, 打开第三个提示灯
+    00353 E003      LDI	R16,3
+    00354 940E 04AC CALL	_led_on
+(0211) 
+(0212) 	FINGERPRINT_Cmd_Img_To_Buffer2(); //将图像转换成特征码存放在Buffer2中
+    00356 DE44      RCALL	_FINGERPRINT_Cmd_Img_To_Buffer2
+(0213) 	FINGERPRINT_Recevice_Data(12); //接收12个长度的反馈码
+    00357 E00C      LDI	R16,0xC
+    00358 DFCA      RCALL	_FINGERPRINT_Recevice_Data
+(0214) 
+(0215) 	FINGERPRINT_Cmd_Reg_Model(); //转换成特征码
+    00359 DE60      RCALL	_FINGERPRINT_Cmd_Reg_Model
+(0216) 	FINGERPRINT_Recevice_Data(12);
+    0035A E00C      LDI	R16,0xC
+    0035B DFC7      RCALL	_FINGERPRINT_Recevice_Data
+(0217) 	if(UART1_FINGERPRINT_RECEVICE_BUFFER[9]!=0x00)
+    0035C 9020 0179 LDS	R2,UART1_FINGERPRINT_RECEVICE_BUFFER+9
+    0035E 2022      TST	R2
+    0035F F011      BEQ	0x0362
+(0218) 		return 0; //合并特征生成模板出错 返回0
+    00360 2700      CLR	R16
+    00361 C014      RJMP	0x0376
+(0219) 
+(0220) 	FINGERPRINT_Cmd_Save_Finger(Page_ID);
+    00362 0185      MOVW	R16,R10
+    00363 DF4D      RCALL	_FINGERPRINT_Cmd_Save_Finger
+(0221) 	FINGERPRINT_Recevice_Data(12);
+    00364 E00C      LDI	R16,0xC
+    00365 DFBD      RCALL	_FINGERPRINT_Recevice_Data
+(0222) 	if(UART1_FINGERPRINT_RECEVICE_BUFFER[9]!=0x00)
+    00366 9020 0179 LDS	R2,UART1_FINGERPRINT_RECEVICE_BUFFER+9
+    00368 2022      TST	R2
+    00369 F041      BEQ	0x0372
+(0223) 	{
+(0224) 		if(UART1_FINGERPRINT_RECEVICE_BUFFER[9]==0x0B)
+    0036A 9180 0179 LDS	R24,UART1_FINGERPRINT_RECEVICE_BUFFER+9
+    0036C 308B      CPI	R24,0xB
+    0036D F411      BNE	0x0370
+(0225) 			return 2; //PageID超出指纹库范围 返回2
+    0036E E002      LDI	R16,2
+    0036F C006      RJMP	0x0376
+(0226) 		return 0; //储存模板出错 返回0
+    00370 2700      CLR	R16
+    00371 C004      RJMP	0x0376
+(0227) 	}
+(0228) 
+(0229) 	led_on(4); //添加新用户完成, 打开全部提示灯
+    00372 E004      LDI	R16,4
+    00373 940E 04AC CALL	_led_on
+(0230) 	return 1; //全部执行无误 返回1
+    00375 E001      LDI	R16,1
+    00376 90B9      LD	R11,Y+
+    00377 90A9      LD	R10,Y+
+    00378 9508      RET
+(0231) }
+(0232) 
+(0233) //指纹搜索是否为注册用户
+(0234) unsigned char FINGERPRINT_search_reg_user(void)
+(0235) {
+(0236) 	led_off_all(); //先关闭所有提示灯
+_FINGERPRINT_search_reg_user:
+    00379 940E 04F6 CALL	_led_off_all
+(0237) 	led_on(1); //打开第一个提示灯
+    0037B E001      LDI	R16,1
+    0037C 940E 04AC CALL	_led_on
+(0238) 
+(0239) 	do
+(0240) 	{
+(0241) 		FINGERPRINT_Cmd_Get_Img(); //获得指纹图像
+    0037E DDDE      RCALL	_FINGERPRINT_Cmd_Get_Img
+(0242) 		FINGERPRINT_Recevice_Data(12); //接收12个长度的反馈码
+    0037F E00C      LDI	R16,0xC
+    00380 DFA2      RCALL	_FINGERPRINT_Recevice_Data
+(0243) 	}
+(0244) 	while(UART1_FINGERPRINT_RECEVICE_BUFFER[9]!=0x00); //检测是否成功的按了指纹
+    00381 9020 0179 LDS	R2,UART1_FINGERPRINT_RECEVICE_BUFFER+9
+    00383 2022      TST	R2
+    00384 F7C9      BNE	0x037E
+(0245) 	
+(0246) 	led_on(2); //读取到指纹, 打开第二个提示灯
+    00385 E002      LDI	R16,2
+    00386 940E 04AC CALL	_led_on
+(0247) 	
+(0248) 	FINGERPRINT_Cmd_Img_To_Buffer1(); //将图像转换成特征码存放在Buffer1中
+    00388 DDF3      RCALL	_FINGERPRINT_Cmd_Img_To_Buffer1
+(0249) 	FINGERPRINT_Recevice_Data(12); //接收12个长度的反馈码
+    00389 E00C      LDI	R16,0xC
+    0038A DF98      RCALL	_FINGERPRINT_Recevice_Data
+(0250) 	
+(0251) 	FINGERPRINT_Cmd_Search_Finger(); //搜索全部用户999枚
+    0038B DEE7      RCALL	_FINGERPRINT_Cmd_Search_Finger
+(0252) 	FINGERPRINT_Recevice_Data(16); //接收16个长度的反馈码
+    0038C E100      LDI	R16,0x10
+    0038D DF95      RCALL	_FINGERPRINT_Recevice_Data
+(0253) 	if(UART1_FINGERPRINT_RECEVICE_BUFFER[9]!=0x00)
+    0038E 9020 0179 LDS	R2,UART1_FINGERPRINT_RECEVICE_BUFFER+9
+    00390 2022      TST	R2
+    00391 F059      BEQ	0x039D
+(0254) 	{
+(0255) 		led_on(3); //发生错误, 打开第三个提示灯
+    00392 E003      LDI	R16,3
+    00393 940E 04AC CALL	_led_on
+(0256) 		
+(0257) 		if(UART1_FINGERPRINT_RECEVICE_BUFFER[9]==0x09)
+    00395 9180 0179 LDS	R24,UART1_FINGERPRINT_RECEVICE_BUFFER+9
+    00397 3089      CPI	R24,0x9
+    00398 F411      BNE	0x039B
+(0258) 			return 2; //没搜索到 返回2
+    00399 E002      LDI	R16,2
+    0039A C003      RJMP	0x039E
+(0259) 		return 0; //其他错误 返回0
+    0039B 2700      CLR	R16
+    0039C C001      RJMP	0x039E
+(0260) 	}
+(0261) 
+(0262) 	led_on_all; //找到匹配的指纹, 打开全部提示灯
+(0263) 	return 1; //全部执行无误 返回1
+    0039D E001      LDI	R16,1
+    0039E 9508      RET
 FILE: F:\工作\单片机\WorkSpace\AccessControlSystem\LCD_Operate.c
 (0001) //LCD_Operate.c
 (0002) 
@@ -1161,76 +1215,751 @@ FILE: F:\工作\单片机\WorkSpace\AccessControlSystem\LCD_Operate.c
 (0004) #include <macros.h>
 (0005) #include "LCD_Operate.h"
 (0006) #include "USART_Operate.h"
-(0007) 
-(0008) //LCD测忙
-(0009) unsigned char LCD_Busy(void)
-(0010) {
-(0011) 	if(PINA & BIT(4))
+(0007) #include "GlobalDefine.h"
+(0008) 
+(0009) //LCD测忙
+(0010) unsigned char LCD_Busy(void)
+(0011) {
+(0012) 	if(lcd_busy)
+(0013) 		return 1;
 _LCD_Busy:
-    00373 9BCC      SBIS	0x19,4
-    00374 C002      RJMP	0x0377
-(0012) 		return 1;
-    00375 E001      LDI	R16,1
-    00376 C001      RJMP	0x0378
-(0013) 	else
-(0014) 		return 0;
-    00377 2700      CLR	R16
-    00378 9508      RET
+    0039F E001      LDI	R16,1
+    003A0 C001      RJMP	0x03A2
+(0014) 	else
+(0015) 		return 0;
+    003A1 2700      CLR	R16
+    003A2 9508      RET
 _LCD_Clear_Screen:
   color                --> R10
-    00379 92AA      ST	-Y,R10
-    0037A 92BA      ST	-Y,R11
-    0037B 0158      MOVW	R10,R16
+    003A3 92AA      ST	-Y,R10
+    003A4 92BA      ST	-Y,R11
+    003A5 0158      MOVW	R10,R16
+(0016) }
+(0017) 
+(0018) //LCD用color颜色清屏
+(0019) void LCD_Clear_Screen(unsigned char *color)
+(0020) {
+(0021) 	USART0_Transmit_String("CLS(");
+    003A6 E60A      LDI	R16,0x6A
+    003A7 E011      LDI	R17,1
+    003A8 940E 00F7 CALL	_USART0_Transmit_String
+(0022) 	USART0_Transmit_String(color);
+    003AA 0185      MOVW	R16,R10
+    003AB 940E 00F7 CALL	_USART0_Transmit_String
+(0023) 	USART0_Transmit_String(");\r\n");
+    003AD E605      LDI	R16,0x65
+    003AE E011      LDI	R17,1
+    003AF 940E 00F7 CALL	_USART0_Transmit_String
+    003B1 90B9      LD	R11,Y+
+    003B2 90A9      LD	R10,Y+
+    003B3 9508      RET
+(0024) }
+(0025) 
+(0026) //LCD显示
+(0027) void LCD_Display(void)
+(0028) {
+(0029) 	USART0_Transmit_String("\r\n");
+_LCD_Display:
+    003B4 E602      LDI	R16,0x62
+    003B5 E011      LDI	R17,1
+    003B6 940C 00F7 JMP	_USART0_Transmit_String
+_Keyboard_Scan:
+  key                  --> R20
+  temp                 --> R22
+    003B8 940E 054F CALL	push_xgsetF00C
+FILE: F:\工作\单片机\WorkSpace\AccessControlSystem\KeyboardOperate.c
+(0001) //KeyboardOperate.c
+(0002) 
+(0003) #include <iom128v.h>
+(0004) #include <macros.h>
+(0005) #include "KeyboardOperate.h"
+(0006) #include "GlobalDefine.h"
+(0007) 
+(0008) //判断按下的是哪个按键
+(0009) unsigned char Keyboard_Scan(void)
+(0010) {
+(0011) 	unsigned char temp; //设置PB口读取寄存位
+(0012) 	unsigned char key = 0; //设置按键值寄存位(初值为0, 可以用于判断是否有按键按下)
+    003BA 2744      CLR	R20
+(0013) 	
+(0014) 	//检测第一行按键
+(0015) 	PORTB = 0xFE; //PB0以外全设为高电平
+    003BB EF8E      LDI	R24,0xFE
+    003BC BB88      OUT	0x18,R24
+(0016) 	DDRB  = 0x0F; //PB低四位设为输入
+    003BD E08F      LDI	R24,0xF
+    003BE BB87      OUT	0x17,R24
+(0017) 	temp  = PINB; //读出PB口的数值到temp
+    003BF B366      IN	R22,0x16
+(0018) 	temp &= 0xF0; //检查高四位
+    003C0 7F60      ANDI	R22,0xF0
+(0019) 	if(temp != 0xF0) //若高四位不全是高电平, 说明有按键按下
+    003C1 3F60      CPI	R22,0xF0
+    003C2 F179      BEQ	0x03F2
+(0020) 	{
+(0021) 		delay(1); //消抖
+    003C3 E001      LDI	R16,1
+    003C4 940E 0496 CALL	_delay
+(0022) 		temp  = PINB; //读出PB口的数值到temp
+    003C6 B366      IN	R22,0x16
+(0023) 		temp &= 0xF0; //再次检查高四位的电平
+    003C7 7F60      ANDI	R22,0xF0
+(0024) 		if(temp != 0xF0) //若高四位还不全是高电平, 说明确实有按键按下
+    003C8 3F60      CPI	R22,0xF0
+    003C9 F141      BEQ	0x03F2
+(0025) 		{
+(0026) 			temp = PINB; //读出PB口的数值到temp
+    003CA B366      IN	R22,0x16
+(0027) 			switch(temp) //判断是哪个按键按下
+    003CB 2EA6      MOV	R10,R22
+    003CC 24BB      CLR	R11
+    003CD 01C5      MOVW	R24,R10
+    003CE 3B8E      CPI	R24,0xBE
+    003CF E0E0      LDI	R30,0
+    003D0 079E      CPC	R25,R30
+    003D1 F0E9      BEQ	0x03EF
+    003D2 EB8E      LDI	R24,0xBE
+    003D3 158A      CP	R24,R10
+    003D4 059B      CPC	R25,R11
+    003D5 F034      BLT	0x03DC
+    003D6 01C5      MOVW	R24,R10
+    003D7 378E      CPI	R24,0x7E
+    003D8 E0E0      LDI	R30,0
+    003D9 079E      CPC	R25,R30
+    003DA F0B1      BEQ	0x03F1
+    003DB C016      RJMP	0x03F2
+    003DC 01C5      MOVW	R24,R10
+    003DD 3D8E      CPI	R24,0xDE
+    003DE E0E0      LDI	R30,0
+    003DF 079E      CPC	R25,R30
+    003E0 F061      BEQ	0x03ED
+    003E1 3D8E      CPI	R24,0xDE
+    003E2 E0E0      LDI	R30,0
+    003E3 079E      CPC	R25,R30
+    003E4 F06C      BLT	0x03F2
+    003E5 01C5      MOVW	R24,R10
+    003E6 3E8E      CPI	R24,0xEE
+    003E7 E0E0      LDI	R30,0
+    003E8 079E      CPC	R25,R30
+    003E9 F009      BEQ	0x03EB
+    003EA C007      RJMP	0x03F2
+(0028) 			{
+(0029) 				case 0xEE: key = '1'; break;
+    003EB E341      LDI	R20,0x31
+    003EC C005      RJMP	0x03F2
+(0030) 				case 0xDE: key = '2'; break;
+    003ED E342      LDI	R20,0x32
+    003EE C003      RJMP	0x03F2
+(0031) 				case 0xBE: key = '3'; break;
+    003EF E343      LDI	R20,0x33
+    003F0 C001      RJMP	0x03F2
+(0032) 				case 0x7E: key = 'A'; break;
+    003F1 E441      LDI	R20,0x41
+(0033) 			}
+(0034) 		}
+(0035) 		//while(temp != 0xF0); //松手检测
+(0036) 	}
+(0037) 	
+(0038) 	//检测第二行按键
+(0039) 	PORTB = 0xFD; //PB1以外全设为高电平
+    003F2 EF8D      LDI	R24,0xFD
+    003F3 BB88      OUT	0x18,R24
+(0040) 	DDRB  = 0x0F; //PB低四位设为输入
+    003F4 E08F      LDI	R24,0xF
+    003F5 BB87      OUT	0x17,R24
+(0041) 	temp  = PINB; //读出PB口的数值到temp
+    003F6 B366      IN	R22,0x16
+(0042) 	temp &= 0xF0; //检查高四位
+    003F7 7F60      ANDI	R22,0xF0
+(0043) 	if(temp != 0xF0) //若高四位不全是高电平, 说明有按键按下
+    003F8 3F60      CPI	R22,0xF0
+    003F9 F179      BEQ	0x0429
+(0044) 	{
+(0045) 		delay(1); //消抖
+    003FA E001      LDI	R16,1
+    003FB 940E 0496 CALL	_delay
+(0046) 		temp  = PINB; //读出PB口的数值到temp
+    003FD B366      IN	R22,0x16
+(0047) 		temp &= 0xF0; //再次检查高四位的电平
+    003FE 7F60      ANDI	R22,0xF0
+(0048) 		if(temp != 0xF0) //若高四位还不全是高电平, 说明确实有按键按下
+    003FF 3F60      CPI	R22,0xF0
+    00400 F141      BEQ	0x0429
+(0049) 		{
+(0050) 			temp = PINB; //读出PB口的数值到temp
+    00401 B366      IN	R22,0x16
+(0051) 			switch(temp) //判断是哪个按键按下
+    00402 2EA6      MOV	R10,R22
+    00403 24BB      CLR	R11
+    00404 01C5      MOVW	R24,R10
+    00405 3B8D      CPI	R24,0xBD
+    00406 E0E0      LDI	R30,0
+    00407 079E      CPC	R25,R30
+    00408 F0E9      BEQ	0x0426
+    00409 EB8D      LDI	R24,0xBD
+    0040A 158A      CP	R24,R10
+    0040B 059B      CPC	R25,R11
+    0040C F034      BLT	0x0413
+    0040D 01C5      MOVW	R24,R10
+    0040E 378D      CPI	R24,0x7D
+    0040F E0E0      LDI	R30,0
+    00410 079E      CPC	R25,R30
+    00411 F0B1      BEQ	0x0428
+    00412 C016      RJMP	0x0429
+    00413 01C5      MOVW	R24,R10
+    00414 3D8D      CPI	R24,0xDD
+    00415 E0E0      LDI	R30,0
+    00416 079E      CPC	R25,R30
+    00417 F061      BEQ	0x0424
+    00418 3D8D      CPI	R24,0xDD
+    00419 E0E0      LDI	R30,0
+    0041A 079E      CPC	R25,R30
+    0041B F06C      BLT	0x0429
+    0041C 01C5      MOVW	R24,R10
+    0041D 3E8D      CPI	R24,0xED
+    0041E E0E0      LDI	R30,0
+    0041F 079E      CPC	R25,R30
+    00420 F009      BEQ	0x0422
+    00421 C007      RJMP	0x0429
+(0052) 			{
+(0053) 				case 0xED: key = '4'; break;
+    00422 E344      LDI	R20,0x34
+    00423 C005      RJMP	0x0429
+(0054) 				case 0xDD: key = '5'; break;
+    00424 E345      LDI	R20,0x35
+    00425 C003      RJMP	0x0429
+(0055) 				case 0xBD: key = '6'; break;
+    00426 E346      LDI	R20,0x36
+    00427 C001      RJMP	0x0429
+(0056) 				case 0x7D: key = 'B'; break;
+    00428 E442      LDI	R20,0x42
+(0057) 			}
+(0058) 		}
+(0059) 		//while(temp != 0xF0); //松手检测
+(0060) 	}
+(0061) 	
+(0062) 	//检测第三行按键
+(0063) 	PORTB = 0xFB; //PB2以外全设为高电平
+    00429 EF8B      LDI	R24,0xFB
+    0042A BB88      OUT	0x18,R24
+(0064) 	DDRB  = 0x0F; //PB低四位设为输入
+    0042B E08F      LDI	R24,0xF
+    0042C BB87      OUT	0x17,R24
+(0065) 	temp  = PINB; //读出PB口的数值到temp
+    0042D B366      IN	R22,0x16
+(0066) 	temp &= 0xF0; //检查高四位
+    0042E 7F60      ANDI	R22,0xF0
+(0067) 	if(temp != 0xF0) //若高四位不全是高电平, 说明有按键按下
+    0042F 3F60      CPI	R22,0xF0
+    00430 F179      BEQ	0x0460
+(0068) 	{
+(0069) 		delay(1); //消抖
+    00431 E001      LDI	R16,1
+    00432 940E 0496 CALL	_delay
+(0070) 		temp  = PINB; //读出PB口的数值到temp
+    00434 B366      IN	R22,0x16
+(0071) 		temp &= 0xF0; //再次检查高四位的电平
+    00435 7F60      ANDI	R22,0xF0
+(0072) 		if(temp != 0xF0) //若高四位还不全是高电平, 说明确实有按键按下
+    00436 3F60      CPI	R22,0xF0
+    00437 F141      BEQ	0x0460
+(0073) 		{
+(0074) 			temp = PINB; //读出PB口的数值到temp
+    00438 B366      IN	R22,0x16
+(0075) 			switch(temp) //判断是哪个按键按下
+    00439 2EA6      MOV	R10,R22
+    0043A 24BB      CLR	R11
+    0043B 01C5      MOVW	R24,R10
+    0043C 3B8B      CPI	R24,0xBB
+    0043D E0E0      LDI	R30,0
+    0043E 079E      CPC	R25,R30
+    0043F F0E9      BEQ	0x045D
+    00440 EB8B      LDI	R24,0xBB
+    00441 158A      CP	R24,R10
+    00442 059B      CPC	R25,R11
+    00443 F034      BLT	0x044A
+    00444 01C5      MOVW	R24,R10
+    00445 378B      CPI	R24,0x7B
+    00446 E0E0      LDI	R30,0
+    00447 079E      CPC	R25,R30
+    00448 F0B1      BEQ	0x045F
+    00449 C016      RJMP	0x0460
+    0044A 01C5      MOVW	R24,R10
+    0044B 3D8B      CPI	R24,0xDB
+    0044C E0E0      LDI	R30,0
+    0044D 079E      CPC	R25,R30
+    0044E F061      BEQ	0x045B
+    0044F 3D8B      CPI	R24,0xDB
+    00450 E0E0      LDI	R30,0
+    00451 079E      CPC	R25,R30
+    00452 F06C      BLT	0x0460
+    00453 01C5      MOVW	R24,R10
+    00454 3E8B      CPI	R24,0xEB
+    00455 E0E0      LDI	R30,0
+    00456 079E      CPC	R25,R30
+    00457 F009      BEQ	0x0459
+    00458 C007      RJMP	0x0460
+(0076) 			{
+(0077) 				case 0xEB: key = '7'; break;
+    00459 E347      LDI	R20,0x37
+    0045A C005      RJMP	0x0460
+(0078) 				case 0xDB: key = '8'; break;
+    0045B E348      LDI	R20,0x38
+    0045C C003      RJMP	0x0460
+(0079) 				case 0xBB: key = '9'; break;
+    0045D E349      LDI	R20,0x39
+    0045E C001      RJMP	0x0460
+(0080) 				case 0x7B: key = 'C'; break;
+    0045F E443      LDI	R20,0x43
+(0081) 			}
+(0082) 		}
+(0083) 		//while(temp != 0xF0); //松手检测
+(0084) 	}
+(0085) 	
+(0086) 	//检测第四行按键
+(0087) 	PORTB = 0xF7; //PB3以外全设为高电平
+    00460 EF87      LDI	R24,0xF7
+    00461 BB88      OUT	0x18,R24
+(0088) 	DDRB  = 0x0F; //PB低四位设为输入
+    00462 E08F      LDI	R24,0xF
+    00463 BB87      OUT	0x17,R24
+(0089) 	temp  = PINB; //读出PB口的数值到temp
+    00464 B366      IN	R22,0x16
+(0090) 	temp &= 0xF0; //检查高四位
+    00465 7F60      ANDI	R22,0xF0
+(0091) 	if(temp != 0xF0) //若高四位不全是高电平, 说明有按键按下
+    00466 3F60      CPI	R22,0xF0
+    00467 F159      BEQ	0x0493
+(0092) 	{
+(0093) 		delay(1); //消抖
+    00468 E001      LDI	R16,1
+    00469 940E 0496 CALL	_delay
+(0094) 		temp  = PINB; //读出PB口的数值到temp
+    0046B B366      IN	R22,0x16
+(0095) 		temp &= 0xF0; //再次检查高四位的电平
+    0046C 7F60      ANDI	R22,0xF0
+(0096) 		if(temp != 0xF0) //若高四位还不全是高电平, 说明确实有按键按下
+    0046D 3F60      CPI	R22,0xF0
+    0046E F121      BEQ	0x0493
+(0097) 		{
+(0098) 			temp = PINB; //读出PB口的数值到temp
+    0046F B366      IN	R22,0x16
+(0099) 			switch(temp) //判断是哪个按键按下
+    00470 2777      CLR	R23
+    00471 3B67      CPI	R22,0xB7
+    00472 E0E0      LDI	R30,0
+    00473 077E      CPC	R23,R30
+    00474 F0D9      BEQ	0x0490
+    00475 EB87      LDI	R24,0xB7
+    00476 E090      LDI	R25,0
+    00477 1786      CP	R24,R22
+    00478 0797      CPC	R25,R23
+    00479 F02C      BLT	0x047F
+    0047A 3767      CPI	R22,0x77
+    0047B E0E0      LDI	R30,0
+    0047C 077E      CPC	R23,R30
+    0047D F0A1      BEQ	0x0492
+    0047E C014      RJMP	0x0493
+    0047F 3D67      CPI	R22,0xD7
+    00480 E0E0      LDI	R30,0
+    00481 077E      CPC	R23,R30
+    00482 F059      BEQ	0x048E
+    00483 3D67      CPI	R22,0xD7
+    00484 E0E0      LDI	R30,0
+    00485 077E      CPC	R23,R30
+    00486 F064      BLT	0x0493
+    00487 3E67      CPI	R22,0xE7
+    00488 E0E0      LDI	R30,0
+    00489 077E      CPC	R23,R30
+    0048A F009      BEQ	0x048C
+    0048B C007      RJMP	0x0493
+(0100) 			{
+(0101) 				case 0xE7: key = '*'; break;
+    0048C E24A      LDI	R20,0x2A
+    0048D C005      RJMP	0x0493
+(0102) 				case 0xD7: key = '0'; break;
+    0048E E340      LDI	R20,0x30
+    0048F C003      RJMP	0x0493
+(0103) 				case 0xB7: key = '#'; break;
+    00490 E243      LDI	R20,0x23
+    00491 C001      RJMP	0x0493
+(0104) 				case 0x77: key = 'D'; break;
+    00492 E444      LDI	R20,0x44
+(0105) 			}
+(0106) 		}
+(0107) 		//while(temp != 0xF0); //松手检测
+(0108) 	}
+(0109) 	return key; //返回读到的按键值
+    00493 2F04      MOV	R16,R20
+    00494 940C 0556 JMP	pop_xgsetF00C
+_delay:
+  j                    --> R20
+  k                    --> R22
+  i                    --> R16
+    00496 934A      ST	-Y,R20
+    00497 936A      ST	-Y,R22
+FILE: F:\工作\单片机\WorkSpace\AccessControlSystem\GlobalDefine.c
+(0001) //GlobalDefine.c
+(0002) 
+(0003) #include <iom128v.h>
+(0004) #include <macros.h>
+(0005) #include "GlobalDefine.h"
+(0006) 
+(0007) //延时函数
+(0008) void delay(unsigned char i)
+(0009) {
+(0010) 	unsigned char j, k;
+(0011) 	
+(0012) 	for(i; i>0; i--)
+    00498 C00D      RJMP	0x04A6
+(0013) 		for(j=0xFF; j>0; j--)
+    00499 EF4F      LDI	R20,0xFF
+    0049A C007      RJMP	0x04A2
+(0014) 			for(k=0xFF; k>0; k--);
+    0049B EF6F      LDI	R22,0xFF
+    0049C C001      RJMP	0x049E
+    0049D 956A      DEC	R22
+    0049E E080      LDI	R24,0
+    0049F 1786      CP	R24,R22
+    004A0 F3E0      BCS	0x049D
+    004A1 954A      DEC	R20
+    004A2 E080      LDI	R24,0
+    004A3 1784      CP	R24,R20
+    004A4 F3B0      BCS	0x049B
+    004A5 950A      DEC	R16
+    004A6 E080      LDI	R24,0
+    004A7 1780      CP	R24,R16
+    004A8 F380      BCS	0x0499
+    004A9 9169      LD	R22,Y+
+    004AA 9149      LD	R20,Y+
+    004AB 9508      RET
+_led_on:
+  i                    --> R16
+    004AC 934A      ST	-Y,R20
+    004AD 935A      ST	-Y,R21
 (0015) }
 (0016) 
-(0017) //LCD清屏
-(0018) void LCD_Clear_Screen(unsigned char *color)
+(0017) //点亮指定LED
+(0018) void led_on(unsigned char i)
 (0019) {
-(0020) 	USART0_Transmit_String("CLS(");
-    0037C E50E      LDI	R16,0x5E
-    0037D E011      LDI	R17,1
-    0037E 940E 0107 CALL	_USART0_Transmit_String
-(0021) 	USART0_Transmit_String(color);
-    00380 0185      MOVW	R16,R10
-    00381 940E 0107 CALL	_USART0_Transmit_String
-(0022) 	USART0_Transmit_String(");\r\n");
+(0020) 	switch(i)
+    004AE 2F40      MOV	R20,R16
+    004AF 2755      CLR	R21
+    004B0 3041      CPI	R20,1
+    004B1 E0E0      LDI	R30,0
+    004B2 075E      CPC	R21,R30
+    004B3 F069      BEQ	0x04C1
+    004B4 3042      CPI	R20,2
+    004B5 E0E0      LDI	R30,0
+    004B6 075E      CPC	R21,R30
+    004B7 F061      BEQ	0x04C4
+    004B8 3043      CPI	R20,3
+    004B9 E0E0      LDI	R30,0
+    004BA 075E      CPC	R21,R30
+    004BB F059      BEQ	0x04C7
+    004BC 3044      CPI	R20,4
+    004BD E0E0      LDI	R30,0
+    004BE 075E      CPC	R21,R30
+    004BF F051      BEQ	0x04CA
+    004C0 C00B      RJMP	0x04CC
+(0021) 	{
+(0022) 		case 1:
+(0023) 			PORTA |= BIT(0);
+    004C1 9AD8      SBI	0x1B,0
+(0024) 			DDRA  |= BIT(0);
+    004C2 9AD0      SBI	0x1A,0
+(0025) 			break;
+    004C3 C008      RJMP	0x04CC
+(0026) 		case 2:
+(0027) 			PORTA |= BIT(1);
+    004C4 9AD9      SBI	0x1B,1
+(0028) 			DDRA  |= BIT(1);
+    004C5 9AD1      SBI	0x1A,1
+(0029) 			break;
+    004C6 C005      RJMP	0x04CC
+(0030) 		case 3:
+(0031) 			PORTA |= BIT(2);
+    004C7 9ADA      SBI	0x1B,2
+(0032) 			DDRA  |= BIT(2);
+    004C8 9AD2      SBI	0x1A,2
+(0033) 			break;
+    004C9 C002      RJMP	0x04CC
+(0034) 		case 4:
+(0035) 			PORTA |= BIT(3);
+    004CA 9ADB      SBI	0x1B,3
+(0036) 			DDRA  |= BIT(3);
+    004CB 9AD3      SBI	0x1A,3
+(0037) 			break;
+    004CC 9159      LD	R21,Y+
+    004CD 9149      LD	R20,Y+
+    004CE 9508      RET
+_led_off:
+  i                    --> R16
+    004CF 934A      ST	-Y,R20
+    004D0 935A      ST	-Y,R21
+(0038) 	}
+(0039) }
+(0040) 
+(0041) //熄灭指定LED
+(0042) void led_off(unsigned char i)
+(0043) {
+(0044) 	switch(i)
+    004D1 2F40      MOV	R20,R16
+    004D2 2755      CLR	R21
+    004D3 3041      CPI	R20,1
+    004D4 E0E0      LDI	R30,0
+    004D5 075E      CPC	R21,R30
+    004D6 F069      BEQ	0x04E4
+    004D7 3042      CPI	R20,2
+    004D8 E0E0      LDI	R30,0
+    004D9 075E      CPC	R21,R30
+    004DA F061      BEQ	0x04E7
+    004DB 3043      CPI	R20,3
+    004DC E0E0      LDI	R30,0
+    004DD 075E      CPC	R21,R30
+    004DE F059      BEQ	0x04EA
+    004DF 3044      CPI	R20,4
+    004E0 E0E0      LDI	R30,0
+    004E1 075E      CPC	R21,R30
+    004E2 F051      BEQ	0x04ED
+    004E3 C00B      RJMP	0x04EF
+(0045) 	{
+(0046) 		case 1:
+(0047) 			PORTA &=~BIT(0);
+    004E4 98D8      CBI	0x1B,0
+(0048) 			DDRA  &=~BIT(0);
+    004E5 98D0      CBI	0x1A,0
+(0049) 			break;
+    004E6 C008      RJMP	0x04EF
+(0050) 		case 2:
+(0051) 			PORTA &=~BIT(1);
+    004E7 98D9      CBI	0x1B,1
+(0052) 			DDRA  &=~BIT(1);
+    004E8 98D1      CBI	0x1A,1
+(0053) 			break;
+    004E9 C005      RJMP	0x04EF
+(0054) 		case 3:
+(0055) 			PORTA &=~BIT(2);
+    004EA 98DA      CBI	0x1B,2
+(0056) 			DDRA  &=~BIT(2);
+    004EB 98D2      CBI	0x1A,2
+(0057) 			break;
+    004EC C002      RJMP	0x04EF
+(0058) 		case 4:
+(0059) 			PORTA &=~BIT(3);
+    004ED 98DB      CBI	0x1B,3
+(0060) 			DDRA  &=~BIT(3);
+    004EE 98D3      CBI	0x1A,3
+(0061) 			break;
+    004EF 9159      LD	R21,Y+
+    004F0 9149      LD	R20,Y+
+    004F1 9508      RET
+(0062) 	}
+(0063) }
+(0064) 
+(0065) //点亮全部LED
+(0066) void led_on_all(void)
+(0067) {
+(0068) 	PORTA = 0x0F;
+_led_on_all:
+    004F2 E08F      LDI	R24,0xF
+    004F3 BB8B      OUT	0x1B,R24
+(0069) 	DDRA  = 0x0F;
+    004F4 BB8A      OUT	0x1A,R24
+    004F5 9508      RET
+(0070) }
+(0071) 
+(0072) //熄灭全部LED
+(0073) void led_off_all(void)
+(0074) {
+(0075) 	PORTA = 0x00;
+_led_off_all:
+    004F6 2422      CLR	R2
+    004F7 BA2B      OUT	0x1B,R2
+(0076) 	DDRA  = 0x0F;
+    004F8 E08F      LDI	R24,0xF
+    004F9 BB8A      OUT	0x1A,R24
+    004FA 9508      RET
+_led_blink:
+  i                    --> R10
+    004FB 92AA      ST	-Y,R10
+    004FC 2EA0      MOV	R10,R16
+(0077) }
+(0078) 
+(0079) //LED闪烁指定次
+(0080) void led_blink(unsigned char i)
+(0081) {
+(0082) 	for(i; i>0; i--)
+    004FD C007      RJMP	0x0505
+(0083) 	{
+(0084) 		led_on_all();
+    004FE DFF3      RCALL	_led_on_all
+(0085) 		delay(10);
+    004FF E00A      LDI	R16,0xA
+    00500 DF95      RCALL	_delay
+(0086) 		led_off_all();
+    00501 DFF4      RCALL	_led_off_all
+(0087) 		delay(10);
+    00502 E00A      LDI	R16,0xA
+    00503 DF92      RCALL	_delay
+    00504 94AA      DEC	R10
+    00505 E080      LDI	R24,0
+    00506 158A      CP	R24,R10
+    00507 F3B0      BCS	0x04FE
+    00508 90A9      LD	R10,Y+
+    00509 9508      RET
+FILE: F:\工作\单片机\WorkSpace\AccessControlSystem\DeviceInitialize.c
+(0001) //DeviceInitialize.c
+(0002) 
+(0003) #include <iom128v.h>
+(0004) #include <macros.h>
+(0005) #include "DeviceInitialize.h"
+(0006) #include "USART_Operate.h"
+(0007) 
+(0008) //IO端口初始化
+(0009) void port_init(void)
+(0010) {
+(0011) 	PORTA = 0x00;
+_port_init:
+    0050A 2422      CLR	R2
+    0050B BA2B      OUT	0x1B,R2
+(0012) 	DDRA  = 0x00;
+    0050C BA2A      OUT	0x1A,R2
+(0013) 	PORTB = 0x00;
+    0050D BA28      OUT	0x18,R2
+(0014) 	DDRB  = 0x00;
+    0050E BA27      OUT	0x17,R2
+(0015) 	PORTC = 0x00; //仅当m103输出
+    0050F BA25      OUT	0x15,R2
+(0016) 	DDRC  = 0x00;
+    00510 BA24      OUT	0x14,R2
+(0017) 	PORTD = 0x00;
+    00511 BA22      OUT	0x12,R2
+(0018) 	DDRD  = 0x00;
+    00512 BA21      OUT	0x11,R2
+(0019) 	PORTE = 0x00;
+    00513 B823      OUT	0x03,R2
+(0020) 	DDRE  = 0x00;
+    00514 B822      OUT	0x02,R2
+(0021) 	PORTF = 0x00;
+    00515 9220 0062 STS	0x62,R2
+(0022) 	DDRF  = 0x00;
+    00517 9220 0061 STS	0x61,R2
+(0023) 	PORTG = 0x00;
+    00519 9220 0065 STS	0x65,R2
+(0024) 	DDRG  = 0x00;
+    0051B 9220 0064 STS	0x64,R2
+    0051D 9508      RET
+(0025) }
+(0026) 
+(0027) //USART0初始化
+(0028) void USART0_Init(unsigned int ubrr)
+(0029) {
+(0030) 	UBRR0H = (unsigned char)(ubrr>>8); //设置波特率
+_USART0_Init:
+  ubrr                 --> R16
+    0051E 0118      MOVW	R2,R16
+    0051F 2C23      MOV	R2,R3
+    00520 2433      CLR	R3
+    00521 9220 0090 STS	0x90,R2
+(0031) 	UBRR0L = (unsigned char)ubrr;
+    00523 B909      OUT	0x09,R16
+(0032) 	UCSR0B = (1<<RXEN0)|(1<<TXEN0); //使能接收器与发送器
+    00524 E188      LDI	R24,0x18
+    00525 B98A      OUT	0x0A,R24
+(0033) 	UCSR0C = (1<<USBS0)|(3<<UCSZ00); //设置帧格式: 8个数据位, 2个停止位
+    00526 E08E      LDI	R24,0xE
+    00527 9380 0095 STS	0x95,R24
+    00529 9508      RET
+(0034) }
+(0035) 
+(0036) //USART1初始化
+(0037) void USART1_Init(unsigned int ubrr)
+(0038) {
+(0039) 	UBRR1H = (unsigned char)(ubrr>>8); //设置波特率
+_USART1_Init:
+  ubrr                 --> R16
+    0052A 0118      MOVW	R2,R16
+    0052B 2C23      MOV	R2,R3
+    0052C 2433      CLR	R3
+    0052D 9220 0098 STS	0x98,R2
+(0040) 	UBRR1L = (unsigned char)ubrr;
+    0052F 9300 0099 STS	0x99,R16
+(0041) 	UCSR1B = (1<<RXEN1)|(1<<TXEN1); //使能接收器与发送器
+    00531 E188      LDI	R24,0x18
+    00532 9380 009A STS	0x9A,R24
+(0042) 	UCSR1C = (1<<USBS1)|(3<<UCSZ01); //设置帧格式: 8个数据位, 2个停止位
+    00534 E08C      LDI	R24,0xC
+    00535 9380 009D STS	0x9D,R24
+    00537 9508      RET
+(0043) }
+(0044) 
+(0045) //设备初始化
+(0046) void init_devices(void)
+(0047) {
+(0048) 	//停止错误中断直到设置好
+(0049) 	CLI(); //禁用所有中断
+_init_devices:
+    00538 94F8      BCLR	7
+(0050) 	XDIV  = 0x00; //晶振驱动
+    00539 2422      CLR	R2
+    0053A BE2C      OUT	0x3C,R2
+(0051) 	XMCRA = 0x00; //外部存储器
+    0053B 9220 006D STS	0x6D,R2
+(0052) 	port_init(); //IO端口初始化
+    0053D DFCC      RCALL	_port_init
+(0053) 	USART0_Init(MYUBRR0); //USART0串口初始化
+    0053E E005      LDI	R16,5
+    0053F E010      LDI	R17,0
+    00540 DFDD      RCALL	_USART0_Init
+(0054) 	USART1_Init(MYUBRR1); //USART1串口初始化
+    00541 E00B      LDI	R16,0xB
+    00542 E010      LDI	R17,0
+    00543 DFE6      RCALL	_USART1_Init
+(0055) 
+(0056) 	MCUCR = 0x00;
+    00544 2422      CLR	R2
+    00545 BE25      OUT	0x35,R2
+(0057) 	EICRA = 0x00; //设置外部中断控制寄存器
+    00546 9220 006A STS	0x6A,R2
+(0058) 	EICRB = 0x00; //设置外部中断控制寄存器
+    00548 BE2A      OUT	0x3A,R2
+(0059) 	EIMSK = 0x00;
+    00549 BE29      OUT	0x39,R2
+(0060) 	TIMSK = 0x00; //定时器中断源
+    0054A BE27      OUT	0x37,R2
+(0061) 	ETIMSK = 0x00; //扩展定时器中断源
+    0054B 9220 007D STS	0x7D,R2
+(0062) 	SEI(); //重新启用中断
 FILE: <library>
-    00383 E509      LDI	R16,0x59
-    00384 E011      LDI	R17,1
-    00385 940E 0107 CALL	_USART0_Transmit_String
-    00387 90B9      LD	R11,Y+
-    00388 90A9      LD	R10,Y+
-    00389 9508      RET
-push_xgsetF03C:
-    0038A 937A      ST	-Y,R23
-    0038B 936A      ST	-Y,R22
-    0038C 935A      ST	-Y,R21
-    0038D 934A      ST	-Y,R20
-    0038E 92DA      ST	-Y,R13
-    0038F 92CA      ST	-Y,R12
-    00390 92BA      ST	-Y,R11
-    00391 92AA      ST	-Y,R10
-    00392 9508      RET
-pop_xgsetF03C:
-    00393 90A9      LD	R10,Y+
-    00394 90B9      LD	R11,Y+
-    00395 90C9      LD	R12,Y+
-    00396 90D9      LD	R13,Y+
-    00397 9149      LD	R20,Y+
-    00398 9159      LD	R21,Y+
-    00399 9169      LD	R22,Y+
-    0039A 9179      LD	R23,Y+
-    0039B 9508      RET
+    0054D 9478      BSET	7
+    0054E 9508      RET
+push_xgsetF00C:
+    0054F 937A      ST	-Y,R23
+    00550 936A      ST	-Y,R22
+    00551 935A      ST	-Y,R21
+    00552 934A      ST	-Y,R20
+    00553 92BA      ST	-Y,R11
+    00554 92AA      ST	-Y,R10
+    00555 9508      RET
+pop_xgsetF00C:
+    00556 90A9      LD	R10,Y+
+    00557 90B9      LD	R11,Y+
+    00558 9149      LD	R20,Y+
+    00559 9159      LD	R21,Y+
+    0055A 9169      LD	R22,Y+
+    0055B 9179      LD	R23,Y+
+    0055C 9508      RET
 lsr32:
-    0039C 920F      PUSH	R0
-    0039D 9009      LD	R0,Y+
-    0039E 2000      TST	R0
-    0039F F031      BEQ	0x03A6
-    003A0 9536      LSR	R19
-    003A1 9527      ROR	R18
-    003A2 9517      ROR	R17
-    003A3 9507      ROR	R16
-    003A4 940A      DEC	R0
-    003A5 CFF8      RJMP	0x039E
-    003A6 900F      POP	R0
-    003A7 9508      RET
+    0055D 920F      PUSH	R0
+    0055E 9009      LD	R0,Y+
+    0055F 2000      TST	R0
+    00560 F031      BEQ	0x0567
+    00561 9536      LSR	R19
+    00562 9527      ROR	R18
+    00563 9517      ROR	R17
+    00564 9507      ROR	R16
+    00565 940A      DEC	R0
+    00566 CFF8      RJMP	0x055F
+    00567 900F      POP	R0
+    00568 9508      RET

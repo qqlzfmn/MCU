@@ -1,6 +1,360 @@
                         .module GlobalDefine.c
                         .area text(rom, con, rel)
  0000                   .dbfile GlobalDefine.c
- 0000           ; //GlobalDefine.c
- 0000           ; 
- 0000           ; #include "GlobalDefine.h"
+ 0000                   .dbfile F:\工作\单片机\WorkSpace\AccessControlSystem\GlobalDefine.c
+ 0000                   .dbfunc e delay _delay fV
+ 0000           ;              j -> R20
+ 0000           ;              k -> R22
+ 0000           ;              i -> R16
+                        .even
+ 0000           _delay::
+ 0000 4A93              st -y,R20
+ 0002 6A93              st -y,R22
+ 0004                   .dbline -1
+ 0004                   .dbline 9
+ 0004           ; //GlobalDefine.c
+ 0004           ; 
+ 0004           ; #include <iom128v.h>
+ 0004           ; #include <macros.h>
+ 0004           ; #include "GlobalDefine.h"
+ 0004           ; 
+ 0004           ; //延时函数
+ 0004           ; void delay(unsigned char i)
+ 0004           ; {
+ 0004                   .dbline 12
+ 0004           ;       unsigned char j, k;
+ 0004           ;       
+ 0004           ;       for(i; i>0; i--)
+ 0004 0DC0              xjmp L5
+ 0006           L2:
+ 0006                   .dbline 13
+ 0006           ;               for(j=0xFF; j>0; j--)
+ 0006 4FEF              ldi R20,255
+ 0008 07C0              xjmp L9
+ 000A           L6:
+ 000A                   .dbline 14
+ 000A           ;                       for(k=0xFF; k>0; k--);
+ 000A 6FEF              ldi R22,255
+ 000C 01C0              xjmp L13
+ 000E           L10:
+ 000E                   .dbline 14
+ 000E           L11:
+ 000E                   .dbline 14
+ 000E 6A95              dec R22
+ 0010           L13:
+ 0010                   .dbline 14
+ 0010 80E0              ldi R24,0
+ 0012 8617              cp R24,R22
+ 0014 E0F3              brlo L10
+ 0016           X0:
+ 0016           L7:
+ 0016                   .dbline 13
+ 0016 4A95              dec R20
+ 0018           L9:
+ 0018                   .dbline 13
+ 0018 80E0              ldi R24,0
+ 001A 8417              cp R24,R20
+ 001C B0F3              brlo L6
+ 001E           X1:
+ 001E           L3:
+ 001E                   .dbline 12
+ 001E 0A95              dec R16
+ 0020           L5:
+ 0020                   .dbline 12
+ 0020 80E0              ldi R24,0
+ 0022 8017              cp R24,R16
+ 0024 80F3              brlo L2
+ 0026           X2:
+ 0026                   .dbline -2
+ 0026           L1:
+ 0026                   .dbline 0 ; func end
+ 0026 6991              ld R22,y+
+ 0028 4991              ld R20,y+
+ 002A 0895              ret
+ 002C                   .dbsym r j 20 c
+ 002C                   .dbsym r k 22 c
+ 002C                   .dbsym r i 16 c
+ 002C                   .dbend
+ 002C                   .dbfunc e led_on _led_on fV
+ 002C           ;              i -> R16
+                        .even
+ 002C           _led_on::
+ 002C 4A93              st -y,R20
+ 002E 5A93              st -y,R21
+ 0030                   .dbline -1
+ 0030                   .dbline 19
+ 0030           ; }
+ 0030           ; 
+ 0030           ; //点亮指定LED
+ 0030           ; void led_on(unsigned char i)
+ 0030           ; {
+ 0030                   .dbline 20
+ 0030           ;       switch(i)
+ 0030 402F              mov R20,R16
+ 0032 5527              clr R21
+ 0034 4130              cpi R20,1
+ 0036 E0E0              ldi R30,0
+ 0038 5E07              cpc R21,R30
+ 003A 69F0              breq L18
+ 003C           X3:
+ 003C 4230              cpi R20,2
+ 003E E0E0              ldi R30,0
+ 0040 5E07              cpc R21,R30
+ 0042 61F0              breq L19
+ 0044           X4:
+ 0044 4330              cpi R20,3
+ 0046 E0E0              ldi R30,0
+ 0048 5E07              cpc R21,R30
+ 004A 59F0              breq L20
+ 004C           X5:
+ 004C 4430              cpi R20,4
+ 004E E0E0              ldi R30,0
+ 0050 5E07              cpc R21,R30
+ 0052 51F0              breq L21
+ 0054           X6:
+ 0054 0BC0              xjmp L15
+ 0056           L18:
+ 0056                   .dbline 23
+ 0056           ;       {
+ 0056           ;               case 1:
+ 0056           ;                       PORTA |= BIT(0);
+ 0056 D89A              sbi 0x1b,0
+ 0058                   .dbline 24
+ 0058           ;                       DDRA  |= BIT(0);
+ 0058 D09A              sbi 0x1a,0
+ 005A                   .dbline 25
+ 005A           ;                       break;
+ 005A 08C0              xjmp L16
+ 005C           L19:
+ 005C                   .dbline 27
+ 005C           ;               case 2:
+ 005C           ;                       PORTA |= BIT(1);
+ 005C D99A              sbi 0x1b,1
+ 005E                   .dbline 28
+ 005E           ;                       DDRA  |= BIT(1);
+ 005E D19A              sbi 0x1a,1
+ 0060                   .dbline 29
+ 0060           ;                       break;
+ 0060 05C0              xjmp L16
+ 0062           L20:
+ 0062                   .dbline 31
+ 0062           ;               case 3:
+ 0062           ;                       PORTA |= BIT(2);
+ 0062 DA9A              sbi 0x1b,2
+ 0064                   .dbline 32
+ 0064           ;                       DDRA  |= BIT(2);
+ 0064 D29A              sbi 0x1a,2
+ 0066                   .dbline 33
+ 0066           ;                       break;
+ 0066 02C0              xjmp L16
+ 0068           L21:
+ 0068                   .dbline 35
+ 0068           ;               case 4:
+ 0068           ;                       PORTA |= BIT(3);
+ 0068 DB9A              sbi 0x1b,3
+ 006A                   .dbline 36
+ 006A           ;                       DDRA  |= BIT(3);
+ 006A D39A              sbi 0x1a,3
+ 006C                   .dbline 37
+ 006C           ;                       break;
+ 006C           L15:
+ 006C           L16:
+ 006C                   .dbline -2
+ 006C           L14:
+ 006C                   .dbline 0 ; func end
+ 006C 5991              ld R21,y+
+ 006E 4991              ld R20,y+
+ 0070 0895              ret
+ 0072                   .dbsym r i 16 c
+ 0072                   .dbend
+ 0072                   .dbfunc e led_off _led_off fV
+ 0072           ;              i -> R16
+                        .even
+ 0072           _led_off::
+ 0072 4A93              st -y,R20
+ 0074 5A93              st -y,R21
+ 0076                   .dbline -1
+ 0076                   .dbline 43
+ 0076           ;       }
+ 0076           ; }
+ 0076           ; 
+ 0076           ; //熄灭指定LED
+ 0076           ; void led_off(unsigned char i)
+ 0076           ; {
+ 0076                   .dbline 44
+ 0076           ;       switch(i)
+ 0076 402F              mov R20,R16
+ 0078 5527              clr R21
+ 007A 4130              cpi R20,1
+ 007C E0E0              ldi R30,0
+ 007E 5E07              cpc R21,R30
+ 0080 69F0              breq L26
+ 0082           X7:
+ 0082 4230              cpi R20,2
+ 0084 E0E0              ldi R30,0
+ 0086 5E07              cpc R21,R30
+ 0088 61F0              breq L27
+ 008A           X8:
+ 008A 4330              cpi R20,3
+ 008C E0E0              ldi R30,0
+ 008E 5E07              cpc R21,R30
+ 0090 59F0              breq L28
+ 0092           X9:
+ 0092 4430              cpi R20,4
+ 0094 E0E0              ldi R30,0
+ 0096 5E07              cpc R21,R30
+ 0098 51F0              breq L29
+ 009A           X10:
+ 009A 0BC0              xjmp L23
+ 009C           L26:
+ 009C                   .dbline 47
+ 009C           ;       {
+ 009C           ;               case 1:
+ 009C           ;                       PORTA &=~BIT(0);
+ 009C D898              cbi 0x1b,0
+ 009E                   .dbline 48
+ 009E           ;                       DDRA  &=~BIT(0);
+ 009E D098              cbi 0x1a,0
+ 00A0                   .dbline 49
+ 00A0           ;                       break;
+ 00A0 08C0              xjmp L24
+ 00A2           L27:
+ 00A2                   .dbline 51
+ 00A2           ;               case 2:
+ 00A2           ;                       PORTA &=~BIT(1);
+ 00A2 D998              cbi 0x1b,1
+ 00A4                   .dbline 52
+ 00A4           ;                       DDRA  &=~BIT(1);
+ 00A4 D198              cbi 0x1a,1
+ 00A6                   .dbline 53
+ 00A6           ;                       break;
+ 00A6 05C0              xjmp L24
+ 00A8           L28:
+ 00A8                   .dbline 55
+ 00A8           ;               case 3:
+ 00A8           ;                       PORTA &=~BIT(2);
+ 00A8 DA98              cbi 0x1b,2
+ 00AA                   .dbline 56
+ 00AA           ;                       DDRA  &=~BIT(2);
+ 00AA D298              cbi 0x1a,2
+ 00AC                   .dbline 57
+ 00AC           ;                       break;
+ 00AC 02C0              xjmp L24
+ 00AE           L29:
+ 00AE                   .dbline 59
+ 00AE           ;               case 4:
+ 00AE           ;                       PORTA &=~BIT(3);
+ 00AE DB98              cbi 0x1b,3
+ 00B0                   .dbline 60
+ 00B0           ;                       DDRA  &=~BIT(3);
+ 00B0 D398              cbi 0x1a,3
+ 00B2                   .dbline 61
+ 00B2           ;                       break;
+ 00B2           L23:
+ 00B2           L24:
+ 00B2                   .dbline -2
+ 00B2           L22:
+ 00B2                   .dbline 0 ; func end
+ 00B2 5991              ld R21,y+
+ 00B4 4991              ld R20,y+
+ 00B6 0895              ret
+ 00B8                   .dbsym r i 16 c
+ 00B8                   .dbend
+ 00B8                   .dbfunc e led_on_all _led_on_all fV
+                        .even
+ 00B8           _led_on_all::
+ 00B8                   .dbline -1
+ 00B8                   .dbline 67
+ 00B8           ;       }
+ 00B8           ; }
+ 00B8           ; 
+ 00B8           ; //点亮全部LED
+ 00B8           ; void led_on_all(void)
+ 00B8           ; {
+ 00B8                   .dbline 68
+ 00B8           ;       PORTA = 0x0F;
+ 00B8 8FE0              ldi R24,15
+ 00BA 8BBB              out 0x1b,R24
+ 00BC                   .dbline 69
+ 00BC           ;       DDRA  = 0x0F;
+ 00BC 8ABB              out 0x1a,R24
+ 00BE                   .dbline -2
+ 00BE           L30:
+ 00BE                   .dbline 0 ; func end
+ 00BE 0895              ret
+ 00C0                   .dbend
+ 00C0                   .dbfunc e led_off_all _led_off_all fV
+                        .even
+ 00C0           _led_off_all::
+ 00C0                   .dbline -1
+ 00C0                   .dbline 74
+ 00C0           ; }
+ 00C0           ; 
+ 00C0           ; //熄灭全部LED
+ 00C0           ; void led_off_all(void)
+ 00C0           ; {
+ 00C0                   .dbline 75
+ 00C0           ;       PORTA = 0x00;
+ 00C0 2224              clr R2
+ 00C2 2BBA              out 0x1b,R2
+ 00C4                   .dbline 76
+ 00C4           ;       DDRA  = 0x0F;
+ 00C4 8FE0              ldi R24,15
+ 00C6 8ABB              out 0x1a,R24
+ 00C8                   .dbline -2
+ 00C8           L31:
+ 00C8                   .dbline 0 ; func end
+ 00C8 0895              ret
+ 00CA                   .dbend
+ 00CA                   .dbfunc e led_blink _led_blink fV
+ 00CA           ;              i -> R10
+                        .even
+ 00CA           _led_blink::
+ 00CA AA92              st -y,R10
+ 00CC A02E              mov R10,R16
+ 00CE                   .dbline -1
+ 00CE                   .dbline 81
+ 00CE           ; }
+ 00CE           ; 
+ 00CE           ; //LED闪烁指定次
+ 00CE           ; void led_blink(unsigned char i)
+ 00CE           ; {
+ 00CE                   .dbline 82
+ 00CE           ;       for(i; i>0; i--)
+ 00CE 07C0              xjmp L36
+ 00D0           L33:
+ 00D0                   .dbline 83
+ 00D0           ;       {
+ 00D0                   .dbline 84
+ 00D0           ;               led_on_all();
+ 00D0 F3DF              xcall _led_on_all
+ 00D2                   .dbline 85
+ 00D2           ;               delay(10);
+ 00D2 0AE0              ldi R16,10
+ 00D4 95DF              xcall _delay
+ 00D6                   .dbline 86
+ 00D6           ;               led_off_all();
+ 00D6 F4DF              xcall _led_off_all
+ 00D8                   .dbline 87
+ 00D8           ;               delay(10);
+ 00D8 0AE0              ldi R16,10
+ 00DA 92DF              xcall _delay
+ 00DC                   .dbline 88
+ 00DC           ;       }
+ 00DC           L34:
+ 00DC                   .dbline 82
+ 00DC AA94              dec R10
+ 00DE           L36:
+ 00DE                   .dbline 82
+ 00DE 80E0              ldi R24,0
+ 00E0 8A15              cp R24,R10
+ 00E2 B0F3              brlo L33
+ 00E4           X11:
+ 00E4                   .dbline -2
+ 00E4           L32:
+ 00E4                   .dbline 0 ; func end
+ 00E4 A990              ld R10,y+
+ 00E6 0895              ret
+ 00E8                   .dbsym r i 10 c
+ 00E8                   .dbend
+ 00E8           ; }
