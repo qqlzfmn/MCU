@@ -6,6 +6,17 @@
 
 /*-------------------- USART0 --------------------*/
 
+//USART0初始化
+void USART0_Init(unsigned int ubrr)
+{
+	UCSR0B = 0x00; //关闭收器与发送器, 等待设置波特率
+	UCSR0A = 0x00; //控制和状态寄存器0A初值
+	UBRR0H = (unsigned char)(ubrr>>8); //设置波特率
+	UBRR0L = (unsigned char)ubrr;
+	UCSR0C = (0<<USBS0)|(3<<UCSZ00); //设置帧格式: 8个数据位, 1个停止位
+	UCSR0B = (1<<RXEN0)|(1<<TXEN0); //使能接收器与发送器
+}
+
 //USART0以5到8个数据位的方式发送帧
 void USART0_Transmit(unsigned char data)
 {
@@ -64,6 +75,17 @@ void USART0_Flush(void)
 }
 
 /*-------------------- USART1 --------------------*/
+
+//USART1初始化
+void USART1_Init(unsigned int ubrr)
+{
+	UCSR1B = 0x00; //关闭收器与发送器, 等待设置波特率
+	UCSR1A = 0x00; //控制和状态寄存器1A初值
+	UBRR1H = (unsigned char)(ubrr>>8); //设置波特率
+	UBRR1L = (unsigned char)ubrr;
+	UCSR1C = (0<<USBS1)|(3<<UCSZ10); //设置帧格式: 8个数据位, 1个停止位
+	UCSR1B = (1<<RXEN1)|(1<<TXEN1); //使能接收器与发送器
+}
 
 //USART1以5到8个数据位的方式发送帧
 void USART1_Transmit(unsigned char data)

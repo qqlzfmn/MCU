@@ -3,97 +3,96 @@ All other addresses (including ones in FLASH) are byte addresses
 
 Area                               Addr   Size   Decimal Bytes (Attributes)
 --------------------------------   ----   ----   ------- ----- ------------
-                           idata   008C   006F =    111. bytes (rel,con,rom)
+                           idata   008C   0071 =    113. bytes (rel,con,rom)
 
        Addr  Global Symbol
       -----  --------------------------------
        008C  __idata_start
-       00FB  __idata_end
+       00FD  __idata_end
 
 Area                               Addr   Size   Decimal Bytes (Attributes)
 --------------------------------   ----   ----   ------- ----- ------------
-                            text   00FC   09D6 =   2518. bytes (rel,con,rom)
+                            text   00FE   0A02 =   2562. bytes (rel,con,rom)
 
        Addr  Global Symbol
       -----  --------------------------------
-       007E  __start
-       007E  __text_start
-       00A0  _exit
-       00A1  _main
-       00D4  _USART0_Transmit
-       00D8  _USART0_Transmit_9bits
-       00E0  _USART0_Receive
-       00E4  _USART0_Receive_9bits
-       00F7  _USART0_Transmit_String
-       0107  _USART0_Flush
-       010C  _USART1_Transmit
-       0113  _USART1_Transmit_9bits
-       0126  _USART1_Receive
-       012D  _USART1_Receive_9bits
-       0145  _USART1_Transmit_String
-       0155  _USART1_Flush
-       015D  _FINGERPRINT_Cmd_Get_Img
-       017C  _FINGERPRINT_Cmd_Img_To_Buffer1
-       019B  _FINGERPRINT_Cmd_Img_To_Buffer2
-       01BA  _FINGERPRINT_Cmd_Reg_Model
-       01D9  _FINGERPRINT_Cmd_Delete_All_Model
-       01F8  _FINGERPRINT_Cmd_Delete_Model
-       024A  _FINGERPRINT_Cmd_Get_Templete_Num
-       0273  _FINGERPRINT_Cmd_Search_Finger
-       0292  _FINGERPRINT_Cmd_Search_Finger_Admin
-       02B1  _FINGERPRINT_Cmd_Save_Finger
-       0323  _FINGERPRINT_Recevice_Data
-       0337  _FINGERPRINT_add_new_user
-       0379  _FINGERPRINT_search_reg_user
-       039F  _LCD_Busy
-       03A3  _LCD_Clear_Screen
-       03B4  _LCD_Display
-       03B8  _Keyboard_Scan
-       0496  _delay
-       04AC  _led_on
-       04CF  _led_off
-       04F2  _led_on_all
-       04F6  _led_off_all
-       04FB  _led_blink
-       050A  _port_init
-       051E  _USART0_Init
-       052A  _USART1_Init
-       0538  _init_devices
-       054F  push_xgsetF00C
-       0556  pop_xgsetF00C
-       055D  lsr32
-       0569  __text_end
+       007F  __start
+       007F  __text_start
+       00A1  _exit
+       00A2  _main
+       00E1  _USART0_Init
+       00F0  _USART0_Transmit
+       00F4  _USART0_Transmit_9bits
+       00FC  _USART0_Receive
+       0100  _USART0_Receive_9bits
+       0113  _USART0_Transmit_String
+       0123  _USART0_Flush
+       0128  _USART1_Init
+       013B  _USART1_Transmit
+       0142  _USART1_Transmit_9bits
+       0155  _USART1_Receive
+       015C  _USART1_Receive_9bits
+       0174  _USART1_Transmit_String
+       0184  _USART1_Flush
+       018C  _FINGERPRINT_Cmd_Get_Img
+       01AB  _FINGERPRINT_Cmd_Img_To_Buffer1
+       01CA  _FINGERPRINT_Cmd_Img_To_Buffer2
+       01E9  _FINGERPRINT_Cmd_Reg_Model
+       0208  _FINGERPRINT_Cmd_Delete_All_Model
+       0227  _FINGERPRINT_Cmd_Delete_Model
+       0279  _FINGERPRINT_Cmd_Get_Templete_Num
+       02A2  _FINGERPRINT_Cmd_Search_Finger
+       02C1  _FINGERPRINT_Cmd_Search_Finger_Admin
+       02E0  _FINGERPRINT_Cmd_Save_Finger
+       0352  _FINGERPRINT_Recevice_Data
+       0366  _FINGERPRINT_add_new_user
+       03A8  _FINGERPRINT_search_reg_user
+       03CE  _LCD_Busy
+       03D2  _LCD_Clear_Screen
+       03E3  _LCD_Display
+       03E7  _Keyboard_Scan
+       04C5  _delay
+       04DB  _led_on
+       04FE  _led_off
+       0521  _led_on_all
+       0525  _led_off_all
+       052A  _led_blink
+       0539  _port_init
+       054D  _init_devices
+       0566  push_xgsetF00C
+       056D  pop_xgsetF00C
+       0574  lsr32
+       0580  __text_end
 
 Area                               Addr   Size   Decimal Bytes (Attributes)
 --------------------------------   ----   ----   ------- ----- ------------
-                            data   0100   006F =    111. bytes (rel,con,ram)
+                            data   0100   0071 =    113. bytes (rel,con,ram)
 
        Addr  Global Symbol
       -----  --------------------------------
        0100  __data_start
-       010D  _FP_Pack_Head
-       0113  _FP_Get_Img
-       0119  _FP_Templete_Num
-       011F  _FP_Search
-       012A  _FP_Search_0_9
-       0135  _FP_Img_To_Buffer1
-       013C  _FP_Img_To_Buffer2
-       0143  _FP_Reg_Model
-       0149  _FP_Delet_All_Model
-       014F  _FP_Save_Finger
-       0158  _FP_Delete_Model
-       016F  __data_end
+       010F  _FP_Pack_Head
+       0115  _FP_Get_Img
+       011B  _FP_Templete_Num
+       0121  _FP_Search
+       012C  _FP_Search_0_9
+       0137  _FP_Img_To_Buffer1
+       013E  _FP_Img_To_Buffer2
+       0145  _FP_Reg_Model
+       014B  _FP_Delet_All_Model
+       0151  _FP_Save_Finger
+       015A  _FP_Delete_Model
+       0171  __data_end
 
 Area                               Addr   Size   Decimal Bytes (Attributes)
 --------------------------------   ----   ----   ------- ----- ------------
-                             bss   016F   0019 =     25. bytes (rel,con,ram)
+                             bss   0171   0018 =     24. bytes (rel,con,ram)
 
        Addr  Global Symbol
       -----  --------------------------------
-       016F  _key_temp
-       016F  __bss_start
-       0170  _UART1_FINGERPRINT_RECEVICE_BUFFER
-       0188  __bss_end
+       0171  _UART1_FINGERPRINT_RECEVICE_BUFFER
+       0171  __bss_start
+       0189  __bss_end
 
 Area                               Start  End    Decimal Bytes (Attributes)
 --------------------------------   ----   ----   ------- ----- ------------

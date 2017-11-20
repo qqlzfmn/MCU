@@ -7,7 +7,7 @@
 #define UART1_Send_Byte USART1_Transmit
 #define UART1_Receive_Byte USART1_Receive
 
-volatile unsigned char UART1_FINGERPRINT_RECEVICE_BUFFER[24];
+volatile unsigned char UART1_FINGERPRINT_RECEVICE_BUFFER[24]; //默认全为1
 
 //FINGERPRINT通信协议定义
 unsigned char FP_Pack_Head[6]={0xEF,0x01,0xFF,0xFF,0xFF,0xFF}; //协议包头

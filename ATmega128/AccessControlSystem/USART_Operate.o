@@ -1,198 +1,236 @@
 XL
-H 1 areas C global symbols
+H 1 areas E global symbols
 M USART_Operate.c
-A text size 112 flags 0
+A text size 156 flags 0
 dbfile USART_Operate.c
 dbfile F:\工作\单片机\WorkSpace\AccessControlSystem\USART_Operate.c
-dbfunc e USART0_Transmit 0 fV
-dbsym r data 10 c
+dbfunc e USART0_Init 0 fV
+dbsym r ubrr 10 i
 dbline FFFFFFFF 0
 dbline B 0
 dbline C 0
-dbline C 0
 dbline D 4
-dbline FFFFFFFE 6
-dbline 0 6
-dbfunc e USART0_Transmit_9bits 8 fV
+dbline E 6
+dbline F 10
+dbline 10 12
+dbline 11 18
+dbline FFFFFFFE 1C
+dbline 0 1C
+dbfunc e USART0_Transmit 1E fV
+dbsym r data 10 c
+dbline FFFFFFFF 1E
+dbline 16 1E
+dbline 17 1E
+dbline 17 1E
+dbline 18 22
+dbline FFFFFFFE 24
+dbline 0 24
+dbfunc e USART0_Transmit_9bits 26 fV
 dbsym r data 10 i
-dbline FFFFFFFF 8
-dbline 12 8
-dbline 13 8
-dbline 13 8
-dbline 14 C
-dbline 15 E
-dbline 16 12
-dbline 17 14
-dbline FFFFFFFE 16
-dbline 0 16
-dbfunc e USART0_Receive 18 fc
-dbline FFFFFFFF 18
-dbline 1C 18
-dbline 1D 18
-dbline 1D 18
-dbline 1E 1C
-dbline FFFFFFFE 1E
-dbline 0 1E
-dbfunc e USART0_Receive_9bits 20 fi
+dbline FFFFFFFF 26
+dbline 1D 26
+dbline 1E 26
+dbline 1E 26
+dbline 1F 2A
+dbline 20 2C
+dbline 21 30
+dbline 22 32
+dbline FFFFFFFE 34
+dbline 0 34
+dbfunc e USART0_Receive 36 fc
+dbline FFFFFFFF 36
+dbline 27 36
+dbline 28 36
+dbline 28 36
+dbline 29 3A
+dbline FFFFFFFE 3C
+dbline 0 3C
+dbfunc e USART0_Receive_9bits 3E fi
 dbsym r resl 12 c
 dbsym r status 14 c
 dbsym r resh 10 c
-dbline FFFFFFFF 22
-dbline 23 22
-dbline 26 22
-dbline 26 22
-dbline 27 26
-dbline 28 28
-dbline 29 2A
-dbline 2A 2C
-dbline 2B 34
-dbline 2C 3A
-dbline 2D 3E
-dbline FFFFFFFE 42
-dbline 0 42
-dbfunc e USART0_Transmit_String 46 fV
-dbsym r p 14 pc
-dbline FFFFFFFF 4C
-dbline 32 4C
-dbline 34 4E
-dbline 35 4E
-dbline 36 54
+dbline FFFFFFFF 40
+dbline 2E 40
+dbline 31 40
+dbline 31 40
+dbline 32 44
+dbline 33 46
+dbline 34 48
+dbline 35 4A
+dbline 36 52
 dbline 37 58
-dbline 33 58
+dbline 38 5C
 dbline FFFFFFFE 60
 dbline 0 60
-dbfunc e USART0_Flush 66 fV
+dbfunc e USART0_Transmit_String 64 fV
+dbsym r p 14 pc
+dbline FFFFFFFF 6A
+dbline 3D 6A
+dbline 3F 6C
+dbline 40 6C
+dbline 41 72
+dbline 42 76
+dbline 3E 76
+dbline FFFFFFFE 7E
+dbline 0 7E
+dbfunc e USART0_Flush 84 fV
 dbsym r dummy 10 c
-dbline FFFFFFFF 66
-dbline 3C 66
-dbline 3F 68
-dbline 3E 6A
-dbline FFFFFFFE 6E
-dbline 0 6E
-dbfunc e USART1_Transmit 70 fV
+dbline FFFFFFFF 84
+dbline 47 84
+dbline 4A 86
+dbline 49 88
+dbline FFFFFFFE 8C
+dbline 0 8C
+dbfunc e USART1_Init 8E fV
+dbsym r ubrr 10 i
+dbline FFFFFFFF 8E
+dbline 51 8E
+dbline 52 8E
+dbline 53 94
+dbline 54 98
+dbline 55 A2
+dbline 56 A6
+dbline 57 AC
+dbline FFFFFFFE B2
+dbline 0 B2
+dbfunc e USART1_Transmit B4 fV
 dbsym r data 10 c
-dbline FFFFFFFF 70
-dbline 46 70
-dbline 47 70
-dbline 47 70
-dbline 48 78
-dbline FFFFFFFE 7C
-dbline 0 7C
-dbfunc e USART1_Transmit_9bits 7E fV
+dbline FFFFFFFF B4
+dbline 5C B4
+dbline 5D B4
+dbline 5D B4
+dbline 5E BC
+dbline FFFFFFFE C0
+dbline 0 C0
+dbfunc e USART1_Transmit_9bits C2 fV
 dbsym r data 10 i
-dbline FFFFFFFF 7E
-dbline 4D 7E
-dbline 4E 7E
-dbline 4E 7E
-dbline 4F 86
-dbline 50 90
-dbline 51 94
-dbline 52 9E
-dbline FFFFFFFE A2
-dbline 0 A2
-dbfunc e USART1_Receive A4 fc
-dbline FFFFFFFF A4
-dbline 57 A4
-dbline 58 A4
-dbline 58 A4
-dbline 59 AC
-dbline FFFFFFFE B0
-dbline 0 B0
-dbfunc e USART1_Receive_9bits B2 fi
+dbline FFFFFFFF C2
+dbline 63 C2
+dbline 64 C2
+dbline 64 C2
+dbline 65 CA
+dbline 66 D4
+dbline 67 D8
+dbline 68 E2
+dbline FFFFFFFE E6
+dbline 0 E6
+dbfunc e USART1_Receive E8 fc
+dbline FFFFFFFF E8
+dbline 6D E8
+dbline 6E E8
+dbline 6E E8
+dbline 6F F0
+dbline FFFFFFFE F4
+dbline 0 F4
+dbfunc e USART1_Receive_9bits F6 fi
 dbsym r resl 12 c
 dbsym r status 14 c
 dbsym r resh 10 c
-dbline FFFFFFFF B4
-dbline 5E B4
-dbline 61 B4
-dbline 61 B4
-dbline 62 BC
-dbline 63 C0
-dbline 64 C4
-dbline 65 C8
-dbline 66 D0
-dbline 67 D6
-dbline 68 DA
-dbline FFFFFFFE DE
-dbline 0 DE
-dbfunc e USART1_Transmit_String E2 fV
+dbline FFFFFFFF F8
+dbline 74 F8
+dbline 77 F8
+dbline 77 F8
+dbline 78 100
+dbline 79 104
+dbline 7A 108
+dbline 7B 10C
+dbline 7C 114
+dbline 7D 11A
+dbline 7E 11E
+dbline FFFFFFFE 122
+dbline 0 122
+dbfunc e USART1_Transmit_String 126 fV
 dbsym r p 14 pc
-dbline FFFFFFFF E8
-dbline 6D E8
-dbline 6F EA
-dbline 70 EA
-dbline 71 F0
-dbline 72 F4
-dbline 6E F4
-dbline FFFFFFFE FC
-dbline 0 FC
-dbfunc e USART1_Flush 102 fV
+dbline FFFFFFFF 12C
+dbline 83 12C
+dbline 85 12E
+dbline 86 12E
+dbline 87 134
+dbline 88 138
+dbline 84 138
+dbline FFFFFFFE 140
+dbline 0 140
+dbfunc e USART1_Flush 146 fV
 dbsym r dummy 10 c
-dbline FFFFFFFF 102
-dbline 77 102
-dbline 7A 104
-dbline 79 108
-dbline FFFFFFFE 110
-dbline 0 110
-S _USART0_Transmit_9bits Def0008
-S _USART1_Transmit_9bits Def007E
-S _USART0_Receive Def0018
-S _USART1_Receive Def00A4
-S _USART0_Flush Def0066
-S _USART1_Flush Def0102
-S _USART0_Receive_9bits Def0020
-S _USART1_Receive_9bits Def00B2
-S _USART0_Transmit_String Def0046
-S _USART1_Transmit_String Def00E2
-S _USART0_Transmit Def0000
-S _USART1_Transmit Def0070
-T 00 00 5D 9B FE CF 0C B9 08 95
+dbline FFFFFFFF 146
+dbline 8D 146
+dbline 90 148
+dbline 8F 14C
+dbline FFFFFFFE 154
+dbline 0 154
+S _USART0_Init Def0000
+S _USART1_Init Def008E
+S _USART0_Transmit_9bits Def0026
+S _USART1_Transmit_9bits Def00C2
+S _USART0_Receive Def0036
+S _USART1_Receive Def00E8
+S _USART0_Flush Def0084
+S _USART1_Flush Def0146
+S _USART0_Receive_9bits Def003E
+S _USART1_Receive_9bits Def00F6
+S _USART0_Transmit_String Def0064
+S _USART1_Transmit_String Def0126
+S _USART0_Transmit Def001E
+S _USART1_Transmit Def00B4
+T 00 00 22 24 2A B8 2B B8 18 01 23 2C 33 24 20 92
 R 00 00 00 00
-T 08 00 5D 9B FE CF 50 98 10 FF 01 C0 50 9A 0C B9
+T 0E 00 90 00 09 B9 86 E0 80 93 95 00 88 E1 8A B9
 R 00 00 00 00
-T 16 00 08 95
+T 1C 00 08 95
 R 00 00 00 00
-T 18 00 5F 9B FE CF 0C B1 08 95
+T 1E 00 5D 9B FE CF 0C B9 08 95
 R 00 00 00 00
-T 20 00 4A 93 5F 9B FE CF 4B B1 0A B1 2C B1 84 2F
+T 26 00 5D 9B FE CF 50 98 10 FF 01 C0 50 9A 0C B9
 R 00 00 00 00
-T 2E 00 80 71 8C 60 19 F0 0F EF 1F EF 04 C0 06 95
+T 34 00 08 95
 R 00 00 00 00
-T 3C 00 01 70 10 2F 02 2F 49 91 08 95
+T 36 00 5F 9B FE CF 0C B1 08 95
 R 00 00 00 00
-T 46 00 4A 93 5A 93 A8 01 05 C0 FA 01 00 81 D6 DF
+T 3E 00 4A 93 5F 9B FE CF 4B B1 0A B1 2C B1 84 2F
 R 00 00 00 00
-T 54 00 4F 5F 5F 4F FA 01 20 80 22 20 B9 F7 59 91
+T 4C 00 80 71 8C 60 19 F0 0F EF 1F EF 04 C0 06 95
 R 00 00 00 00
-T 62 00 49 91 08 95
+T 5A 00 01 70 10 2F 02 2F 49 91 08 95
 R 00 00 00 00
-T 66 00 01 C0 0C B1 5F 99 FD CF 08 95
+T 64 00 4A 93 5A 93 A8 01 05 C0 FA 01 00 81 D6 DF
 R 00 00 00 00
-T 70 00 20 90 9B 00 25 FE FC CF 00 93 9C 00 08 95
+T 72 00 4F 5F 5F 4F FA 01 20 80 22 20 B9 F7 59 91
 R 00 00 00 00
-T 7E 00 20 90 9B 00 25 FE FC CF 80 91 9A 00 8E 7F
+T 80 00 49 91 08 95
 R 00 00 00 00
-T 8C 00 80 93 9A 00 10 FF 05 C0 80 91 9A 00 81 60
+T 84 00 01 C0 0C B1 5F 99 FD CF 08 95
 R 00 00 00 00
-T 9A 00 80 93 9A 00 00 93 9C 00 08 95
+T 8E 00 22 24 20 92 9A 00 20 92 9B 00 18 01 23 2C
 R 00 00 00 00
-T A4 00 20 90 9B 00 27 FE FC CF 00 91 9C 00 08 95
+T 9C 00 33 24 20 92 98 00 00 93 99 00 86 E0 80 93
 R 00 00 00 00
-T B2 00 4A 93 20 90 9B 00 27 FE FC CF 40 91 9B 00
+T AA 00 9D 00 88 E1 80 93 9A 00 08 95
 R 00 00 00 00
-T C0 00 00 91 9A 00 20 91 9C 00 84 2F 80 71 8C 60
+T B4 00 20 90 9B 00 25 FE FC CF 00 93 9C 00 08 95
 R 00 00 00 00
-T CE 00 19 F0 0F EF 1F EF 04 C0 06 95 01 70 10 2F
+T C2 00 20 90 9B 00 25 FE FC CF 80 91 9A 00 8E 7F
 R 00 00 00 00
-T DC 00 02 2F 49 91 08 95
+T D0 00 80 93 9A 00 10 FF 05 C0 80 91 9A 00 81 60
 R 00 00 00 00
-T E2 00 4A 93 5A 93 A8 01 05 C0 FA 01 00 81 C0 DF
+T DE 00 80 93 9A 00 00 93 9C 00 08 95
 R 00 00 00 00
-T F0 00 4F 5F 5F 4F FA 01 20 80 22 20 B9 F7 59 91
+T E8 00 20 90 9B 00 27 FE FC CF 00 91 9C 00 08 95
 R 00 00 00 00
-T FE 00 49 91 08 95
+T F6 00 4A 93 20 90 9B 00 27 FE FC CF 40 91 9B 00
 R 00 00 00 00
-T 02 01 02 C0 00 91 9C 00 20 90 9B 00 27 FC FA CF
+T 04 01 00 91 9A 00 20 91 9C 00 84 2F 80 71 8C 60
 R 00 00 00 00
-T 10 01 08 95
+T 12 01 19 F0 0F EF 1F EF 04 C0 06 95 01 70 10 2F
+R 00 00 00 00
+T 20 01 02 2F 49 91 08 95
+R 00 00 00 00
+T 26 01 4A 93 5A 93 A8 01 05 C0 FA 01 00 81 C0 DF
+R 00 00 00 00
+T 34 01 4F 5F 5F 4F FA 01 20 80 22 20 B9 F7 59 91
+R 00 00 00 00
+T 42 01 49 91 08 95
+R 00 00 00 00
+T 46 01 02 C0 00 91 9C 00 20 90 9B 00 27 FC FA CF
+R 00 00 00 00
+T 54 01 08 95
 R 00 00 00 00

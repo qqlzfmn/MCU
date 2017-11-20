@@ -6,7 +6,7 @@
                         .even
  0000           _main::
  0000                   .dbline -1
- 0000                   .dbline 13
+ 0000                   .dbline 11
  0000           ; #include <iom128v.h>
  0000           ; #include <macros.h>
  0000           ; #include "USART_Operate.h"
@@ -16,117 +16,127 @@
  0000           ; #include "GlobalDefine.h"
  0000           ; #include "DeviceInitialize.h"
  0000           ; 
- 0000           ; unsigned char key_temp;
- 0000           ; 
  0000           ; void main(void)
  0000           ; {
- 0000                   .dbline 14
+ 0000                   .dbline 12
  0000           ;       init_devices(); //设备初始化
  0000 0E940000          xcall _init_devices
- 0004                   .dbline 16
+ 0004                   .dbline 14
  0004           ;       
  0004           ;       delay(10); //等待设备初始化完成
  0004 0AE0              ldi R16,10
  0006 0E940000          xcall _delay
- 000A                   .dbline 17
+ 000A                   .dbline 15
  000A           ;       led_blink(3); //指示灯闪烁3次提示设备初始化完成
  000A 03E0              ldi R16,3
  000C 0E940000          xcall _led_blink
- 0010                   .dbline 19
- 0010           ;       
+ 0010                   .dbline 16
  0010           ;       USART0_Transmit_String("Hello World!");
  0010 00E0              ldi R16,<L2
  0012 10E0              ldi R17,>L2
  0014 0E940000          xcall _USART0_Transmit_String
- 0018 24C0              xjmp L4
- 001A           L3:
- 001A                   .dbline 22
- 001A           ;       
- 001A           ;       while(1) //待机
- 001A           ;       {
- 001A                   .dbline 27
- 001A           ;               //while(LCD_Busy());
- 001A           ;               //LCD_Clear_Screen(gray);
- 001A           ;               //USART0_Transmit_String("DS32(0,50,'实验室门禁系统',1);DS16(65,100,'显示模块测试',2);\r\n");
- 001A           ;               //delay(100);
- 001A           ;               switch(Keyboard_Scan())
- 001A 0E940000          xcall _Keyboard_Scan
- 001E 402F              mov R20,R16
- 0020 5527              clr R21
- 0022 4134              cpi R20,65
- 0024 E0E0              ldi R30,0
- 0026 5E07              cpc R21,R30
- 0028 69F0              breq L9
- 002A           X0:
- 002A 4234              cpi R20,66
+ 0018                   .dbline 17
+ 0018           ;       USART1_Transmit_String("Hello World!");
+ 0018 00E0              ldi R16,<L2
+ 001A 10E0              ldi R17,>L2
+ 001C 0E940000          xcall _USART1_Transmit_String
+ 0020 2CC0              xjmp L4
+ 0022           L3:
+ 0022                   .dbline 19
+ 0022           ;       while(1) //待机
+ 0022           ;       {
+ 0022                   .dbline 24
+ 0022           ;               //while(LCD_Busy());
+ 0022           ;               //LCD_Clear_Screen(gray);
+ 0022           ;               //USART0_Transmit_String("DS32(0,50,'实验室门禁系统',1);DS16(65,100,'显示模块测试',2);\r\n");
+ 0022           ;               //delay(100);
+ 0022           ;               switch(Keyboard_Scan())
+ 0022 0E940000          xcall _Keyboard_Scan
+ 0026 402F              mov R20,R16
+ 0028 5527              clr R21
+ 002A 4134              cpi R20,65
  002C E0E0              ldi R30,0
  002E 5E07              cpc R21,R30
- 0030 71F0              breq L10
- 0032           X1:
- 0032 4334              cpi R20,67
+ 0030 69F0              breq L9
+ 0032           X0:
+ 0032 4234              cpi R20,66
  0034 E0E0              ldi R30,0
  0036 5E07              cpc R21,R30
- 0038 69F0              breq L11
- 003A           X2:
- 003A 4434              cpi R20,68
+ 0038 71F0              breq L10
+ 003A           X1:
+ 003A 4334              cpi R20,67
  003C E0E0              ldi R30,0
  003E 5E07              cpc R21,R30
- 0040 69F0              breq L12
- 0042           X3:
- 0042 0FC0              xjmp L6
- 0044           L9:
- 0044                   .dbline 29
- 0044           ;               {
- 0044           ;                       case 'A': FINGERPRINT_add_new_user(0); break;
- 0044 0027              clr R16
- 0046 1127              clr R17
- 0048 0E940000          xcall _FINGERPRINT_add_new_user
- 004C                   .dbline 29
- 004C 0AC0              xjmp L7
- 004E           L10:
- 004E                   .dbline 30
- 004E           ;                       case 'B': FINGERPRINT_search_reg_user();break;
- 004E 0E940000          xcall _FINGERPRINT_search_reg_user
- 0052                   .dbline 30
- 0052 07C0              xjmp L7
- 0054           L11:
- 0054                   .dbline 31
- 0054           ;                       case 'C': led_on(3); break;
- 0054 03E0              ldi R16,3
- 0056 0E940000          xcall _led_on
- 005A                   .dbline 31
- 005A 03C0              xjmp L7
- 005C           L12:
- 005C                   .dbline 32
- 005C           ;                       case 'D': led_on(4); break;
- 005C 04E0              ldi R16,4
+ 0040 69F0              breq L11
+ 0042           X2:
+ 0042 4434              cpi R20,68
+ 0044 E0E0              ldi R30,0
+ 0046 5E07              cpc R21,R30
+ 0048 89F0              breq L13
+ 004A           X3:
+ 004A 17C0              xjmp L6
+ 004C           L9:
+ 004C                   .dbline 26
+ 004C           ;               {
+ 004C           ;                       case 'A': FINGERPRINT_add_new_user(0); break;
+ 004C 0027              clr R16
+ 004E 1127              clr R17
+ 0050 0E940000          xcall _FINGERPRINT_add_new_user
+ 0054                   .dbline 26
+ 0054 12C0              xjmp L7
+ 0056           L10:
+ 0056                   .dbline 27
+ 0056           ;                       case 'B': FINGERPRINT_search_reg_user(); break;
+ 0056 0E940000          xcall _FINGERPRINT_search_reg_user
+ 005A                   .dbline 27
+ 005A 0FC0              xjmp L7
+ 005C           L11:
+ 005C                   .dbline 28
+ 005C           ;                       case 'C': led_on(3); LCD_Clear_Screen(gray); break;
+ 005C 03E0              ldi R16,3
  005E 0E940000          xcall _led_on
- 0062                   .dbline 32
- 0062           L6:
- 0062           L7:
- 0062                   .dbline 34
- 0062           ;               }
- 0062           ;       }
- 0062           L4:
- 0062                   .dbline 21
- 0062 DBCF              xjmp L3
- 0064           X4:
- 0064                   .dbline -2
- 0064           L1:
- 0064                   .dbline 0 ; func end
- 0064 0895              ret
- 0066                   .dbend
-                        .area bss(ram, con, rel)
- 0000                   .dbfile F:\工作\单片机\WorkSpace\AccessControlSystem\AccessControlSystem.c
- 0000           _key_temp::
- 0000                   .blkb 1
- 0001                   .dbsym e key_temp _key_temp c
+ 0062                   .dbline 28
+ 0062 00E0              ldi R16,<L12
+ 0064 10E0              ldi R17,>L12
+ 0066 0E940000          xcall _LCD_Clear_Screen
+ 006A                   .dbline 28
+ 006A 07C0              xjmp L7
+ 006C           L13:
+ 006C                   .dbline 29
+ 006C           ;                       case 'D': led_on(4); USART1_Transmit_String("Hello World!"); break;
+ 006C 04E0              ldi R16,4
+ 006E 0E940000          xcall _led_on
+ 0072                   .dbline 29
+ 0072 00E0              ldi R16,<L2
+ 0074 10E0              ldi R17,>L2
+ 0076 0E940000          xcall _USART1_Transmit_String
+ 007A                   .dbline 29
+ 007A           L6:
+ 007A           L7:
+ 007A                   .dbline 31
+ 007A           ;               }
+ 007A           ;       }
+ 007A           L4:
+ 007A                   .dbline 18
+ 007A D3CF              xjmp L3
+ 007C           X4:
+ 007C                   .dbline -2
+ 007C           L1:
+ 007C                   .dbline 0 ; func end
+ 007C 0895              ret
+ 007E                   .dbend
                         .area data(ram, con, rel)
  0000                   .dbfile F:\工作\单片机\WorkSpace\AccessControlSystem\AccessControlSystem.c
- 0000           L2:
- 0000                   .blkb 13
+ 0000           L12:
+ 0000                   .blkb 2
                         .area idata
- 0000 48656C6C6F20576F726C642100        .byte 'H,'e,'l,'l,'o,32,'W,'o,'r,'l,'d,33,0
+ 0000 3700              .byte 55,0
                         .area data(ram, con, rel)
- 000D                   .dbfile F:\工作\单片机\WorkSpace\AccessControlSystem\AccessControlSystem.c
- 000D           ; }
+ 0002                   .dbfile F:\工作\单片机\WorkSpace\AccessControlSystem\AccessControlSystem.c
+ 0002           L2:
+ 0002                   .blkb 13
+                        .area idata
+ 0002 48656C6C6F20576F726C642100        .byte 'H,'e,'l,'l,'o,32,'W,'o,'r,'l,'d,33,0
+                        .area data(ram, con, rel)
+ 000F                   .dbfile F:\工作\单片机\WorkSpace\AccessControlSystem\AccessControlSystem.c
+ 000F           ; }

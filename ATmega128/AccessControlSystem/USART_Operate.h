@@ -6,8 +6,13 @@
 #define FOSC 11059200 //晶振频率
 #define BAUD0 115200 //USART0波特率(屏幕)
 #define BAUD1 57600 //USART1波特率(指纹)
-#define MYUBRR0 FOSC/16/BAUD0-1 //UBRR0初值
-#define MYUBRR1 FOSC/16/BAUD1-1 //UBRR1初值
+#define MYUBRR0 FOSC/16/BAUD0-1 //UBRR0初值0x05
+#define MYUBRR1 FOSC/16/BAUD1-1 //UBRR1初值0x0B
+
+/*-------------------- USART0 --------------------*/
+
+//USART0初始化
+void USART0_Init(unsigned int ubrr);
 
 //USART0以5到8个数据位的方式发送帧
 void USART0_Transmit(unsigned char data);
@@ -26,6 +31,11 @@ void USART0_Transmit_String(unsigned char *p);
 
 //USART0刷新接收缓冲器
 void USART0_Flush(void);
+
+/*-------------------- USART1 --------------------*/
+
+//USART1初始化
+void USART1_Init(unsigned int ubrr);
 
 //USART1以5到8个数据位的方式发送帧
 void USART1_Transmit(unsigned char data);

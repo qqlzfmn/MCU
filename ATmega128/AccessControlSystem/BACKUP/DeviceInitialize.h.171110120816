@@ -1,0 +1,12 @@
+//#include "DeviceInitialize.h"
+
+#ifndef _DeviceInitialize_H
+#define _DeviceInitialize_H
+
+//USART0初始化
+void USART0_Init(unsigned int ubrr);
+
+//USART1初始化
+void USART1_Init(unsigned int ubrr);
+
+#endif

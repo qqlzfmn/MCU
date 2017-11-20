@@ -4,10 +4,10 @@
 #include "USART_Operate.h"
 #include "GlobalDefine.h"
 
-#define UART1_Send_Byte USART1_Transmit
-#define UART1_Receive_Byte USART1_Receive
+#define UART1_Send_Byte USART0_Transmit
+#define UART1_Receive_Byte USART0_Receive
 
-volatile unsigned char UART1_FINGERPRINT_RECEVICE_BUFFER[24];
+volatile unsigned char UART1_FINGERPRINT_RECEVICE_BUFFER[24]; //默认全为1
 
 //FINGERPRINT通信协议定义
 unsigned char FP_Pack_Head[6]={0xEF,0x01,0xFF,0xFF,0xFF,0xFF}; //协议包头
@@ -186,7 +186,7 @@ void FINGERPRINT_Recevice_Data(unsigned char ucLength)
 unsigned char FINGERPRINT_add_new_user(unsigned int Page_ID)
 {
 	led_off_all(); //先关闭所有提示灯
-	led_on(1);
+	led_on(1); //打开第一个提示灯
 
 	do
 	{
@@ -195,7 +195,7 @@ unsigned char FINGERPRINT_add_new_user(unsigned int Page_ID)
 	}
 	while(UART1_FINGERPRINT_RECEVICE_BUFFER[9]!=0x00); //检测是否成功的按了指纹
 	
-	led_on(2); //第一个指纹录入完成, 打开第一个提示灯
+	led_on(2); //第一个指纹录入完成, 打开第二个提示灯
 
 	FINGERPRINT_Cmd_Img_To_Buffer1(); //将图像转换成特征码存放在Buffer1中
 	FINGERPRINT_Recevice_Data(12); //接收12个长度的反馈码
@@ -207,7 +207,7 @@ unsigned char FINGERPRINT_add_new_user(unsigned int Page_ID)
 	}
 	while(UART1_FINGERPRINT_RECEVICE_BUFFER[9]!=0x00);
 	
-	led_on(3); //第二个指纹录入完成, 打开第二个提示灯
+	led_on(3); //第二个指纹录入完成, 打开第三个提示灯
 
 	FINGERPRINT_Cmd_Img_To_Buffer2(); //将图像转换成特征码存放在Buffer2中
 	FINGERPRINT_Recevice_Data(12); //接收12个长度的反馈码
@@ -233,8 +233,8 @@ unsigned char FINGERPRINT_add_new_user(unsigned int Page_ID)
 //指纹搜索是否为注册用户
 unsigned char FINGERPRINT_search_reg_user(void)
 {
-	led_off_all();
-	led_on(1);
+	led_off_all(); //先关闭所有提示灯
+	led_on(1); //打开第一个提示灯
 
 	do
 	{
@@ -243,7 +243,7 @@ unsigned char FINGERPRINT_search_reg_user(void)
 	}
 	while(UART1_FINGERPRINT_RECEVICE_BUFFER[9]!=0x00); //检测是否成功的按了指纹
 	
-	led_on(2);
+	led_on(2); //读取到指纹, 打开第二个提示灯
 	
 	FINGERPRINT_Cmd_Img_To_Buffer1(); //将图像转换成特征码存放在Buffer1中
 	FINGERPRINT_Recevice_Data(12); //接收12个长度的反馈码
@@ -252,7 +252,7 @@ unsigned char FINGERPRINT_search_reg_user(void)
 	FINGERPRINT_Recevice_Data(16); //接收16个长度的反馈码
 	if(UART1_FINGERPRINT_RECEVICE_BUFFER[9]!=0x00)
 	{
-		led_on(3);
+		led_on(3); //发生错误, 打开第三个提示灯
 		
 		if(UART1_FINGERPRINT_RECEVICE_BUFFER[9]==0x09)
 			return 2; //没搜索到 返回2

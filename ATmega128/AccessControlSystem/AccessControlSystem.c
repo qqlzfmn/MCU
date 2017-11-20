@@ -7,17 +7,14 @@
 #include "GlobalDefine.h"
 #include "DeviceInitialize.h"
 
-unsigned char key_temp;
-
 void main(void)
 {
 	init_devices(); //设备初始化
 	
 	delay(10); //等待设备初始化完成
 	led_blink(3); //指示灯闪烁3次提示设备初始化完成
-	
 	USART0_Transmit_String("Hello World!");
-	
+	USART1_Transmit_String("Hello World!");
 	while(1) //待机
 	{
 		//while(LCD_Busy());
@@ -27,9 +24,9 @@ void main(void)
 		switch(Keyboard_Scan())
 		{
 			case 'A': FINGERPRINT_add_new_user(0); break;
-			case 'B': FINGERPRINT_search_reg_user();break;
-			case 'C': led_on(3); break;
-			case 'D': led_on(4); break;
+			case 'B': FINGERPRINT_search_reg_user(); break;
+			case 'C': led_on(3); LCD_Clear_Screen(gray); break;
+			case 'D': led_on(4); USART1_Transmit_String("Hello World!"); break;
 		}
 	}
 }

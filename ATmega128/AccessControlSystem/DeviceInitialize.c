@@ -24,24 +24,6 @@ void port_init(void)
 	DDRG  = 0x00;
 }
 
-//USART0初始化
-void USART0_Init(unsigned int ubrr)
-{
-	UBRR0H = (unsigned char)(ubrr>>8); //设置波特率
-	UBRR0L = (unsigned char)ubrr;
-	UCSR0B = (1<<RXEN0)|(1<<TXEN0); //使能接收器与发送器
-	UCSR0C = (1<<USBS0)|(3<<UCSZ00); //设置帧格式: 8个数据位, 2个停止位
-}
-
-//USART1初始化
-void USART1_Init(unsigned int ubrr)
-{
-	UBRR1H = (unsigned char)(ubrr>>8); //设置波特率
-	UBRR1L = (unsigned char)ubrr;
-	UCSR1B = (1<<RXEN1)|(1<<TXEN1); //使能接收器与发送器
-	UCSR1C = (1<<USBS1)|(3<<UCSZ01); //设置帧格式: 8个数据位, 2个停止位
-}
-
 //设备初始化
 void init_devices(void)
 {
