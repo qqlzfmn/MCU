@@ -18,15 +18,34 @@
 #define dark_yellow "12" 	//深黄
 #define dark_cyan 	"13" 	//深青
 #define white 		"14" 	//白色
-#define light_gray 	"15		//浅灰
+#define light_gray 	"15"	//浅灰
+
+#define GpuSend		USART0_Transmit_String
+
+#define lcd_busy	PINA & BIT(4) //定义PA4引脚接lcd_busy
 
 //LCD测忙
 unsigned char LCD_Busy(void);
 
-//LCD清屏
+//LCD用color颜色清屏
 void LCD_Clear_Screen(unsigned char *color);
 
-//LCD显示
-void LCD_Display(void);
+//LCD设置亮度0-100
+void LCD_Set_Brightness(unsigned char *brightness);
+
+//设备初始化页面
+void LCD_Init_Devices(void);
+
+//待机页面
+void LCD_Standby(void);
+
+//输入页面
+void LCD_input(void);
+
+//指纹错误页面
+void LCD_fingerprint_wrong(void);
+
+//注册指纹
+void LCD_sign_up(void);
 
 #endif

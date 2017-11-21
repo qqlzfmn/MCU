@@ -2,7 +2,6 @@
 
 #include <iom128v.h>
 #include "USART_Operate.h"
-#include "DeviceInitialize.h"
 
 /*-------------------- USART0 --------------------*/
 

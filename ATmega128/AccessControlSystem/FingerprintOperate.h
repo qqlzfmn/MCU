@@ -3,6 +3,9 @@
 #ifndef _FingerprintOperate_H
 #define _FingerprintOperate_H
 
+#define fingerprint_power_on	PORTA |= BIT(7); DDRA & BIT(7) //定义PA7引脚接指纹模块电源
+#define fingerprint_touched 	PINA  &  BIT(6) //定义PA6引脚接指纹模块触摸检测
+
 /*-------------------- FINGERPRINT命令字 --------------------*/
 
 //FINGERPRINT_获得指纹图像命令
@@ -40,10 +43,13 @@ void FINGERPRINT_Recevice_Data(unsigned char ucLength);
 
 /*-------------------- 应用层接口函数 --------------------*/
 
-//指纹添加新用户
+//指纹添加新用户  执行无误后返回1 发生错误返回0
 unsigned char FINGERPRINT_add_new_user(unsigned int Page_ID);
 
-//指纹搜索是否为注册用户
+//指纹搜索是否为注册用户  执行无误后返回1 发生错误返回0
 unsigned char FINGERPRINT_search_reg_user(void);
+
+//检测是否有手指按下  若有则返回1 若没有则返回0
+unsigned char FINGERPRINT_touched(void);
 
 #endif

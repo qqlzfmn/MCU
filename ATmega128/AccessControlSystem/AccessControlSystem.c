@@ -4,29 +4,46 @@
 #include "FingerprintOperate.h"
 #include "LCD_Operate.h"
 #include "KeyboardOperate.h"
-#include "GlobalDefine.h"
 #include "DeviceInitialize.h"
+#include "LED_Operate.h"
+#include "Delay.h"
+
+//待机
+void Standby(void)
+{
+	while(LCD_Busy());
+	LCD_Standby();
+	
+	while(1)
+	{
+		switch(Keyboard_Scan())
+		{
+			case 'A':
+				while(LCD_Busy());
+				LCD_sign_up();
+				FINGERPRINT_add_new_user(0);
+				break; //添加指纹到第0页
+			case 'B':
+				while(LCD_Busy());
+				LCD_Standby();
+				FINGERPRINT_search_reg_user();
+				break; //搜索指纹是否在库中
+			case 'C':
+				FINGERPRINT_Cmd_Delete_Model(0);
+				break; //删除第0页的指纹
+			case 'D':
+				FINGERPRINT_Cmd_Delete_All_Model();
+				break; //删除全部指纹
+		}
+	}
+}
 
 void main(void)
 {
 	init_devices(); //设备初始化
-	
-	delay(10); //等待设备初始化完成
+	while(LCD_Busy());
+	LCD_Init_Devices(); //LCD显示设备初始化页面
 	led_blink(3); //指示灯闪烁3次提示设备初始化完成
-	USART0_Transmit_String("Hello World!");
-	USART1_Transmit_String("Hello World!");
-	while(1) //待机
-	{
-		//while(LCD_Busy());
-		//LCD_Clear_Screen(gray);
-		//USART0_Transmit_String("DS32(0,50,'实验室门禁系统',1);DS16(65,100,'显示模块测试',2);\r\n");
-		//delay(100);
-		switch(Keyboard_Scan())
-		{
-			case 'A': FINGERPRINT_add_new_user(0); break;
-			case 'B': FINGERPRINT_search_reg_user(); break;
-			case 'C': led_on(3); LCD_Clear_Screen(gray); break;
-			case 'D': led_on(4); USART1_Transmit_String("Hello World!"); break;
-		}
-	}
+
+	Standby(); //待机
 }

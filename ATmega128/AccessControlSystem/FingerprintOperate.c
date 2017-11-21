@@ -1,8 +1,10 @@
 //FingerprintOperate.c
 
+#include <iom128v.h>
+#include <macros.h>
 #include "FingerprintOperate.h"
 #include "USART_Operate.h"
-#include "GlobalDefine.h"
+#include "LED_Operate.h"
 
 #define UART1_Send_Byte USART1_Transmit
 #define UART1_Receive_Byte USART1_Receive
@@ -242,23 +244,32 @@ unsigned char FINGERPRINT_search_reg_user(void)
 		FINGERPRINT_Recevice_Data(12); //接收12个长度的反馈码
 	}
 	while(UART1_FINGERPRINT_RECEVICE_BUFFER[9]!=0x00); //检测是否成功的按了指纹
-	
+
 	led_on(2); //读取到指纹, 打开第二个提示灯
-	
+
 	FINGERPRINT_Cmd_Img_To_Buffer1(); //将图像转换成特征码存放在Buffer1中
 	FINGERPRINT_Recevice_Data(12); //接收12个长度的反馈码
-	
+
 	FINGERPRINT_Cmd_Search_Finger(); //搜索全部用户999枚
 	FINGERPRINT_Recevice_Data(16); //接收16个长度的反馈码
+
 	if(UART1_FINGERPRINT_RECEVICE_BUFFER[9]!=0x00)
 	{
-		led_on(3); //发生错误, 打开第三个提示灯
-		
-		if(UART1_FINGERPRINT_RECEVICE_BUFFER[9]==0x09)
-			return 2; //没搜索到 返回2
-		return 0; //其他错误 返回0
+		led_on(4); //发生错误, 打开第四个提示灯
+		return 0; //发生错误 返回0
 	}
 
-	led_on_all; //找到匹配的指纹, 打开全部提示灯
+	led_on_all(); //找到匹配的指纹, 打开全部提示灯
 	return 1; //全部执行无误 返回1
+}
+
+//检测是否有手指按下
+unsigned char FINGERPRINT_touched(void)
+{
+	if(fingerprint_touched)
+	{
+		fingerprint_power_on;
+		return 1;
+	}
+	return 0;
 }

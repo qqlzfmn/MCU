@@ -1,9 +1,0 @@
-//#include "GlobalDefine.h"
-
-#ifndef _GlobalDefine_H
-#define _GlobalDefine_H
-
-#define lcd_busy PINA & BIT(4) //定义PA4脚为lcd_busy位
-
-
-#endif

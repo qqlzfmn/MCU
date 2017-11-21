@@ -1,7 +1,0 @@
-#include<iom128v.h>
-#include <macros.h>
-
-void main(void)
-{
-	
-}

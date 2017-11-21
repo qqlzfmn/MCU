@@ -1,9 +1,8 @@
 //KeyboardOperate.c
 
 #include <iom128v.h>
-#include <macros.h>
 #include "KeyboardOperate.h"
-#include "GlobalDefine.h"
+#include "Delay.h"
 
 //判断按下的是哪个按键
 unsigned char Keyboard_Scan(void)
